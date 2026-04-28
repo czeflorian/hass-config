@@ -1,0 +1,844 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Enheten är redan konfigurerad",
+      "already_in_progress": "Konfigurationsflödet pågår redan",
+      "no_devices_found": "Inga enheter hittades i nätverket"
+    },
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "description": "Vill du konfigurera {name}?"
+      },
+      "user": {
+        "data": {
+          "address": "Enhet"
+        },
+        "description": "Välj en enhet att konfigurera"
+      }
+    }
+  },
+  "entity": {
+    "select": {
+      "state": {
+        "name": "State",
+        "state": {
+          "device_state_on": "På",
+          "device_state_off": "Av",
+          "device_state_running": "Kör",
+          "device_state_paused": "Pausad",
+          "device_state_time_delay_active": "Fördröjd tid är aktiverat",
+          "device_state_cancelling": "Avbryter",
+          "device_state_door_open": "Luckan är öppen!",
+          "device_state_settings": "Inställningar"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Bomull",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Syntet",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Woollens",
+          "program_delicates": "PROGRAM_DELICATES",
+          "program_spin_pump": "Spin+Drain",
+          "program_rinsing": "Sköljning",
+          "program_darkwash": "Mörk (jeans)",
+          "program_outdoor_sports_goretex": "Sport",
+          "program_stain": "Fläckbehandling",
+          "program_hygeine": "Hygien+",
+          "program_duvet": "Täcken",
+          "program_shirts": "Skjortor/blusar",
+          "program_drum_clean": "Rengöring trumma",
+          "program_mix": "Mixa",
+          "program_curtain": "Gardiner",
+          "program_lingerie": "Underkläder",
+          "program_soft_toys": "Mjukisdjur",
+          "program_towel": "Handduk",
+          "program_cottons_eco": "Bomull/eko",
+          "program_dryer_cotton": "Bomull, torrt",
+          "program_dryer_synthetics": "Syntet, torrt",
+          "program_hygiene_wash_dry": "Hygien+ tvätt/tork",
+          "program_4kg_wash_dry": "4 kg tvätt/tork",
+          "program_wash_wear": "Strykfritt",
+          "program_dark_wash": "Mörk",
+          "program_outdoor": "Fritidsplagg",
+          "program_drum_clean_plus": "Rengöring trumma+",
+          "program_steam_refresh": "Kort ångprogram"
+        }
+      },
+      "washer_temperature": {
+        "name": "Temperatur",
+        "state": {
+          "temperature_cold_wash": "Kallt vatten",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60 °C",
+          "90c": "90 °C"
+        }
+      },
+      "washer_spin": {
+        "name": "Centrifugering",
+        "state": {
+          "spin_no_spin": "Ingen centrifugering",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Sköljstopp",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Snabb+ av",
+          "fast_plus_on_fast": "Snabb",
+          "fast_plus_on_fast_plus": "Snabb+"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Anpassad varaktighet",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Extrasköljning, antal"
+      },
+      "settings_volume": {
+        "name": "Volymknapp",
+        "state": {
+          "volume_low": "Låg",
+          "volume_high": "Hög"
+        }
+      },
+      "remote_control": {
+        "name": "Fjärrkontroll"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "washer_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "washer_warning_security": {
+        "name": "Säkerhet"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Statisk",
+          "program_static_fan": "Statisk + varmluft",
+          "program_fan_heating": "Varmluft",
+          "program_multi_cooking": "Multitillagning (3D)",
+          "program_fan_heat_bottom": "Varmluft + undervärme",
+          "program_eco_grill": "Ekogrill",
+          "program_full_grill": "Högsta grill",
+          "program_full_grill_fan": "Högsta grill + varmluft",
+          "program_bottom_heating": "Undervärme",
+          "program_defrost": "Avfrostning",
+          "program_warm_keeping": "Håll varmt",
+          "program_eco_fan_heating": "Ekovarmluft",
+          "program_steam_cleaning": "Ångrengöring",
+          "program_eco_pyro": "Ekorengöring",
+          "program_pyro": "Rengöring"
+        }
+      },
+      "oven_temperature": {
+        "name": "Temperatur"
+      },
+      "settings_brightness": {
+        "name": "Ljusstyrka"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "oven_warning_door_locked": {
+        "name": "Luckan är låst"
+      },
+      "oven_warning_error": {
+        "name": "Ett oväntat fel har uppstått i produkten. Läs i användarhandboken."
+      },
+      "program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_mix_wash_plus": "All-in-Wash",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_glasscare": "GlassCare",
+          "program_new58min": "QuickWash 58 min",
+          "program_30min": "Mini 30min",
+          "program_prewash": "Förtvätt",
+          "program_hygiene": "HygieneCare",
+          "program_daily": "PROGRAM_DAILY",
+          "program_silent": "Tyst tvätt",
+          "program_makine_temizleme": "Innerrengöring"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Typ av diskmedel",
+        "state": {
+          "setting_detergent_type_powder": "Pulverdiskmedel",
+          "setting_detergent_type_tablet": "Tablettdiskmedel",
+          "setting_detergent_type_liquid": "Flytande diskmedel"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Nivå för sköljhjälp"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Vattnets hårdhet"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Ingen spolglans"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Inget salt"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Kontrollera filtret"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Ring service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Lite flytande diskmedel"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_aqua_flex": "PROGRAM_AQUA_FLEX",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_delicate": "Skondisk",
+          "program_quick_and_shine": "PROGRAM_QUICK_AND_SHINE",
+          "program_mini": "PROGRAM_MINI",
+          "program_prewash": "Förtvätt",
+          "program_quiet": "PROGRAM_QUIET",
+          "program_clean_and_shine": "PROGRAM_CLEAN_AND_SHINE",
+          "program_innerclean": "InnerClean"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Flytande tvättmedel"
+      },
+      "washer_dry": {
+        "name": "Torkar",
+        "state": {
+          "dry_off": "Av",
+          "dry_extra": "Helt torrt",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Stryktorrt",
+          "dry_10": "10 min.",
+          "dry_20": "20 min.",
+          "dry_30": "30 minuter",
+          "dry_60": "60 min.",
+          "dry_90": "90 minuter",
+          "dry_120": "120 min.",
+          "dry_150": "150 minuter"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Antal sköljningar"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Mjuk luft",
+        "state": {
+          "air_conditioner_soft_air_off": "Av",
+          "air_conditioner_soft_air_up": "Uppåt",
+          "air_conditioner_soft_air_down": "Nedåt"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Vertikalt luftflöde",
+        "state": {
+          "up_down_vane_control_off": "Av",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Auto"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Horisontellt luftflöde",
+        "state": {
+          "left_right_vane_control_off": "Av",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Kvar",
+          "left_right_vane_control_right": "Höger",
+          "left_right_vane_control_auto": "Auto"
+        }
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "State",
+        "state": {
+          "device_state_on": "På",
+          "device_state_off": "Av",
+          "device_state_running": "Kör",
+          "device_state_paused": "Pausad",
+          "device_state_time_delay_active": "Fördröjd tid är aktiverat",
+          "device_state_cancelling": "Avbryter",
+          "device_state_door_open": "Luckan är öppen!",
+          "device_state_settings": "Inställningar"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Bomull",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Syntet",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Woollens",
+          "program_delicates": "PROGRAM_DELICATES",
+          "program_spin_pump": "Spin+Drain",
+          "program_rinsing": "Sköljning",
+          "program_darkwash": "Mörk (jeans)",
+          "program_outdoor_sports_goretex": "Sport",
+          "program_stain": "Fläckbehandling",
+          "program_hygeine": "Hygien+",
+          "program_duvet": "Täcken",
+          "program_shirts": "Skjortor/blusar",
+          "program_drum_clean": "Rengöring trumma",
+          "program_mix": "Mixa",
+          "program_curtain": "Gardiner",
+          "program_lingerie": "Underkläder",
+          "program_soft_toys": "Mjukisdjur",
+          "program_towel": "Handduk",
+          "program_cottons_eco": "Bomull/eko",
+          "program_dryer_cotton": "Bomull, torrt",
+          "program_dryer_synthetics": "Syntet, torrt",
+          "program_hygiene_wash_dry": "Hygien+ tvätt/tork",
+          "program_4kg_wash_dry": "4 kg tvätt/tork",
+          "program_wash_wear": "Strykfritt",
+          "program_dark_wash": "Mörk",
+          "program_outdoor": "Fritidsplagg",
+          "program_drum_clean_plus": "Rengöring trumma+",
+          "program_steam_refresh": "Kort ångprogram"
+        }
+      },
+      "washer_temperature": {
+        "name": "Temperatur",
+        "state": {
+          "temperature_cold_wash": "Kallt vatten",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60 °C",
+          "90c": "90 °C"
+        }
+      },
+      "washer_spin": {
+        "name": "Centrifugering",
+        "state": {
+          "spin_no_spin": "Ingen centrifugering",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Sköljstopp",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Snabb+ av",
+          "fast_plus_on_fast": "Snabb",
+          "fast_plus_on_fast_plus": "Snabb+"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Anpassad varaktighet",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Extrasköljning, antal"
+      },
+      "settings_volume": {
+        "name": "Volymknapp",
+        "state": {
+          "volume_low": "Låg",
+          "volume_high": "Hög"
+        }
+      },
+      "sub_state": {
+        "name": "Understat",
+        "state": {
+          "washer_substate_washing": "Tvätta",
+          "washer_substate_spin": "Centrifugering",
+          "washer_water_intake": "Vattenintag",
+          "washer_substate_prewash": "Förtvätt",
+          "washer_substate_rinsing": "Skölj",
+          "washer_substate_softener": "Sköljmedel",
+          "washer_substate_program_started": "Programmet börjar",
+          "washer_substate_time_delay_enabled": "Aktiverad sluttid",
+          "washer_substate_paused": "Paus",
+          "washer_substate_analysing": "Analyserar",
+          "washer_substate_door_locked": "Luckan är låst",
+          "washer_substate_opening_door": "Öppnar luckan",
+          "washer_substate_locking_door": "Låser luckan",
+          "washer_substate_remove_laundry": "Tvättprogrammet är klart. Ta ut tvätten!",
+          "washer_substate_add_laundry": "Lägg i tvätten",
+          "washer_substate_rinse_hold": "Sköljstopp är aktiverat. Välj centrifugeringshastighet",
+          "washer_substate_remote_anticrease": "Fjärrstyrd antiskrynkling pågår.",
+          "washer_substate_drying": "Torkar",
+          "oven_message_good_appetite": "Smaklig måltid!",
+          "oven_message_cooking": "Tillagning",
+          "oven_message_paused": "Pausad",
+          "oven_message_waiting": "Väntar",
+          "oven_message_defrosting": "Upptining",
+          "operation_completed": "Klart",
+          "oven_message_preheating": "Föruppvärmning",
+          "oven_message_preheating_completed": "Förvärmningen har slutförts",
+          "oven_message_cleaning": "Rengöring",
+          "oven_message_cleaning_completed": "Ugnen är rengjord",
+          "dishwasher_message_time_delay_started": "Aktiverad sluttid",
+          "dishwasher_message_paused": "Pausat program",
+          "dishwasher_message_program_finished": "Programmet är klart",
+          "dishwasher_message_program_sanitized": "Programmet är klart och sanitiseras",
+          "dishwasher_message_cancelling": "Avbryter …",
+          "dishwasher_message_time_delay_cancelled": "Fördröjning avbruten",
+          "dishwasher_message_program_started": "Programmet har börjat",
+          "dishwasher_message_washing": "Diskar",
+          "dishwasher_message_rinsing": "Sköljer",
+          "dishwasher_message_drying": "Torkar"
+        }
+      },
+      "washer_delay": {
+        "name": "Programmets sluttid"
+      },
+      "washer_duration": {
+        "name": "Torktid"
+      },
+      "washer_remaining": {
+        "name": "Kvarstår"
+      },
+      "remote_control": {
+        "name": "Fjärrkontroll"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "washer_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "washer_warning_security": {
+        "name": "Säkerhet"
+      },
+      "washer_prewash": {
+        "name": "Förtvätt"
+      },
+      "washer_extrarinse": {
+        "name": "Extra sköljning"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Fjärrstyrd antiskrynkling"
+      },
+      "washer_steam": {
+        "name": "Ånga"
+      },
+      "washer_phr": {
+        "name": "Borttagning av husdjurshår"
+      },
+      "washer_add_water": {
+        "name": "Extra vatten"
+      },
+      "washer_soaking": {
+        "name": "Blötläggs"
+      },
+      "washer_night": {
+        "name": "Nattläge"
+      },
+      "washer_anticrease": {
+        "name": "Strykfritt"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Statisk",
+          "program_static_fan": "Statisk + varmluft",
+          "program_fan_heating": "Varmluft",
+          "program_multi_cooking": "Multitillagning (3D)",
+          "program_fan_heat_bottom": "Varmluft + undervärme",
+          "program_eco_grill": "Ekogrill",
+          "program_full_grill": "Högsta grill",
+          "program_full_grill_fan": "Högsta grill + varmluft",
+          "program_bottom_heating": "Undervärme",
+          "program_defrost": "Avfrostning",
+          "program_warm_keeping": "Håll varmt",
+          "program_eco_fan_heating": "Ekovarmluft",
+          "program_steam_cleaning": "Ångrengöring",
+          "program_eco_pyro": "Ekorengöring",
+          "program_pyro": "Rengöring"
+        }
+      },
+      "oven_temperature": {
+        "name": "Temperatur"
+      },
+      "settings_brightness": {
+        "name": "Ljusstyrka"
+      },
+      "variable_delay": {
+        "name": "Programmets sluttid"
+      },
+      "variable_oven_duration": {
+        "name": "Tillagningstid (timme : minut)"
+      },
+      "variable_remaining": {
+        "name": "Kvarstår"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "oven_warning_door_locked": {
+        "name": "Luckan är låst"
+      },
+      "oven_warning_error": {
+        "name": "Ett oväntat fel har uppstått i produkten. Läs i användarhandboken."
+      },
+      "oven_booster": {
+        "name": "Snabbuppvärmning"
+      },
+      "oven_skip_preheating": {
+        "name": "Hoppa över >"
+      },
+      "program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_mix_wash_plus": "All-in-Wash",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_glasscare": "GlassCare",
+          "program_new58min": "QuickWash 58 min",
+          "program_30min": "Mini 30min",
+          "program_prewash": "Förtvätt",
+          "program_hygiene": "HygieneCare",
+          "program_daily": "PROGRAM_DAILY",
+          "program_silent": "Tyst tvätt",
+          "program_makine_temizleme": "Innerrengöring"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Typ av diskmedel",
+        "state": {
+          "setting_detergent_type_powder": "Pulverdiskmedel",
+          "setting_detergent_type_tablet": "Tablettdiskmedel",
+          "setting_detergent_type_liquid": "Flytande diskmedel"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Nivå för sköljhjälp"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Vattnets hårdhet"
+      },
+      "dishwasher_delay": {
+        "name": "Start för tidsfördröjning"
+      },
+      "dishwasher_duration": {
+        "name": "Varaktighet"
+      },
+      "dishwasher_remaining": {
+        "name": "Återstående tid"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Ingen spolglans"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Inget salt"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Kontrollera filtret"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Ring service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Lite flytande diskmedel"
+      },
+      "dishwasher_traywash": {
+        "name": "Bricktvätt"
+      },
+      "dishwasher_fastplus": {
+        "name": "Diskmaskin fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Ångglans"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Extra sköljning"
+      },
+      "dishwasher_halfload": {
+        "name": "Halvfylld"
+      },
+      "setting_auto_door": {
+        "name": "Doormatic"
+      },
+      "setting_inner_illumination": {
+        "name": "Innerbelysning"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_aqua_flex": "PROGRAM_AQUA_FLEX",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_delicate": "Skondisk",
+          "program_quick_and_shine": "PROGRAM_QUICK_AND_SHINE",
+          "program_mini": "PROGRAM_MINI",
+          "program_prewash": "Förtvätt",
+          "program_quiet": "PROGRAM_QUIET",
+          "program_clean_and_shine": "PROGRAM_CLEAN_AND_SHINE",
+          "program_innerclean": "InnerClean"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Flytande tvättmedel"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Diskmaskinshygien intensiv"
+      },
+      "dishwasher_deepwash": {
+        "name": "Djuptvätt"
+      },
+      "washer_dry": {
+        "name": "Torkar",
+        "state": {
+          "dry_off": "Av",
+          "dry_extra": "Helt torrt",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Stryktorrt",
+          "dry_10": "10 min.",
+          "dry_20": "20 min.",
+          "dry_30": "30 minuter",
+          "dry_60": "60 min.",
+          "dry_90": "90 minuter",
+          "dry_120": "120 min.",
+          "dry_150": "150 minuter"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Antal sköljningar"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Mjuk luft",
+        "state": {
+          "air_conditioner_soft_air_off": "Av",
+          "air_conditioner_soft_air_up": "Uppåt",
+          "air_conditioner_soft_air_down": "Nedåt"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Vertikalt luftflöde",
+        "state": {
+          "up_down_vane_control_off": "Av",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Auto"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Horisontellt luftflöde",
+        "state": {
+          "left_right_vane_control_off": "Av",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Kvar",
+          "left_right_vane_control_right": "Höger",
+          "left_right_vane_control_auto": "Auto"
+        }
+      },
+      "air_conditioner_instant_consumption": {
+        "name": "Luftkonditioneringens omedelbara förbrukning"
+      },
+      "air_conditioner_sleep_mode_minute": {
+        "name": "Luftkonditioneringens viloläge minut"
+      },
+      "air_conditioner_auto_switch_off": {
+        "name": "Automatisk avstängning"
+      },
+      "air_conditioner_auto_switch_on": {
+        "name": "Automatisk start"
+      }
+    },
+    "binary_sensor": {
+      "remote_control": {
+        "name": "Fjärrkontroll"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "washer_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "washer_warning_security": {
+        "name": "Säkerhet"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "oven_warning_door_locked": {
+        "name": "Luckan är låst"
+      },
+      "oven_warning_error": {
+        "name": "Ett oväntat fel har uppstått i produkten. Läs i användarhandboken."
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Ingen spolglans"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Inget salt"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Inget vatten"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Kontrollera filtret"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Luckan är öppen"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Ring service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Lite flytande diskmedel"
+      }
+    },
+    "climate": {
+      "ac": {
+        "name": "AC"
+      }
+    },
+    "switch": {
+      "washer_prewash": {
+        "name": "Förtvätt"
+      },
+      "washer_extrarinse": {
+        "name": "Extra sköljning"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Fjärrstyrd antiskrynkling"
+      },
+      "washer_steam": {
+        "name": "Ånga"
+      },
+      "washer_phr": {
+        "name": "Borttagning av husdjurshår"
+      },
+      "washer_add_water": {
+        "name": "Extra vatten"
+      },
+      "washer_soaking": {
+        "name": "Blötläggs"
+      },
+      "washer_night": {
+        "name": "Nattläge"
+      },
+      "washer_anticrease": {
+        "name": "Strykfritt"
+      },
+      "oven_booster": {
+        "name": "Snabbuppvärmning"
+      },
+      "oven_skip_preheating": {
+        "name": "Hoppa över >"
+      },
+      "dishwasher_traywash": {
+        "name": "Bricktvätt"
+      },
+      "dishwasher_fastplus": {
+        "name": "Diskmaskin fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Ångglans"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Extra sköljning"
+      },
+      "dishwasher_halfload": {
+        "name": "Halvfylld"
+      },
+      "setting_auto_door": {
+        "name": "Doormatic"
+      },
+      "setting_inner_illumination": {
+        "name": "Innerbelysning"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Diskmaskinshygien intensiv"
+      },
+      "dishwasher_deepwash": {
+        "name": "Djuptvätt"
+      }
+    }
+  }
+}

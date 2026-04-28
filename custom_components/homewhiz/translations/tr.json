@@ -1,0 +1,844 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Cihaz zaten yapılandırılmış",
+      "already_in_progress": "Yapılandırma akışı zaten devam ediyor",
+      "no_devices_found": "Ağda cihaz bulunamadı"
+    },
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "description": "{name} kurulumunu yapmak istiyor musunuz?"
+      },
+      "user": {
+        "data": {
+          "address": "Cihaz"
+        },
+        "description": "Kurulum için bir cihaz seçin"
+      }
+    }
+  },
+  "entity": {
+    "select": {
+      "state": {
+        "name": "Durum",
+        "state": {
+          "device_state_on": "Açık",
+          "device_state_off": "Kapalı",
+          "device_state_running": "Çalışıyor",
+          "device_state_paused": "Duraklatıldı",
+          "device_state_time_delay_active": "Zaman Erteleme Aktif",
+          "device_state_cancelling": "İptal ediliyor",
+          "device_state_door_open": "Kapı açık !",
+          "device_state_settings": "Ayarlar"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Pamuklu",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Sentetik",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Woollens",
+          "program_delicates": "Narin",
+          "program_spin_pump": "Spin+Drain",
+          "program_rinsing": "Durulama",
+          "program_darkwash": "Koyu Renkliler (Kot)",
+          "program_outdoor_sports_goretex": "Spor",
+          "program_stain": "Leke Programı",
+          "program_hygeine": "Bebek+",
+          "program_duvet": "Yorgan/Kuştüyü",
+          "program_shirts": "Gömlek",
+          "program_drum_clean": "Makine Temizleme",
+          "program_mix": "Karma",
+          "program_curtain": "Perde",
+          "program_lingerie": "İç Çamaşırı",
+          "program_soft_toys": "Yumuşak Oyuncaklar",
+          "program_towel": "Havlu",
+          "program_cottons_eco": "Pamuklu Ekonomik",
+          "program_dryer_cotton": "Pamuklu Kurutma",
+          "program_dryer_synthetics": "Sentetik Kurutma",
+          "program_hygiene_wash_dry": "Bebek+ Yıka & Kurut",
+          "program_4kg_wash_dry": "4 kg Yıka & Kurut",
+          "program_wash_wear": "Yıka & Giy",
+          "program_dark_wash": "Koyu Renkliler",
+          "program_outdoor": "Spor",
+          "program_drum_clean_plus": "Kazan Temizleme+",
+          "program_steam_refresh": "Havalandırma"
+        }
+      },
+      "washer_temperature": {
+        "name": "Sıcaklık",
+        "state": {
+          "temperature_cold_wash": "Soğuk Yıkama",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60C",
+          "90c": "90C"
+        }
+      },
+      "washer_spin": {
+        "name": "Devir",
+        "state": {
+          "spin_no_spin": "Sıkma Yok",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Suda Bırakma",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Kapalı",
+          "fast_plus_on_fast": "Hızlı",
+          "fast_plus_on_fast_plus": "Çok Hızlı"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Kişiselleşmiş Süre Seviyesi",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Ekstra Durulama Sayısı"
+      },
+      "settings_volume": {
+        "name": "Tuş Sesi",
+        "state": {
+          "volume_low": "Düşük",
+          "volume_high": "Yüksek"
+        }
+      },
+      "remote_control": {
+        "name": "Uzaktan kumanda"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "washer_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "washer_warning_security": {
+        "name": "Güvenlik"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Statik",
+          "program_static_fan": "Statik + Fan",
+          "program_fan_heating": "Fan Destekli",
+          "program_multi_cooking": "Multi (3D) Pişirme",
+          "program_fan_heat_bottom": "Pizza",
+          "program_eco_grill": "Küçük Izgara",
+          "program_full_grill": "Izgara",
+          "program_full_grill_fan": "Izgara+Fan",
+          "program_bottom_heating": "Alt Isıtıcı",
+          "program_defrost": "Buz Çözme",
+          "program_warm_keeping": "Sıcak Tutma",
+          "program_eco_fan_heating": "Ekonomik Fanlı",
+          "program_steam_cleaning": "Buharlı Temizleme",
+          "program_eco_pyro": "Eko Temizleme",
+          "program_pyro": "Temizleme"
+        }
+      },
+      "oven_temperature": {
+        "name": "Sıcaklık"
+      },
+      "settings_brightness": {
+        "name": "Parlaklık"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "oven_warning_door_locked": {
+        "name": "Kapak kilitli"
+      },
+      "oven_warning_error": {
+        "name": "Üründe beklenmedik bir hata oluştu.Lütfen kullanma kılavuzunu kontrol ediniz."
+      },
+      "program": {
+        "name": "é",
+        "state": {
+          "program_auto": "Otomatik",
+          "program_mix_wash_plus": "Karma",
+          "program_intensive_70": "Yoğun 70°C",
+          "program_eco_50": "Eko 50°C",
+          "program_glasscare": "Hassas",
+          "program_new58min": "Hızlı 58'",
+          "program_30min": "Mini 30'",
+          "program_prewash": "Ön Yıkama",
+          "program_hygiene": "Ekstra Hijyen",
+          "program_daily": "Günlük Yıkama",
+          "program_silent": "Ekstra Sessiz",
+          "program_makine_temizleme": "Makine Yıkama"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Deterjan Tipi",
+        "state": {
+          "setting_detergent_type_powder": "Toz Deterjan",
+          "setting_detergent_type_tablet": "Tablet Deterjan",
+          "setting_detergent_type_liquid": "Sıvı/Jel Deterjan"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Parlatıcı Seviyesi"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Su sertliği"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Parlatıcı yok"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Tuz yok"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Filtreyi kontrol edin"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Kapı açık"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Servisi arayın"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Sıvı/Jel Deterjan Az"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Otomatik",
+          "program_aqua_flex": "Karma",
+          "program_intensive_70": "Yoğun 70°C",
+          "program_eco_50": "Eko 50°C",
+          "program_delicate": "Hassas",
+          "program_quick_and_shine": "Hızlı58",
+          "program_mini": "Mini",
+          "program_prewash": "Ön Yıkama",
+          "program_quiet": "Sessiz",
+          "program_clean_and_shine": "Günlük",
+          "program_innerclean": "Makine Yıkama"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Sıvı Deterjan Seviyesi"
+      },
+      "washer_dry": {
+        "name": "Kurutma",
+        "state": {
+          "dry_off": "Kapalı",
+          "dry_extra": "Ekstra Kuru",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Ütü Kuruluğu",
+          "dry_10": "10 dk",
+          "dry_20": "20 dk",
+          "dry_30": "30 dk",
+          "dry_60": "60 dk",
+          "dry_90": "90 dk",
+          "dry_120": "120 dk",
+          "dry_150": "150 dk"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Durulama Miktarı"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Yumuşak Hava",
+        "state": {
+          "air_conditioner_soft_air_off": "Kapalı",
+          "air_conditioner_soft_air_up": "Yukarı",
+          "air_conditioner_soft_air_down": "Aşağı"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Dikey Hava Akışı",
+        "state": {
+          "up_down_vane_control_off": "Kapalı",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Otomatik"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Yatay Hava Akışı",
+        "state": {
+          "left_right_vane_control_off": "Kapalı",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Sol",
+          "left_right_vane_control_right": "Sağ",
+          "left_right_vane_control_auto": "Otomatik"
+        }
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "Durum",
+        "state": {
+          "device_state_on": "Açık",
+          "device_state_off": "Kapalı",
+          "device_state_running": "Çalışıyor",
+          "device_state_paused": "Duraklatıldı",
+          "device_state_time_delay_active": "Zaman Erteleme Aktif",
+          "device_state_cancelling": "İptal ediliyor",
+          "device_state_door_open": "Kapı açık !",
+          "device_state_settings": "Ayarlar"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Pamuklu",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Sentetik",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Woollens",
+          "program_delicates": "Narin",
+          "program_spin_pump": "Spin+Drain",
+          "program_rinsing": "Durulama",
+          "program_darkwash": "Koyu Renkliler (Kot)",
+          "program_outdoor_sports_goretex": "Spor",
+          "program_stain": "Leke Programı",
+          "program_hygeine": "Bebek+",
+          "program_duvet": "Yorgan/Kuştüyü",
+          "program_shirts": "Gömlek",
+          "program_drum_clean": "Makine Temizleme",
+          "program_mix": "Karma",
+          "program_curtain": "Perde",
+          "program_lingerie": "İç Çamaşırı",
+          "program_soft_toys": "Yumuşak Oyuncaklar",
+          "program_towel": "Havlu",
+          "program_cottons_eco": "Pamuklu Ekonomik",
+          "program_dryer_cotton": "Pamuklu Kurutma",
+          "program_dryer_synthetics": "Sentetik Kurutma",
+          "program_hygiene_wash_dry": "Bebek+ Yıka & Kurut",
+          "program_4kg_wash_dry": "4 kg Yıka & Kurut",
+          "program_wash_wear": "Yıka & Giy",
+          "program_dark_wash": "Koyu Renkliler",
+          "program_outdoor": "Spor",
+          "program_drum_clean_plus": "Kazan Temizleme+",
+          "program_steam_refresh": "Havalandırma"
+        }
+      },
+      "washer_temperature": {
+        "name": "Sıcaklık",
+        "state": {
+          "temperature_cold_wash": "Soğuk Yıkama",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60C",
+          "90c": "90C"
+        }
+      },
+      "washer_spin": {
+        "name": "Devir",
+        "state": {
+          "spin_no_spin": "Sıkma Yok",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Suda Bırakma",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Kapalı",
+          "fast_plus_on_fast": "Hızlı",
+          "fast_plus_on_fast_plus": "Çok Hızlı"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Kişiselleşmiş Süre Seviyesi",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Ekstra Durulama Sayısı"
+      },
+      "settings_volume": {
+        "name": "Tuş Sesi",
+        "state": {
+          "volume_low": "Düşük",
+          "volume_high": "Yüksek"
+        }
+      },
+      "sub_state": {
+        "name": "Alt durum",
+        "state": {
+          "washer_substate_washing": "Yıkama",
+          "washer_substate_spin": "Sıkma",
+          "washer_water_intake": "Su alınıyor",
+          "washer_substate_prewash": "Ön yıkama",
+          "washer_substate_rinsing": "Durulama",
+          "washer_substate_softener": "Yumuşatıcı",
+          "washer_substate_program_started": "Program başlıyor",
+          "washer_substate_time_delay_enabled": "Bitiş zamanı aktif",
+          "washer_substate_paused": "Duraklatıldı",
+          "washer_substate_analysing": "Analiz yapılıyor",
+          "washer_substate_door_locked": "Kapak kilitli",
+          "washer_substate_opening_door": "Kapak açılıyor",
+          "washer_substate_locking_door": "Kapak kilitleniyor",
+          "washer_substate_remove_laundry": "Yıkama bitti; çamaşırlarınızı alın",
+          "washer_substate_add_laundry": "Çamaşır koyabilirsiniz",
+          "washer_substate_rinse_hold": "Suda bekletme devrede; devir hızı seçiniz",
+          "washer_substate_remote_anticrease": "Akıllı kırışık azaltma çalışıyor",
+          "washer_substate_drying": "Kurutma",
+          "oven_message_good_appetite": "Afiyet Olsun",
+          "oven_message_cooking": "Pişiriliyor",
+          "oven_message_paused": "Durduruldu",
+          "oven_message_waiting": "Bekliyor",
+          "oven_message_defrosting": "Buz Çözme",
+          "operation_completed": "İşlem tamamlandı",
+          "oven_message_preheating": "Ön Isıtma",
+          "oven_message_preheating_completed": "Ön ısıtma tamamlandı",
+          "oven_message_cleaning": "Temizleniyor",
+          "oven_message_cleaning_completed": "Temizlenme bitti",
+          "dishwasher_message_time_delay_started": "Bitiş zamanı etkin",
+          "dishwasher_message_paused": "Program duraklatıldı",
+          "dishwasher_message_program_finished": "Program bitti",
+          "dishwasher_message_program_sanitized": "Program bitti ve dezenfekte edildi",
+          "dishwasher_message_cancelling": "İptal ediliyor...",
+          "dishwasher_message_time_delay_cancelled": "Gecikme iptal edildi",
+          "dishwasher_message_program_started": "Program başladı",
+          "dishwasher_message_washing": "Yıkıyor",
+          "dishwasher_message_rinsing": "Duruluyor",
+          "dishwasher_message_drying": "Kurutuluyor"
+        }
+      },
+      "washer_delay": {
+        "name": "Program Bitiş Zamanı"
+      },
+      "washer_duration": {
+        "name": "Program Süresi"
+      },
+      "washer_remaining": {
+        "name": "Kalan Süre"
+      },
+      "remote_control": {
+        "name": "Uzaktan kumanda"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "washer_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "washer_warning_security": {
+        "name": "Güvenlik"
+      },
+      "washer_prewash": {
+        "name": "Ön yıkama"
+      },
+      "washer_extrarinse": {
+        "name": "İlave Durulama"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Akıllı Kırışık Azaltma"
+      },
+      "washer_steam": {
+        "name": "Buhar"
+      },
+      "washer_phr": {
+        "name": "Hayvan Tüyü Uzaklaştırma"
+      },
+      "washer_add_water": {
+        "name": "İlave Su"
+      },
+      "washer_soaking": {
+        "name": "Suda bastırma"
+      },
+      "washer_night": {
+        "name": "Gece Modu"
+      },
+      "washer_anticrease": {
+        "name": "Kırışık Azaltma"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Statik",
+          "program_static_fan": "Statik + Fan",
+          "program_fan_heating": "Fan Destekli",
+          "program_multi_cooking": "Multi (3D) Pişirme",
+          "program_fan_heat_bottom": "Pizza",
+          "program_eco_grill": "Küçük Izgara",
+          "program_full_grill": "Izgara",
+          "program_full_grill_fan": "Izgara+Fan",
+          "program_bottom_heating": "Alt Isıtıcı",
+          "program_defrost": "Buz Çözme",
+          "program_warm_keeping": "Sıcak Tutma",
+          "program_eco_fan_heating": "Ekonomik Fanlı",
+          "program_steam_cleaning": "Buharlı Temizleme",
+          "program_eco_pyro": "Eko Temizleme",
+          "program_pyro": "Temizleme"
+        }
+      },
+      "oven_temperature": {
+        "name": "Sıcaklık"
+      },
+      "settings_brightness": {
+        "name": "Parlaklık"
+      },
+      "variable_delay": {
+        "name": "Program Bitiş Zamanı"
+      },
+      "variable_oven_duration": {
+        "name": "Pişirme Süresi (Saat : Dakika)"
+      },
+      "variable_remaining": {
+        "name": "Kalan süre"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "oven_warning_door_locked": {
+        "name": "Kapak kilitli"
+      },
+      "oven_warning_error": {
+        "name": "Üründe beklenmedik bir hata oluştu.Lütfen kullanma kılavuzunu kontrol ediniz."
+      },
+      "oven_booster": {
+        "name": "Hızlı Isıtma"
+      },
+      "oven_skip_preheating": {
+        "name": "Atla >"
+      },
+      "program": {
+        "name": "é",
+        "state": {
+          "program_auto": "Otomatik",
+          "program_mix_wash_plus": "Karma",
+          "program_intensive_70": "Yoğun 70°C",
+          "program_eco_50": "Eko 50°C",
+          "program_glasscare": "Hassas",
+          "program_new58min": "Hızlı 58'",
+          "program_30min": "Mini 30'",
+          "program_prewash": "Ön Yıkama",
+          "program_hygiene": "Ekstra Hijyen",
+          "program_daily": "Günlük Yıkama",
+          "program_silent": "Ekstra Sessiz",
+          "program_makine_temizleme": "Makine Yıkama"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Deterjan Tipi",
+        "state": {
+          "setting_detergent_type_powder": "Toz Deterjan",
+          "setting_detergent_type_tablet": "Tablet Deterjan",
+          "setting_detergent_type_liquid": "Sıvı/Jel Deterjan"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Parlatıcı Seviyesi"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Su sertliği"
+      },
+      "dishwasher_delay": {
+        "name": "Program Bitiş Zamanı"
+      },
+      "dishwasher_duration": {
+        "name": "Süre"
+      },
+      "dishwasher_remaining": {
+        "name": "Kalan Zaman"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Parlatıcı yok"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Tuz yok"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Filtreyi kontrol edin"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Kapı açık"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Servisi arayın"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Sıvı/Jel Deterjan Az"
+      },
+      "dishwasher_traywash": {
+        "name": "Tepsi Yıkama"
+      },
+      "dishwasher_fastplus": {
+        "name": "Bulaşık makinesi fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Buharlı parlat"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Ekstra Durulama"
+      },
+      "dishwasher_halfload": {
+        "name": "Yarım Yük"
+      },
+      "setting_auto_door": {
+        "name": "Otomatik Kapı Açma"
+      },
+      "setting_inner_illumination": {
+        "name": "İç Aydınlatma"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Otomatik",
+          "program_aqua_flex": "Karma",
+          "program_intensive_70": "Yoğun 70°C",
+          "program_eco_50": "Eko 50°C",
+          "program_delicate": "Hassas",
+          "program_quick_and_shine": "Hızlı58",
+          "program_mini": "Mini",
+          "program_prewash": "Ön Yıkama",
+          "program_quiet": "Sessiz",
+          "program_clean_and_shine": "Günlük",
+          "program_innerclean": "Makine Yıkama"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Sıvı Deterjan Seviyesi"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Bulaşık makinesi hijyeni yoğun"
+      },
+      "dishwasher_deepwash": {
+        "name": "Şişe Yıkama"
+      },
+      "washer_dry": {
+        "name": "Kurutma",
+        "state": {
+          "dry_off": "Kapalı",
+          "dry_extra": "Ekstra Kuru",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Ütü Kuruluğu",
+          "dry_10": "10 dk",
+          "dry_20": "20 dk",
+          "dry_30": "30 dk",
+          "dry_60": "60 dk",
+          "dry_90": "90 dk",
+          "dry_120": "120 dk",
+          "dry_150": "150 dk"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Durulama Miktarı"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Yumuşak Hava",
+        "state": {
+          "air_conditioner_soft_air_off": "Kapalı",
+          "air_conditioner_soft_air_up": "Yukarı",
+          "air_conditioner_soft_air_down": "Aşağı"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Dikey Hava Akışı",
+        "state": {
+          "up_down_vane_control_off": "Kapalı",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Otomatik"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Yatay Hava Akışı",
+        "state": {
+          "left_right_vane_control_off": "Kapalı",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Sol",
+          "left_right_vane_control_right": "Sağ",
+          "left_right_vane_control_auto": "Otomatik"
+        }
+      },
+      "air_conditioner_instant_consumption": {
+        "name": "Klima anlık tüketimi"
+      },
+      "air_conditioner_sleep_mode_minute": {
+        "name": "Klima uyku modu dakika"
+      },
+      "air_conditioner_auto_switch_off": {
+        "name": "Otomatik Kapanma"
+      },
+      "air_conditioner_auto_switch_on": {
+        "name": "Otomatik Açılma"
+      }
+    },
+    "binary_sensor": {
+      "remote_control": {
+        "name": "Uzaktan kumanda"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "washer_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "washer_warning_security": {
+        "name": "Güvenlik"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Kapak açık"
+      },
+      "oven_warning_door_locked": {
+        "name": "Kapak kilitli"
+      },
+      "oven_warning_error": {
+        "name": "Üründe beklenmedik bir hata oluştu.Lütfen kullanma kılavuzunu kontrol ediniz."
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Parlatıcı yok"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Tuz yok"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Su kesik"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Filtreyi kontrol edin"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Kapı açık"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Servisi arayın"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Sıvı/Jel Deterjan Az"
+      }
+    },
+    "climate": {
+      "ac": {
+        "name": "AC"
+      }
+    },
+    "switch": {
+      "washer_prewash": {
+        "name": "Ön yıkama"
+      },
+      "washer_extrarinse": {
+        "name": "İlave Durulama"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Akıllı Kırışık Azaltma"
+      },
+      "washer_steam": {
+        "name": "Buhar"
+      },
+      "washer_phr": {
+        "name": "Hayvan Tüyü Uzaklaştırma"
+      },
+      "washer_add_water": {
+        "name": "İlave Su"
+      },
+      "washer_soaking": {
+        "name": "Suda bastırma"
+      },
+      "washer_night": {
+        "name": "Gece Modu"
+      },
+      "washer_anticrease": {
+        "name": "Kırışık Azaltma"
+      },
+      "oven_booster": {
+        "name": "Hızlı Isıtma"
+      },
+      "oven_skip_preheating": {
+        "name": "Atla >"
+      },
+      "dishwasher_traywash": {
+        "name": "Tepsi Yıkama"
+      },
+      "dishwasher_fastplus": {
+        "name": "Bulaşık makinesi fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Buharlı parlat"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Ekstra Durulama"
+      },
+      "dishwasher_halfload": {
+        "name": "Yarım Yük"
+      },
+      "setting_auto_door": {
+        "name": "Otomatik Kapı Açma"
+      },
+      "setting_inner_illumination": {
+        "name": "İç Aydınlatma"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Bulaşık makinesi hijyeni yoğun"
+      },
+      "dishwasher_deepwash": {
+        "name": "Şişe Yıkama"
+      }
+    }
+  }
+}

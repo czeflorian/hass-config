@@ -1,0 +1,92 @@
+# ─────────────────────────────────────────────────────
+# Terracotta Home — A warm, cozy Home Assistant theme
+# Place this file in: /config/themes/terracotta_home.yaml
+# Then in configuration.yaml add:
+#   frontend:
+#     themes: !include_dir_merge_named themes/
+# Restart HA, then go to your Profile and select the theme.
+# ─────────────────────────────────────────────────────
+
+Terracotta Home:
+  # ── Core background & surface colors ──
+  primary-background-color: "#f5ede3"
+  secondary-background-color: "#fdf6ee"
+  card-background-color: "#fdf6ee"
+  divider-color: "#e8d5c4"
+
+  # ── Sidebar ──
+  sidebar-background-color: "#3b2a1a"
+  sidebar-text-color: "#f5ede3"
+  sidebar-icon-color: "#c49a78"
+  sidebar-selected-text-color: "#fdf6ee"
+  sidebar-selected-icon-color: "#e07a3f"
+  sidebar-border-color: "#2a1e12"
+
+  # ── Header / Toolbar ──
+  app-header-background-color: "#3b2a1a"
+  app-header-text-color: "#fdf6ee"
+  app-header-selection-bar-color: "#e07a3f"
+  app-header-edit-background-color: "#4e3826"
+
+  # ── Primary accent & action colors ──
+  primary-color: "#c2622a"
+  accent-color: "#e07a3f"
+  light-primary-color: "#f0a878"
+  dark-primary-color: "#9e4d1f"
+
+  # ── Text ──
+  primary-text-color: "#3b2a1a"
+  secondary-text-color: "#8c6a50"
+  text-primary-color: "#3b2a1a"
+  disabled-text-color: "#c4a98a"
+  text-accent-color: "#e07a3f"
+  label-badge-background-color: "#c2622a"
+  label-badge-text-color: "#fdf6ee"
+
+  # ── Switches & toggles ──
+  switch-checked-color: "#c2622a"
+  switch-checked-button-color: "#fdf6ee"
+  switch-checked-track-color: "#e07a3f"
+  switch-unchecked-color: "#c4a98a"
+  switch-unchecked-button-color: "#fdf6ee"
+  switch-unchecked-track-color: "#e8d5c4"
+
+  # ── Sliders ──
+  slider-color: "#c2622a"
+  slider-secondary-color: "#e8d5c4"
+  slider-bar-color: "#e8d5c4"
+
+  # ── Cards & borders ──
+  ha-card-background: "#fdf6ee"
+  ha-card-border-color: "#e8d5c4"
+  ha-card-border-width: "1px"
+  ha-card-border-radius: "20px"
+  ha-card-box-shadow: "0 2px 12px rgba(59,42,26,0.07)"
+
+  # ── Input fields ──
+  input-fill-color: "#f5ede3"
+  input-ink-color: "#3b2a1a"
+  input-label-ink-color: "#8c6a50"
+  input-idle-line-color: "#e8d5c4"
+  input-hover-line-color: "#c2622a"
+  input-focused-color: "#c2622a"
+  input-focused-label-color: "#c2622a"
+  input-focused-line-color: "#c2622a"
+
+  # ── States / alerts ──
+  success-color: "#5a8a5e"
+  warning-color: "#c48a2a"
+  error-color: "#b04040"
+  info-color: "#4a7a9b"
+
+  # ── Mushroom card overrides ──
+  mush-rgb-red: "176, 64, 64"
+  mush-rgb-orange: "196, 98, 42"
+  mush-rgb-amber: "196, 138, 42"
+  mush-rgb-green: "90, 138, 94"
+  mush-rgb-blue: "74, 122, 155"
+  mush-rgb-purple: "130, 90, 150"
+  mush-rgb-grey: "150, 130, 115"
+
+  # ── Lovelace sections layout ──
+  masonry-view-card-margin: "8px"

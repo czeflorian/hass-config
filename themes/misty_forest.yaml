@@ -1,0 +1,200 @@
+# ─────────────────────────────────────────────────────
+# Misty Forest (Light + Dark)
+# Place in: /homeassistant/themes/misty_forest.yaml
+#
+# In configuration.yaml add:
+#   frontend:
+#     themes: !include_dir_merge_named themes/
+#
+# Then restart HA and select "Misty Forest" in your Profile.
+# HA will auto-switch between light/dark based on your OS.
+#
+# ── LIGHT PALETTE ────────────────────────────────────
+#   Forest Floor  #e8f0e4   main background
+#   Moss Card     #f0f5ee   card surfaces
+#   Fern          #4a7c59   sidebar · header · primary
+#   Ember         #d47a3a   accent · highlights
+#   Dew           #d4e8cc   borders · dividers
+#   Bark          #6b7c65   secondary text
+#   Canopy        #1c2e1e   primary text
+#
+# ── DARK PALETTE ─────────────────────────────────────
+#   Midnight Grove  #141f15   main background
+#   Deep Moss       #1c2b1e   card surfaces
+#   Fern            #4a7c59   sidebar · header · primary
+#   Ember           #d47a3a   accent · highlights
+#   Shadow Dew      #2a3d2c   borders · dividers
+#   Pale Bark       #8fa887   secondary text
+#   Mist            #ddecd5   primary text
+# ─────────────────────────────────────────────────────
+
+Misty Forest:
+  modes:
+
+    # ══════════════════════════════
+    # LIGHT MODE
+    # ══════════════════════════════
+    light:
+      # ── Backgrounds ──
+      primary-background-color: "#e8f0e4"
+      secondary-background-color: "#f0f5ee"
+      card-background-color: "#f0f5ee"
+      divider-color: "#d4e8cc"
+
+      # ── Sidebar ──
+      sidebar-background-color: "#4a7c59"
+      sidebar-text-color: "#f0f5ee"
+      sidebar-icon-color: "#c2e0c8"
+      sidebar-selected-text-color: "#ffffff"
+      sidebar-selected-icon-color: "#ffffff"
+      sidebar-border-color: "#3a6447"
+
+      # ── Header / Toolbar ──
+      app-header-background-color: "#4a7c59"
+      app-header-text-color: "#f0f5ee"
+      app-header-selection-bar-color: "#d47a3a"
+      app-header-edit-background-color: "#3a6447"
+
+      # ── Primary & accent ──
+      primary-color: "#4a7c59"
+      accent-color: "#d47a3a"
+      light-primary-color: "#7aaa88"
+      dark-primary-color: "#2e5c3a"
+
+      # ── Text ──
+      primary-text-color: "#1c2e1e"
+      secondary-text-color: "#6b7c65"
+      text-primary-color: "#1c2e1e"
+      disabled-text-color: "#a8bca2"
+      text-accent-color: "#d47a3a"
+      label-badge-background-color: "#d47a3a"
+      label-badge-text-color: "#ffffff"
+
+      # ── Switches & toggles ──
+      switch-checked-color: "#4a7c59"
+      switch-checked-button-color: "#ffffff"
+      switch-checked-track-color: "#7aaa88"
+      switch-unchecked-color: "#a8bca2"
+      switch-unchecked-button-color: "#ffffff"
+      switch-unchecked-track-color: "#d4e8cc"
+
+      # ── Sliders ──
+      slider-color: "#4a7c59"
+      slider-secondary-color: "#d4e8cc"
+      slider-bar-color: "#d4e8cc"
+
+      # ── Cards ──
+      ha-card-background: "#f0f5ee"
+      ha-card-border-color: "#d4e8cc"
+      ha-card-border-width: "1px"
+      ha-card-border-radius: "20px"
+      ha-card-box-shadow: "0 2px 12px rgba(28,46,30,0.07)"
+
+      # ── Inputs ──
+      input-fill-color: "#e8f0e4"
+      input-ink-color: "#1c2e1e"
+      input-label-ink-color: "#6b7c65"
+      input-idle-line-color: "#d4e8cc"
+      input-hover-line-color: "#4a7c59"
+      input-focused-color: "#4a7c59"
+      input-focused-label-color: "#4a7c59"
+      input-focused-line-color: "#4a7c59"
+
+      # ── States ──
+      success-color: "#4a7c59"
+      warning-color: "#d47a3a"
+      error-color: "#b04040"
+      info-color: "#4a7a9b"
+
+      # ── Mushroom ──
+      mush-rgb-red: "176, 64, 64"
+      mush-rgb-orange: "212, 122, 58"
+      mush-rgb-amber: "196, 150, 30"
+      mush-rgb-green: "74, 124, 89"
+      mush-rgb-blue: "74, 122, 155"
+      mush-rgb-purple: "130, 90, 150"
+      mush-rgb-grey: "107, 124, 101"
+
+    # ══════════════════════════════
+    # DARK MODE
+    # ══════════════════════════════
+    dark:
+      # ── Backgrounds ──
+      primary-background-color: "#141f15"
+      secondary-background-color: "#1c2b1e"
+      card-background-color: "#1c2b1e"
+      divider-color: "#2a3d2c"
+
+      # ── Sidebar ──
+      sidebar-background-color: "#4a7c59"
+      sidebar-text-color: "#f0f5ee"
+      sidebar-icon-color: "#c2e0c8"
+      sidebar-selected-text-color: "#ffffff"
+      sidebar-selected-icon-color: "#ddecd5"
+      sidebar-border-color: "#3a6447"
+
+      # ── Header / Toolbar ──
+      app-header-background-color: "#4a7c59"
+      app-header-text-color: "#f0f5ee"
+      app-header-selection-bar-color: "#d47a3a"
+      app-header-edit-background-color: "#3a6447"
+
+      # ── Primary & accent ──
+      primary-color: "#7aaa88"
+      accent-color: "#d47a3a"
+      light-primary-color: "#a3c96e"
+      dark-primary-color: "#4a7c59"
+
+      # ── Text ──
+      primary-text-color: "#ddecd5"
+      secondary-text-color: "#8fa887"
+      text-primary-color: "#ddecd5"
+      disabled-text-color: "#4a5e4c"
+      text-accent-color: "#d47a3a"
+      label-badge-background-color: "#d47a3a"
+      label-badge-text-color: "#ffffff"
+
+      # ── Switches & toggles ──
+      switch-checked-color: "#7aaa88"
+      switch-checked-button-color: "#1c2b1e"
+      switch-checked-track-color: "#4a7c59"
+      switch-unchecked-color: "#4a5e4c"
+      switch-unchecked-button-color: "#8fa887"
+      switch-unchecked-track-color: "#2a3d2c"
+
+      # ── Sliders ──
+      slider-color: "#7aaa88"
+      slider-secondary-color: "#2a3d2c"
+      slider-bar-color: "#2a3d2c"
+
+      # ── Cards ──
+      ha-card-background: "#1c2b1e"
+      ha-card-border-color: "#2a3d2c"
+      ha-card-border-width: "1px"
+      ha-card-border-radius: "20px"
+      ha-card-box-shadow: "0 2px 16px rgba(0,0,0,0.3)"
+
+      # ── Inputs ──
+      input-fill-color: "#1c2b1e"
+      input-ink-color: "#ddecd5"
+      input-label-ink-color: "#8fa887"
+      input-idle-line-color: "#2a3d2c"
+      input-hover-line-color: "#7aaa88"
+      input-focused-color: "#7aaa88"
+      input-focused-label-color: "#7aaa88"
+      input-focused-line-color: "#7aaa88"
+
+      # ── States ──
+      success-color: "#7aaa88"
+      warning-color: "#d47a3a"
+      error-color: "#c06060"
+      info-color: "#6a9abb"
+
+      # ── Mushroom ──
+      mush-rgb-red: "192, 96, 96"
+      mush-rgb-orange: "212, 122, 58"
+      mush-rgb-amber: "210, 168, 50"
+      mush-rgb-green: "122, 170, 136"
+      mush-rgb-blue: "106, 154, 187"
+      mush-rgb-purple: "160, 120, 180"
+      mush-rgb-grey: "143, 168, 135"

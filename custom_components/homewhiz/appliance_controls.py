@@ -1,0 +1,1218 @@
+import logging
+import re
+from abc import ABC, abstractmethod
+from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass, fields
+from datetime import UTC, datetime, timedelta
+from typing import Any, Generic, TypeVar
+
+from bidict import bidict
+from homeassistant.components.climate import (  # type: ignore[import]
+    PRESET_BOOST,
+    PRESET_NONE,
+    SWING_BOTH,
+    SWING_HORIZONTAL,
+    SWING_OFF,
+    SWING_VERTICAL,
+    HVACMode,
+)
+
+from custom_components.homewhiz.appliance_config import (
+    ApplianceConfiguration,
+    ApplianceFeature,
+    ApplianceFeatureBoundedOption,
+    ApplianceFeatureEnumOption,
+    ApplianceProgram,
+    ApplianceProgress,
+    ApplianceProgressFeature,
+    ApplianceRemoteControl,
+    ApplianceState,
+    ApplianceSubState,
+    ApplianceWarning,
+)
+from custom_components.homewhiz.helper import unit_for_key
+
+from .homewhiz import Command
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
+
+
+def clamp(value: int) -> int:
+    return value if value < 128 else value - 128
+
+
+def safe_get(data: bytearray, index: int) -> int:
+    if index >= len(data):
+        _LOGGER.debug(
+            "Index %d out of range (data length: %d), returning 0", index, len(data)
+        )
+        return 0
+    return clamp(data[index])
+
+
+def to_friendly_name(name: str) -> str:
+    # Generates a translation friendly name based on the key
+    # To filter out characters not supported by homeassistant
+    name = name.replace("+", "plus")
+    name = name.lower()
+    name = re.sub("[^a-z0-9-_]", "", name)
+    if name[-1] == "_":
+        name = name[:-1]
+    return name
+
+
+class Control(ABC):
+    """Parent control class"""
+
+    key: str
+
+    @abstractmethod
+    def get_value(self, data: bytearray) -> Any:
+        pass
+
+    @property
+    def friendly_name(self) -> str:
+        return to_friendly_name(self.key)
+
+
+class Option(ABC):
+    """General option class"""
+
+    value: int
+    name: str
+
+    @abstractmethod
+    def get_value(self, data: bytearray) -> Any:
+        pass
+
+    @property
+    def friendly_name(self) -> str:
+        return to_friendly_name(self.name)
+
+
+class DebugControl(Control):
+    def __init__(self, key: str, read_index: int):
+        self.key = key
+        self.read_index = read_index
+
+    def get_value(self, data: bytearray) -> Any:
+        return data[self.read_index]
+
+
+_Options = TypeVar("_Options", bound=Mapping[int, str])
+
+
+class EnumControl(Control, Generic[_Options]):
+    """Control class for enum sensors"""
+
+    def __init__(self, key: str, read_index: int, options: _Options):
+        self.key = key
+        self.read_index = read_index
+        self.options = options
+
+    def get_value(self, data: bytearray) -> str | None:
+        byte = safe_get(data, self.read_index)
+        if byte in self.options:
+            return self.options[byte]
+        return None
+
+
+class WriteEnumControl(EnumControl[bidict[int, str]]):
+    """Control class for enum selectors"""
+
+    def __init__(
+        self, key: str, read_index: int, write_index: int, options: bidict[int, str]
+    ):
+        super().__init__(key, read_index, options)
+        self.write_index = write_index
+
+    def set_value(self, value: str) -> Command:
+        byte = self.options.inverse[value]
+        return Command(self.write_index, byte)
+
+
+class NumericControl(Control):
+    def __init__(
+        self, key: str, read_index: int, bounds: ApplianceFeatureBoundedOption
+    ):
+        self.key = key
+        self.read_index = read_index
+        self.bounds = bounds
+
+    def get_value(self, data: bytearray) -> float | None:
+        byte = safe_get(data, self.read_index)
+        return byte * self.bounds.factor
+
+
+class WriteNumericControl(NumericControl):
+    def __init__(
+        self,
+        key: str,
+        read_index: int,
+        write_index: int,
+        bounds: ApplianceFeatureBoundedOption,
+    ):
+        super().__init__(key, read_index, bounds)
+        self.write_index = write_index
+
+    def set_value(self, value: float) -> Command:
+        return Command(index=self.write_index, value=int(value / self.bounds.factor))
+
+
+class HobZoneHeaterLevelControl(WriteNumericControl):
+    """Hob zone heater level control that auto-switches to MANUAL mode."""
+
+    def __init__(
+        self,
+        key: str,
+        read_index: int,
+        write_index: int,
+        bounds: ApplianceFeatureBoundedOption,
+        program_write_index: int,
+        manual_mode_value: int,
+    ):
+        super().__init__(key, read_index, write_index, bounds)
+        self.program_write_index = program_write_index
+        self.manual_mode_value = manual_mode_value
+
+    def set_value_multi(self, value: float) -> list[Command]:
+        """Set heater level with automatic mode switch to MANUAL."""
+        return [
+            Command(index=self.program_write_index, value=self.manual_mode_value),
+            Command(index=self.write_index, value=int(value / self.bounds.factor)),
+        ]
+
+
+class HobZonePredefinedProgramControl(WriteEnumControl):
+    """Hob zone predefined program control that auto-switches to PREDEFINED mode."""
+
+    def __init__(
+        self,
+        key: str,
+        read_index: int,
+        write_index: int,
+        options: bidict[int, str],
+        program_write_index: int,
+        predefined_mode_value: int,
+    ):
+        super().__init__(key, read_index, write_index, options)
+        self.program_write_index = program_write_index
+        self.predefined_mode_value = predefined_mode_value
+
+    def set_value_multi(self, value: str) -> list[Command]:
+        """Set predefined program with automatic mode switch to PREDEFINED."""
+        byte = self.options.inverse[value]
+        return [
+            Command(index=self.program_write_index, value=self.predefined_mode_value),
+            Command(index=self.write_index, value=byte),
+        ]
+
+
+class TimeControl(Control):
+    def __init__(self, key: str, hour_index: int, minute_index: int | None):
+        self.key = key
+        self.hour_index = hour_index
+        self.minute_index = minute_index
+
+    def get_value(self, data: bytearray) -> int:
+        hours = safe_get(data, self.hour_index)
+        minutes = (
+            safe_get(data, self.minute_index) if self.minute_index is not None else 0
+        )
+        _LOGGER.debug(
+            "Getting time for %s from hour index %d and minute index %s",
+            self.key,
+            self.hour_index,
+            self.minute_index,
+        )
+        return hours * 60 + minutes
+
+
+class StateAwareRemainingTimeControl(Control):
+    """Wraps a remaining time control to return 0 when device is off."""
+
+    def __init__(
+        self, key: str, remaining_control: TimeControl, state_control: Control | None
+    ):
+        self.key = key
+        self.remaining_control = remaining_control
+        self.state_control = state_control
+
+    def get_value(self, data: bytearray) -> int:
+        _LOGGER.debug(
+            "Getting state aware remaining time for %s, state_control: %s, value %s",
+            self.key,
+            self.state_control,
+            data,
+        )
+        if self.state_control is not None:
+            state = self.state_control.get_value(data)
+            _LOGGER.debug(
+                "Current state for state aware remaining time %s: %s", self.key, state
+            )
+            if state == "device_state_off":
+                _LOGGER.debug(
+                    "Device is off, returning 0 for remaining time %s",
+                    self.key,
+                )
+                return 0
+        _LOGGER.debug(
+            "Device is not off, getting remaining time from underlying control %s",
+            self.key,
+        )
+        return self.remaining_control.get_value(data)
+
+
+class SummedTimestampControl(Control):
+    """Uses different sensors to calculate a timestamp"""
+
+    def __init__(self, key: str, sensors: list[Control]):
+        self.key = key
+        self.sensors = sensors
+
+    def get_value(self, data: bytearray) -> datetime | None:
+        _LOGGER.debug(
+            "Calculating Time for %s from %s",
+            self.key,
+            [sensor.key for sensor in self.sensors],
+        )
+        minute_delta = sum(sensor.get_value(data) for sensor in self.sensors)
+        if minute_delta < 1:
+            _LOGGER.debug("Device Running or No Delay Active")
+            return None
+
+        time_delta = timedelta(minutes=minute_delta)
+        _LOGGER.debug("Calculated time delta of %s", time_delta)
+        time_est = datetime.now(UTC).replace(second=0, microsecond=0) + time_delta
+        _LOGGER.debug("Calculated time of %s", time_est)
+        return time_est
+
+
+class BooleanControl(Control):
+    _last_known_value: bool | None = None
+
+    @abstractmethod
+    def get_value(self, data: bytearray) -> bool:
+        pass
+
+    def _get_cached_bool(self, current_bool: bool) -> bool:
+        self._last_known_value = current_bool
+        return current_bool
+
+    def _get_fallback_value(self) -> bool:
+        if self._last_known_value is not None:
+            _LOGGER.debug(
+                "Using cached value for boolean control %s",
+                getattr(self, "key", "unknown"),
+            )
+            return self._last_known_value
+        return False
+
+
+class BooleanCompareControl(BooleanControl):
+    def __init__(self, key: str, read_index: int, compare_value: int):
+        self.key = key
+        self.read_index = read_index
+        self.compare_value = compare_value
+
+    def get_value(self, data: bytearray) -> bool:
+        if self.read_index < len(data):
+            current_bool = data[self.read_index] == self.compare_value
+            return self._get_cached_bool(current_bool)
+        return self._get_fallback_value()
+
+
+class BooleanBitmaskControl(BooleanControl):
+    def __init__(self, key: str, read_index: int, bit: int):
+        self.key = key
+        self.read_index = read_index
+        self.bit = bit
+
+    def get_value(self, data: bytearray) -> bool:
+        if self.read_index < len(data):
+            current_bool = data[self.read_index] & (1 << self.bit) != 0
+            return self._get_cached_bool(current_bool)
+        return self._get_fallback_value()
+
+
+@dataclass
+class WriteBooleanControl(BooleanControl):
+    def __init__(
+        self, key: str, read_index: int, write_index: int, value_on: int, value_off: int
+    ):
+        self.key = key
+        self.read_index = read_index
+        self.write_index = write_index
+        self.value_on = value_on
+        self.value_off = value_off
+
+    def get_value(self, data: bytearray) -> bool:
+        if self.read_index < len(data):
+            byte = clamp(data[self.read_index])
+            current_bool = byte == self.value_on
+            return self._get_cached_bool(current_bool)
+        return self._get_fallback_value()
+
+    def set_value(self, value: bool) -> Command:
+        return Command(
+            index=self.write_index, value=self.value_on if value else self.value_off
+        )
+
+
+class DisabledSwingAxisControl(Control):
+    key = "disabled"
+    enabled = False
+
+    def get_value(self, data: bytearray) -> bool:
+        return False
+
+    def set_value(self, _value: bool, current_data: bytearray) -> list[Command]:
+        return []
+
+
+class SwingAxisControl(Control):
+    enabled = True
+
+    def __init__(self, parent: WriteEnumControl | WriteBooleanControl):
+        self.key = parent.key
+        self.parent = parent
+
+    def get_value(self, data: bytearray) -> bool:
+        option = self.parent.get_value(data)
+        _LOGGER.debug("Option - type: %s value: %s", type(option), option)
+        if isinstance(option, bool):
+            return option
+        return option is not None and not option.endswith("_off")
+
+    def _option_with_suffix(self, suffix: str) -> str | None:
+        if isinstance(self.parent, WriteBooleanControl):
+            return None
+        return next(
+            (
+                option
+                for option in self.parent.options.values()
+                if option.endswith(suffix)
+            ),
+            None,
+        )
+
+    def set_value(self, value: bool, current_data: bytearray) -> list[Command]:
+        current_value = self.get_value(current_data)
+        if current_value == value:
+            return []
+        if isinstance(self.parent, WriteBooleanControl):
+            return [self.parent.set_value(value)]
+        selected_option = (
+            self._option_with_suffix("_auto")
+            if value
+            else self._option_with_suffix("_off")
+        )
+        if selected_option is None:
+            raise ValueError(f"Cannot change swing for axis {self.key}")
+        return [self.parent.set_value(selected_option)]
+
+
+def build_swing_control_from_optional(
+    parent: WriteEnumControl | WriteBooleanControl | None,
+) -> DisabledSwingAxisControl | SwingAxisControl:
+    if parent is None:
+        return DisabledSwingAxisControl()
+    return SwingAxisControl(parent)
+
+
+class SwingControl(Control):
+    key = "swing"
+
+    def __init__(
+        self,
+        horizontal: WriteEnumControl | None,
+        vertical: WriteEnumControl | WriteBooleanControl | None,
+    ):
+        self.horizontal = build_swing_control_from_optional(horizontal)
+        self.vertical = build_swing_control_from_optional(vertical)
+        self.enabled = self.horizontal.enabled or self.vertical.enabled
+
+    @property
+    def options(self) -> list[str]:
+        result: list[str] = [SWING_OFF]
+        if self.horizontal.enabled:
+            result.append(SWING_HORIZONTAL)
+        if self.vertical.enabled:
+            result.append(SWING_VERTICAL)
+        if self.horizontal.enabled and self.vertical.enabled:
+            result.append(SWING_BOTH)
+        return result
+
+    def get_value(self, data: bytearray) -> str | None:
+        horizontal = self.horizontal.get_value(data)
+        vertical = self.vertical.get_value(data)
+        if horizontal and vertical:
+            return SWING_BOTH
+        if horizontal:
+            return SWING_HORIZONTAL
+        if vertical:
+            return SWING_VERTICAL
+        return SWING_OFF
+
+    def set_value(self, value: str, current_data: bytearray) -> list[Command]:
+        commands: list[Command] = []
+        if value == SWING_OFF:
+            commands.extend(self.horizontal.set_value(False, current_data))
+            commands.extend(self.vertical.set_value(False, current_data))
+        elif value == SWING_HORIZONTAL:
+            commands.extend(self.horizontal.set_value(True, current_data))
+            commands.extend(self.vertical.set_value(False, current_data))
+        elif value == SWING_VERTICAL:
+            commands.extend(self.horizontal.set_value(False, current_data))
+            commands.extend(self.vertical.set_value(True, current_data))
+        elif value == SWING_BOTH:
+            commands.extend(self.horizontal.set_value(True, current_data))
+            commands.extend(self.vertical.set_value(True, current_data))
+        return commands
+
+
+program_suffix_to_hvac_mode = {
+    "cooling": HVACMode.COOL,
+    "auto": HVACMode.AUTO,
+    "dry": HVACMode.DRY,
+    "dehumidification": HVACMode.DRY,
+    "heating": HVACMode.HEAT,
+    "fan": HVACMode.FAN_ONLY,
+}
+
+
+class HvacControl(Control):
+    key = "hvac"
+
+    def __init__(self, program: WriteEnumControl, state: WriteBooleanControl):
+        self.program = program
+        self.state = state
+        self._program_dict = bidict(
+            {
+                option: program_suffix_to_hvac_mode[option.split("_")[-1]]
+                for option in program.options.values()
+            }
+        )
+
+    def _hvac_mode_raw(self, data: bytearray) -> HVACMode | None:
+        option = self.program.get_value(data)
+        if option is None:
+            return None
+        return self._program_dict[option]
+
+    def get_value(self, data: bytearray) -> HVACMode | None:
+        if not self.state.get_value(data):
+            return HVACMode.OFF
+        return self._hvac_mode_raw(data)
+
+    def set_value(self, hvac_mode: HVACMode, current_data: bytearray) -> list[Command]:
+        if hvac_mode == HVACMode.OFF:
+            return [self.state.set_value(False)]
+        result: list[Command] = []
+        if not self.state.get_value(current_data):
+            result.append(self.state.set_value(True))
+        if self._hvac_mode_raw(current_data) != hvac_mode:
+            program_key = self._program_dict.inverse.get(hvac_mode)
+            if program_key is None:
+                raise ValueError(f"Unrecognized fan mode {hvac_mode}")
+            result.append(self.program.set_value(program_key))
+        return result
+
+    @property
+    def options(self) -> list[HVACMode]:
+        return [
+            self._program_dict[program] for program in self.program.options.values()
+        ] + [HVACMode.OFF]
+
+
+class PresetControl(Control):
+    key = "preset"
+
+    def __init__(self, jet_mode: WriteBooleanControl | None):
+        self.jet_mode = jet_mode
+        self.enabled = jet_mode is not None
+
+    @property
+    def options(self) -> list[str]:
+        if not self.enabled:
+            return [PRESET_NONE]
+        return [PRESET_NONE, PRESET_BOOST]
+
+    def get_value(self, data: bytearray) -> str | None:
+        if self.enabled:
+            assert self.jet_mode is not None
+            if self.jet_mode.get_value(data):
+                return PRESET_BOOST
+        return PRESET_NONE
+
+    def set_value(self, value: str) -> list[Command]:
+        if not self.enabled:
+            return []
+        assert self.jet_mode is not None
+        if value == PRESET_BOOST:
+            return [self.jet_mode.set_value(True)]
+        if value == PRESET_NONE:
+            return [self.jet_mode.set_value(False)]
+        return []
+
+
+class ClimateControl(Control):
+    key = "ac"
+
+    def __init__(
+        self,
+        hvac_mode: HvacControl,
+        target_temperature: WriteNumericControl,
+        current_temperature: NumericControl,
+        fan_mode: WriteEnumControl,
+        swing: SwingControl,
+        preset_mode: PresetControl,
+    ):
+        self.hvac_mode = hvac_mode
+        self.target_temperature = target_temperature
+        self.current_temperature = current_temperature
+        self.fan_mode = fan_mode
+        self.swing = swing
+        self.preset_mode = preset_mode
+        self._controls = [
+            hvac_mode,
+            target_temperature,
+            current_temperature,
+            fan_mode,
+            swing,
+            preset_mode,
+        ]
+
+    def get_value(self, data: bytearray) -> dict[str, Any]:
+        return {c.key: c.get_value(data) for c in self._controls}
+
+
+def get_bounded_values_options(
+    key: str, values: ApplianceFeatureBoundedOption
+) -> bidict[int, str]:
+    result: bidict[int, str] = bidict()
+    value = float(values.lowerLimit)
+    while value <= values.upperLimit:
+        wifiValue = int(value / values.factor)
+        unit = unit_for_key(key)
+        value_str = f"{value:g}"
+        name = f"{value_str}{unit}" if unit is not None else value_str
+        result[wifiValue] = to_friendly_name(name)
+        value += values.step
+    return result
+
+
+def get_options_from_feature(key: str, feature: ApplianceFeature) -> bidict[int, str]:
+    options: bidict[int, str] = bidict()
+    if feature.enumValues is not None:
+        for option in feature.enumValues:
+            friendly_name = to_friendly_name(option.strKey)
+            if friendly_name in options.inverse:
+                friendly_name = f"{friendly_name}_{option.wifiArrayValue}"
+            options[option.wifiArrayValue] = friendly_name
+    if feature.boundedValues is not None:
+        for boundedValues in feature.boundedValues:
+            options = (
+                get_bounded_values_options(to_friendly_name(key), boundedValues)
+                | options
+            )
+    return bidict(sorted(options.items()))
+
+
+def get_options_from_enum_options(
+    options: Sequence[ApplianceFeatureEnumOption],
+) -> dict[int, str]:
+    return {
+        option.wifiArrayValue: to_friendly_name(option.strKey) for option in options
+    }
+
+
+def build_read_control_from_feature(feature: ApplianceFeature) -> Control | None:
+    key = feature.strKey
+    if key is None:
+        return None
+    key = to_friendly_name(key)
+    if (
+        feature.enumValues is None
+        and feature.boundedValues is not None
+        and len(feature.boundedValues) == 1
+    ):
+        return NumericControl(
+            key=key,
+            read_index=feature.wifiArrayIndex,
+            bounds=feature.boundedValues[0],
+        )
+    return EnumControl(
+        key=key,
+        read_index=feature.wifiArrayIndex,
+        options=get_options_from_feature(key, feature),
+    )
+
+
+def build_write_control_from_feature(feature: ApplianceFeature) -> Control | None:
+    write_index = (
+        feature.wfaWriteIndex
+        if feature.wfaWriteIndex is not None
+        else feature.wifiArrayIndex
+    )
+    key = feature.strKey
+    if key is None:
+        return None
+    key = to_friendly_name(key)
+    if (
+        feature.enumValues is None
+        and feature.boundedValues is not None
+        and len(feature.boundedValues) == 1
+    ):
+        return WriteNumericControl(
+            key=key,
+            read_index=feature.wifiArrayIndex,
+            write_index=write_index,
+            bounds=feature.boundedValues[0],
+        )
+    return WriteEnumControl(
+        key=key,
+        read_index=feature.wifiArrayIndex,
+        write_index=write_index,
+        options=get_options_from_feature(key, feature),
+    )
+
+
+def build_control_from_program(program: ApplianceProgram | None) -> Control | None:
+    """Return a control for program or None if program is missing."""
+    if program is None:
+        return None
+    return WriteEnumControl(
+        key=to_friendly_name(program.strKey),
+        read_index=program.wifiArrayIndex,
+        write_index=(
+            program.wfaWriteIndex
+            if program.wfaWriteIndex is not None
+            else program.wifiArrayIndex
+        ),
+        options=bidict(get_options_from_enum_options(program.values)),
+    )
+
+
+def build_control_from_substate(
+    sub_states: ApplianceSubState | None,
+) -> Control | None:
+    if sub_states is None:
+        return None
+    return EnumControl(
+        key="sub_state",
+        read_index=sub_states.wifiArrayReadIndex,
+        options=get_options_from_enum_options(sub_states.subStates),
+    )
+
+
+def build_controls_from_monitorings(
+    monitorings: list[ApplianceFeature] | None,
+) -> Iterable[Control | None]:
+    if monitorings is None:
+        return []
+    return map(build_read_control_from_feature, monitorings)
+
+
+def build_control_from_state(state: ApplianceState | None) -> Control | None:
+    if state is None:
+        return None
+    read_index = state.wifiArrayReadIndex
+    write_index = (
+        state.wifiArrayWriteIndex
+        if state.wifiArrayWriteIndex is not None
+        else state.wfaIndex
+    )
+    if read_index is None or write_index is None:
+        return None
+    return WriteEnumControl(
+        key="state",
+        read_index=read_index,
+        write_index=write_index,
+        options=bidict(get_options_from_enum_options(state.states)),
+    )
+
+
+def build_controls_from_progress_variables(  # noqa: C901
+    progress_variables: ApplianceProgress | None,
+    state_control: Control | None = None,
+) -> list[Control]:
+    if progress_variables is None:
+        return []
+
+    results: list[Control] = []
+    delay_keys: dict[str, tuple[str, int]] = {}
+
+    for field in fields(progress_variables):
+        feature: ApplianceProgressFeature | None = getattr(
+            progress_variables, field.name
+        )
+        if feature is not None:
+            feature_key = to_friendly_name(feature.strKey)
+            if feature.isCalculatedToStart is not None and feature_key in [
+                "washer_delay"
+            ]:
+                calculation_key = feature_key
+                feature_key = "delay_start#" + str(len(delay_keys))
+                delay_keys.update(
+                    {calculation_key: (feature_key, feature.isCalculatedToStart)}
+                )
+            results.append(
+                TimeControl(
+                    key=feature_key,
+                    hour_index=feature.hour.wifiArrayIndex,
+                    minute_index=feature.minute.wifiArrayIndex
+                    if feature.minute is not None
+                    else None,
+                )
+            )
+
+    if state_control is not None:
+        for i, control in enumerate(results):
+            if control.key == "washer_remaining" and isinstance(control, TimeControl):
+                _LOGGER.debug(
+                    "Wrapping control %s of type %s with state aware control - %s",
+                    control.key,
+                    type(control),
+                    i,
+                )
+                results[i] = StateAwareRemainingTimeControl(
+                    key=control.key,
+                    remaining_control=control,
+                    state_control=state_control,
+                )
+
+    for calculation_key, feature_key_tuple in delay_keys.items():
+        feature_key = feature_key_tuple[0]
+
+        remaining_key: str = "_".join([*calculation_key.split("_")[:-1], "remaining"])
+        _LOGGER.debug(
+            "Detected time based calculated feature %s "
+            "end time calculations will based on %s",
+            calculation_key,
+            remaining_key,
+        )
+
+        if feature_key_tuple[1] == 1:
+            end_time_key = feature_key.replace("delay_start", "delay_end_time", 1)
+            start_time_key = calculation_key
+        else:
+            end_time_key = calculation_key
+            start_time_key = feature_key.replace("delay_start", "delay_start_time", 1)
+
+        timestamp_sensors = {
+            end_time_key: [
+                control
+                for control in results
+                if control.key in [feature_key, remaining_key]
+            ],
+            start_time_key: [
+                control for control in results if control.key in [feature_key]
+            ],
+        }
+
+        if len(timestamp_sensors[end_time_key]) <= 1:
+            del timestamp_sensors[end_time_key]
+        if len(timestamp_sensors[start_time_key]) == 0:
+            del timestamp_sensors[start_time_key]
+
+        _LOGGER.debug("Adding sensor info %s:", timestamp_sensors.keys())
+
+        results.extend(
+            [
+                SummedTimestampControl(key=name, sensors=sensors)
+                for name, sensors in timestamp_sensors.items()
+            ]
+        )
+    return results
+
+
+def build_control_from_remote_control(
+    remote_control: ApplianceRemoteControl | None,
+) -> Control | None:
+    if remote_control is None:
+        return None
+    return BooleanCompareControl(
+        key="remote_control",
+        read_index=remote_control.wifiArrayReadIndex,
+        compare_value=remote_control.wifiArrayValue,
+    )
+
+
+def build_controls_from_warnings(warnings: ApplianceWarning | None) -> list[Control]:
+    if warnings is None:
+        return []
+
+    return [
+        BooleanBitmaskControl(
+            key=to_friendly_name(warn.strKey),
+            read_index=warnings.wifiArrayReadIndex,
+            bit=warn.bitIndex,
+        )
+        for warn in warnings.warnings
+    ]
+
+
+def build_controls_from_features(
+    settings: list[ApplianceFeature] | None,
+) -> list[Control]:
+    if settings is None:
+        return []
+    return [
+        c
+        for c in (build_write_control_from_feature(s) for s in settings)
+        if c is not None
+    ]
+
+
+def build_controls_from_hob_zones(  # noqa: C901
+    zones: Any,  # ApplianceHobZones | None
+) -> list[Control]:
+    """Generate controls for all hob zones based on zone configuration."""
+    if zones is None:
+        return []
+
+    zone_controls: list[Control] = []
+    default_zone = zones.defaultZone
+    num_zones = zones.numberOfZones
+    segment_length = zones.eachZoneWifiArraySegmentLength
+
+    # Find mode values from program options
+    manual_mode_value = 1  # Default fallback
+    predefined_mode_value = 2  # Default fallback
+    if default_zone.program is not None:
+        for prog_option in default_zone.program.values:
+            if prog_option.strKey == "HOB_PROGRAM_MANUAL":
+                manual_mode_value = prog_option.wifiArrayValue
+            elif prog_option.strKey == "HOB_PROGRAM_PREDEFINED":
+                predefined_mode_value = prog_option.wifiArrayValue
+
+    # Generate controls for each zone
+    for zone_idx in range(num_zones):
+        # Calculate zone offset: wifiArrayIndex values in defaultZone are already absolute for Zone 1
+        zone_offset = zone_idx * segment_length
+        zone_prefix = f"zone_{zone_idx + 1}"
+
+        # Zone program (manual/predefined)
+        program_write_idx = None
+        if default_zone.program is not None:
+            program_read_idx = default_zone.program.wifiArrayIndex + zone_offset
+            program_write_idx = (
+                default_zone.program.wfaWriteIndex + zone_offset
+                if default_zone.program.wfaWriteIndex is not None
+                else program_read_idx
+            )
+            zone_controls.append(
+                WriteEnumControl(
+                    key=f"{zone_prefix}_program",
+                    read_index=program_read_idx,
+                    write_index=program_write_idx,
+                    options=bidict(
+                        get_options_from_enum_options(default_zone.program.values)
+                    ),
+                )
+            )
+
+        # Zone sub-programs with mode-aware controls
+        for sub_program in default_zone.subPrograms:
+            if sub_program.strKey is None:
+                continue
+            sub_key = to_friendly_name(sub_program.strKey)
+            read_idx = sub_program.wifiArrayIndex + zone_offset
+
+            write_idx = (
+                sub_program.wfaWriteIndex + zone_offset
+                if sub_program.wfaWriteIndex is not None
+                else read_idx
+            )
+
+            if sub_program.boundedValues and len(sub_program.boundedValues) == 1:
+                # Heater level control with auto mode-switch to MANUAL
+                if program_write_idx is not None:
+                    zone_controls.append(
+                        HobZoneHeaterLevelControl(
+                            key=f"{zone_prefix}_{sub_key}",
+                            read_index=read_idx,
+                            write_index=write_idx,
+                            bounds=sub_program.boundedValues[0],
+                            program_write_index=program_write_idx,
+                            manual_mode_value=manual_mode_value,
+                        )
+                    )
+                else:
+                    # Fallback to regular control if program index not available
+                    zone_controls.append(
+                        WriteNumericControl(
+                            key=f"{zone_prefix}_{sub_key}",
+                            read_index=read_idx,
+                            write_index=write_idx,
+                            bounds=sub_program.boundedValues[0],
+                        )
+                    )
+            elif sub_program.enumValues:
+                # Check if this is the predefined program control
+                if (
+                    sub_program.strKey == "HOB_PREDEFINED_PROGRAM"
+                    and program_write_idx is not None
+                ):
+                    # Predefined program control with auto mode-switch to PREDEFINED
+                    zone_controls.append(
+                        HobZonePredefinedProgramControl(
+                            key=f"{zone_prefix}_{sub_key}",
+                            read_index=read_idx,
+                            write_index=write_idx,
+                            options=bidict(
+                                get_options_from_enum_options(sub_program.enumValues)
+                            ),
+                            program_write_index=program_write_idx,
+                            predefined_mode_value=predefined_mode_value,
+                        )
+                    )
+                else:
+                    # Regular enum control (e.g., flexi)
+                    zone_controls.append(
+                        WriteEnumControl(
+                            key=f"{zone_prefix}_{sub_key}",
+                            read_index=read_idx,
+                            write_index=write_idx,
+                            options=bidict(
+                                get_options_from_enum_options(sub_program.enumValues)
+                            ),
+                        )
+                    )
+
+        # Zone monitorings (zone extension status)
+        for monitoring in default_zone.monitorings:
+            if monitoring.strKey is None:
+                continue
+            mon_key = to_friendly_name(monitoring.strKey)
+            read_idx = monitoring.wifiArrayIndex + zone_offset
+
+            if monitoring.enumValues:
+                zone_controls.append(
+                    EnumControl(
+                        key=f"{zone_prefix}_{mon_key}",
+                        read_index=read_idx,
+                        options=get_options_from_enum_options(monitoring.enumValues),
+                    )
+                )
+
+        # Zone cooking state
+        if default_zone.cookingStates is not None:
+            cook_read_idx = default_zone.cookingStates.wifiArrayReadIndex
+            if cook_read_idx is not None:
+                cook_read_idx += zone_offset
+                zone_controls.append(
+                    EnumControl(
+                        key=f"{zone_prefix}_cooking_state",
+                        read_index=cook_read_idx,
+                        options=get_options_from_enum_options(
+                            default_zone.cookingStates.states
+                        ),
+                    )
+                )
+
+        # Zone duration timer
+        if (
+            default_zone.progressVariables is not None
+            and default_zone.progressVariables.duration is not None
+        ):
+            duration = default_zone.progressVariables.duration
+            hour_idx = duration.hour.wifiArrayIndex + zone_offset
+            minute_idx = duration.minute.wifiArrayIndex + zone_offset
+            zone_controls.append(
+                TimeControl(
+                    key=f"{zone_prefix}_duration",
+                    hour_index=hour_idx,
+                    minute_index=minute_idx,
+                )
+            )
+
+        # Zone remaining/elapsed timer (if visible)
+        if (
+            default_zone.progressVariables is not None
+            and default_zone.progressVariables.remainingOrElapsed is not None
+            and default_zone.progressVariables.remainingOrElapsed.isVisible == 1
+        ):
+            remaining = default_zone.progressVariables.remainingOrElapsed
+            hour_idx = remaining.hour.wifiArrayIndex + zone_offset
+            minute_idx = remaining.minute.wifiArrayIndex + zone_offset
+            zone_controls.append(
+                TimeControl(
+                    key=f"{zone_prefix}_remaining_or_elapsed",
+                    hour_index=hour_idx,
+                    minute_index=minute_idx,
+                )
+            )
+
+        # Zone warnings (hot, pan info)
+        if default_zone.deviceWarnings is not None:
+            warn_read_idx = default_zone.deviceWarnings.wifiArrayReadIndex + zone_offset
+            for warn in default_zone.deviceWarnings.warnings:
+                warn_key = to_friendly_name(warn.strKey)
+                zone_controls.append(
+                    BooleanBitmaskControl(
+                        key=f"{zone_prefix}_{warn_key}",
+                        read_index=warn_read_idx,
+                        bit=warn.bitIndex,
+                    )
+                )
+
+    return zone_controls
+
+
+def convert_to_bool_control_if_possible(control: Control) -> Control:
+    if not isinstance(control, WriteEnumControl):
+        return control
+    options = control.options.inverse
+    option_keys = sorted(options.keys())
+    if (
+        len(option_keys) == 2
+        and option_keys[0].endswith("_off")
+        and option_keys[1].endswith("_on")
+    ):
+        return WriteBooleanControl(
+            key=control.key,
+            read_index=control.read_index,
+            write_index=control.write_index,
+            value_off=options[option_keys[0]],
+            value_on=options[option_keys[1]],
+        )
+    return control
+
+
+def extract_ac_control(control_list: list[Control]) -> list[Control]:
+    controls_dict = {control.key: control for control in control_list}
+    keys = controls_dict.keys()
+    if "air_conditioner_program" in keys:
+        state = controls_dict["state"]
+        assert isinstance(state, WriteBooleanControl)
+        program = controls_dict["air_conditioner_program"]
+        assert isinstance(program, WriteEnumControl)
+        current_temperature = controls_dict["air_conditioner_room_temperature"]
+        assert isinstance(current_temperature, NumericControl)
+        target_temperature = controls_dict["air_conditioner_target_temperature"]
+        assert isinstance(target_temperature, WriteNumericControl)
+        fan_mode = controls_dict["air_conditioner_wind_strength"]
+        assert isinstance(fan_mode, WriteEnumControl)
+        vertical_swing_control = controls_dict.get(
+            "air_conditioner_up_down_vane_control"
+        )
+        assert vertical_swing_control is None or isinstance(
+            vertical_swing_control, (WriteEnumControl, WriteBooleanControl)
+        )
+        horizontal_swing_control = controls_dict.get(
+            "air_conditioner_left_right_vane_control"
+        )
+        assert horizontal_swing_control is None or isinstance(
+            horizontal_swing_control, WriteEnumControl
+        )
+        jet_mode_control = controls_dict.get("air_conditioner_jet_mode")
+        assert jet_mode_control is None or isinstance(
+            jet_mode_control, WriteBooleanControl
+        )
+
+        climate = ClimateControl(
+            hvac_mode=HvacControl(program, state),
+            current_temperature=current_temperature,
+            target_temperature=target_temperature,
+            fan_mode=fan_mode,
+            swing=SwingControl(horizontal_swing_control, vertical_swing_control),
+            preset_mode=PresetControl(jet_mode_control),
+        )
+        excluded_controls: list[Control] = [
+            program,
+            state,
+            current_temperature,
+            target_temperature,
+            fan_mode,
+        ]
+        if jet_mode_control is not None:
+            excluded_controls.append(jet_mode_control)
+        return [c for c in control_list if c not in excluded_controls] + [climate]
+    return control_list
+
+
+# Only generate controls once to allow basic inter-Control communication
+# Use entry id as key to avoid issues when multiple homewhiz devices are used
+controls: dict[str, list[Control]] = {}
+
+
+def generate_controls_from_config(
+    key: str,
+    config: ApplianceConfiguration,
+) -> list[Control]:
+    if key not in controls:
+        state_control = build_control_from_state(getattr(config, "deviceStates", None))
+
+        program_control = build_control_from_program(getattr(config, "program", None))
+
+        sub_program_controls = list(
+            build_controls_from_features(getattr(config, "subPrograms", None) or [])
+        )
+        custom_sub_program_controls = list(
+            build_controls_from_features(
+                getattr(config, "customSubPrograms", None) or []
+            )
+        )
+        monitorings_controls = list(
+            build_controls_from_monitorings(getattr(config, "monitorings", None) or [])
+        )
+
+        progress_controls = (
+            build_controls_from_progress_variables(
+                getattr(config, "progressVariables", None), state_control
+            )
+            if getattr(config, "progressVariables", None) is not None
+            else []
+        )
+
+        remote_control = build_control_from_remote_control(
+            getattr(config, "remoteControl", None)
+        )
+
+        warnings_controls: list[Control] = []
+        if getattr(config, "deviceWarnings", None) is not None:
+            warnings_controls.extend(
+                build_controls_from_warnings(config.deviceWarnings)
+            )
+        if getattr(config, "warnings", None) is not None:
+            warnings_controls.extend(build_controls_from_warnings(config.warnings))
+
+        settings_controls = list(
+            build_controls_from_features(getattr(config, "settings", None) or [])
+        )
+
+        # Hob zones support
+        hob_zones_controls = build_controls_from_hob_zones(
+            getattr(config, "zones", None)
+        )
+
+        possible_controls: list[Control | None] = [
+            state_control,
+            program_control,
+            build_control_from_substate(getattr(config, "deviceSubStates", None)),
+            *sub_program_controls,
+            *custom_sub_program_controls,
+            *monitorings_controls,
+            *progress_controls,
+            remote_control,
+            *warnings_controls,
+            *settings_controls,
+            *hob_zones_controls,
+        ]
+
+        tmp_controls = [
+            convert_to_bool_control_if_possible(control)
+            for control in possible_controls
+            if control is not None
+        ]
+
+        _LOGGER.debug(
+            "generate_controls_from_config: key=%s -> %d controls",
+            key,
+            len(tmp_controls),
+        )
+        controls[key] = extract_ac_control(tmp_controls)
+
+    return controls[key]

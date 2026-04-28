@@ -1,0 +1,825 @@
+{
+  "entity": {
+    "select": {
+      "state": {
+        "name": "Denumire atribuită",
+        "state": {
+          "device_state_on": "Pornit",
+          "device_state_off": "Oprit",
+          "device_state_running": "În derulare",
+          "device_state_paused": "În pauză",
+          "device_state_time_delay_active": "Temporizare activă",
+          "device_state_cancelling": "Se anulează",
+          "device_state_door_open": "Ușa este deschisă!",
+          "device_state_settings": "Setări"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Bumbac",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Sintetice",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Lână",
+          "program_delicates": "Program delicate",
+          "program_spin_pump": "Evacuare și centrifugare (stoarcere)",
+          "program_rinsing": "Clătire",
+          "program_darkwash": "Culori închise (jeans)",
+          "program_outdoor_sports_goretex": "Sport",
+          "program_stain": "Îngrijire pete",
+          "program_hygeine": "Igienă+",
+          "program_duvet": "Pilotă",
+          "program_shirts": "Cămăși",
+          "program_drum_clean": "Curățare tambur",
+          "program_mix": "Mixte (amestecate)",
+          "program_curtain": "Perdele",
+          "program_lingerie": "Lenjerie",
+          "program_soft_toys": "Jucării moi",
+          "program_towel": "Prosoape",
+          "program_cottons_eco": "Rufe din bumbac (eco)",
+          "program_dryer_cotton": "Uscare pentru bumbac",
+          "program_dryer_synthetics": "Uscare sintetice",
+          "program_hygiene_wash_dry": "Igienă+ Spălare și uscare",
+          "program_4kg_wash_dry": "4 kg Spălare și uscare",
+          "program_wash_wear": "Spălare și purtare",
+          "program_dark_wash": "Culori închise",
+          "program_outdoor": "Aer liber",
+          "program_drum_clean_plus": "Curățare tambur+",
+          "program_steam_refresh": "Împrospătare aburi"
+        }
+      },
+      "washer_temperature": {
+        "name": "Temperatură",
+        "state": {
+          "temperature_cold_wash": "Apă rece",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60 °C",
+          "90c": "90 °C"
+        }
+      },
+      "washer_spin": {
+        "name": "Rotire",
+        "state": {
+          "spin_no_spin": "Fără rotire",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Amânare clătire",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Fast+ oprit",
+          "fast_plus_on_fast": "Rapid",
+          "fast_plus_on_fast_plus": "Rapid+"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Nivel durată personalizată",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Număr de clătiri suplimentare"
+      },
+      "settings_volume": {
+        "name": "Buton volum",
+        "state": {
+          "volume_low": "Scăzut",
+          "volume_high": "Ridicat"
+        }
+      },
+      "remote_control": {
+        "name": "Control de la distanță"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "washer_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "washer_warning_security": {
+        "name": "Siguranță"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Static",
+          "program_static_fan": "Static + ventilator",
+          "program_fan_heating": "Încălzire ventilator",
+          "program_multi_cooking": "Gătire multiplă (3D)",
+          "program_fan_heat_bottom": "Căldură ventilator + de jos",
+          "program_eco_grill": "Grătar Eco",
+          "program_full_grill": "Grătar complet",
+          "program_full_grill_fan": "Grătar complet + ventilator",
+          "program_bottom_heating": "Încălzire de jos",
+          "program_defrost": "Dezghețare",
+          "program_warm_keeping": "Păstrare căldură",
+          "program_eco_fan_heating": "Încălzire ventilator Eco",
+          "program_steam_cleaning": "Curăţare cu aburi",
+          "program_eco_pyro": "Curățare Eco",
+          "program_pyro": "Curățare"
+        }
+      },
+      "oven_temperature": {
+        "name": "Temperatură"
+      },
+      "settings_brightness": {
+        "name": "Luminozitate"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "oven_warning_door_locked": {
+        "name": "Ușa este blocată"
+      },
+      "oven_warning_error": {
+        "name": "A apărut o eroare neașteptată în produs. Vă rugăm să verificați manualul de utilizare."
+      },
+      "program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_mix_wash_plus": "Spălare completă",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_glasscare": "Îngrijire sticlă",
+          "program_new58min": "QuickWash 58'",
+          "program_30min": "Mini 30'",
+          "program_prewash": "Prespălare",
+          "program_hygiene": "HygieneCare",
+          "program_daily": "PROGRAM_DAILY",
+          "program_silent": "SilentWash",
+          "program_makine_temizleme": "Curățare interioară"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Tip de detergent",
+        "state": {
+          "setting_detergent_type_powder": "Detergent pudră",
+          "setting_detergent_type_tablet": "Detergent tabletă",
+          "setting_detergent_type_liquid": "Detergent lichid"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Nivel ajutor la clătire"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Duritate apă"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Lipsește lichidul de clătire"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Lipsește sarea"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Verificați filtrul"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Apelare service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Nivel scăzut detergent lichid"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_aqua_flex": "PROGRAM_AQUA_FLEX",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_delicate": "Delicat",
+          "program_quick_and_shine": "PROGRAM_QUICK_AND_SHINE",
+          "program_mini": "PROGRAM_MINI",
+          "program_prewash": "Prespălare",
+          "program_quiet": "PROGRAM_QUIET",
+          "program_clean_and_shine": "PROGRAM_CLEAN_AND_SHINE",
+          "program_innerclean": "InnerClean"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Detergent lichid"
+      },
+      "washer_dry": {
+        "name": "Uscare",
+        "state": {
+          "dry_off": "Oprit",
+          "dry_extra": "Uscare suplimentară",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Uscare pentru călcare",
+          "dry_10": "10 min.",
+          "dry_20": "20 min.",
+          "dry_30": "30 min",
+          "dry_60": "60 min.",
+          "dry_90": "90 min",
+          "dry_120": "120 min.",
+          "dry_150": "150 min"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Contor clătire"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Aer slab",
+        "state": {
+          "air_conditioner_soft_air_off": "Oprit",
+          "air_conditioner_soft_air_up": "Sus",
+          "air_conditioner_soft_air_down": "Jos"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Flux de aer vertical",
+        "state": {
+          "up_down_vane_control_off": "Oprit",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Automat"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Flux de aer orizontal",
+        "state": {
+          "left_right_vane_control_off": "Oprit",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Stânga",
+          "left_right_vane_control_right": "Dreapta",
+          "left_right_vane_control_auto": "Automat"
+        }
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "Denumire atribuită",
+        "state": {
+          "device_state_on": "Pornit",
+          "device_state_off": "Oprit",
+          "device_state_running": "În derulare",
+          "device_state_paused": "În pauză",
+          "device_state_time_delay_active": "Temporizare activă",
+          "device_state_cancelling": "Se anulează",
+          "device_state_door_open": "Ușa este deschisă!",
+          "device_state_settings": "Setări"
+        }
+      },
+      "washer_program": {
+        "name": "Program",
+        "state": {
+          "program_cottons": "Bumbac",
+          "program_eco_40_60": "Eco 40-60",
+          "program_synthetics": "Sintetice",
+          "program_mini_mini14": "Xpress",
+          "program_wool_handwash": "Lână",
+          "program_delicates": "Program delicate",
+          "program_spin_pump": "Evacuare și centrifugare (stoarcere)",
+          "program_rinsing": "Clătire",
+          "program_darkwash": "Culori închise (jeans)",
+          "program_outdoor_sports_goretex": "Sport",
+          "program_stain": "Îngrijire pete",
+          "program_hygeine": "Igienă+",
+          "program_duvet": "Pilotă",
+          "program_shirts": "Cămăși",
+          "program_drum_clean": "Curățare tambur",
+          "program_mix": "Mixte (amestecate)",
+          "program_curtain": "Perdele",
+          "program_lingerie": "Lenjerie",
+          "program_soft_toys": "Jucării moi",
+          "program_towel": "Prosoape",
+          "program_cottons_eco": "Rufe din bumbac (eco)",
+          "program_dryer_cotton": "Uscare pentru bumbac",
+          "program_dryer_synthetics": "Uscare sintetice",
+          "program_hygiene_wash_dry": "Igienă+ Spălare și uscare",
+          "program_4kg_wash_dry": "4 kg Spălare și uscare",
+          "program_wash_wear": "Spălare și purtare",
+          "program_dark_wash": "Culori închise",
+          "program_outdoor": "Aer liber",
+          "program_drum_clean_plus": "Curățare tambur+",
+          "program_steam_refresh": "Împrospătare aburi"
+        }
+      },
+      "washer_temperature": {
+        "name": "Temperatură",
+        "state": {
+          "temperature_cold_wash": "Apă rece",
+          "temperature_20": "20 °C",
+          "temperature_30": "30 °C",
+          "temperature_40": "40 °C",
+          "60c": "60 °C",
+          "90c": "90 °C"
+        }
+      },
+      "washer_spin": {
+        "name": "Rotire",
+        "state": {
+          "spin_no_spin": "Fără rotire",
+          "600rpm": "600RPM",
+          "800rpm": "800RPM",
+          "1000rpm": "1000RPM",
+          "1200rpm": "1200RPM",
+          "spin_rinse_hold": "Amânare clătire",
+          "spin_600": "600",
+          "spin_800": "800",
+          "spin_1200": "1200",
+          "spin_1400": "1400",
+          "1400rpm": "1400RPM"
+        }
+      },
+      "washer_fast_plus": {
+        "name": "Fast+",
+        "state": {
+          "fast_plus_off": "Fast+ oprit",
+          "fast_plus_on_fast": "Rapid",
+          "fast_plus_on_fast_plus": "Rapid+"
+        }
+      },
+      "custom_duration_level": {
+        "name": "Nivel durată personalizată",
+        "state": {
+          "duration_level_0": "DURATION_LEVEL_0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8",
+          "9": "9",
+          "10": "10",
+          "11": "11"
+        }
+      },
+      "washer_extra_rinse_count": {
+        "name": "Număr de clătiri suplimentare"
+      },
+      "settings_volume": {
+        "name": "Buton volum",
+        "state": {
+          "volume_low": "Scăzut",
+          "volume_high": "Ridicat"
+        }
+      },
+      "sub_state": {
+        "name": "Substat",
+        "state": {
+          "washer_substate_washing": "Spălare",
+          "washer_substate_spin": "Rotire",
+          "washer_water_intake": "Admisie apă",
+          "washer_substate_prewash": "Prespălare",
+          "washer_substate_rinsing": "Clătire",
+          "washer_substate_softener": "Agent de înmuiere",
+          "washer_substate_program_started": "Pornire program",
+          "washer_substate_time_delay_enabled": "Timp de finalizare activat",
+          "washer_substate_paused": "Pauză",
+          "washer_substate_analysing": "Analizare",
+          "washer_substate_door_locked": "Ușa este blocată",
+          "washer_substate_opening_door": "Deschidere ușă",
+          "washer_substate_locking_door": "Blocare ușă",
+          "washer_substate_remove_laundry": "Ciclu de spălare complet; scoateți rufele",
+          "washer_substate_add_laundry": "Puteți adăuga rufe",
+          "washer_substate_rinse_hold": "Amânarea clătirii este activă; selectați viteza de rotație",
+          "washer_substate_remote_anticrease": "Programul anti-cute telecomandat este în desfășurare.",
+          "washer_substate_drying": "Uscare",
+          "oven_message_good_appetite": "Poftă bună",
+          "oven_message_cooking": "Gătire",
+          "oven_message_paused": "În pauză",
+          "oven_message_waiting": "În așteptare",
+          "oven_message_defrosting": "Dezghețare",
+          "operation_completed": "Operațiunea s-a încheiat",
+          "oven_message_preheating": "Preîncălzire",
+          "oven_message_preheating_completed": "Preîncălzire finalizată",
+          "oven_message_cleaning": "Curățare",
+          "oven_message_cleaning_completed": "Curățarea s-a încheiat",
+          "dishwasher_message_time_delay_started": "Timp de finalizare activat",
+          "dishwasher_message_paused": "Pauză program",
+          "dishwasher_message_program_finished": "Program complet",
+          "dishwasher_message_program_sanitized": "Program complet și dezinfectat",
+          "dishwasher_message_cancelling": "Se anulează...",
+          "dishwasher_message_time_delay_cancelled": "Temporizare anulată",
+          "dishwasher_message_program_started": "Program pornit",
+          "dishwasher_message_washing": "Spălare",
+          "dishwasher_message_rinsing": "Se clătește",
+          "dishwasher_message_drying": "Uscare"
+        }
+      },
+      "washer_delay": {
+        "name": "Timp de finalizare program"
+      },
+      "washer_duration": {
+        "name": "Durată"
+      },
+      "washer_remaining": {
+        "name": "Rămas"
+      },
+      "remote_control": {
+        "name": "Control de la distanță"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "washer_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "washer_warning_security": {
+        "name": "Siguranță"
+      },
+      "washer_prewash": {
+        "name": "Prespălare"
+      },
+      "washer_extrarinse": {
+        "name": "Clătire suplimentară"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Program anti-cute telecomandat"
+      },
+      "washer_steam": {
+        "name": "Abur"
+      },
+      "washer_phr": {
+        "name": "Îndepărtare păr de animale"
+      },
+      "washer_add_water": {
+        "name": "Apă suplimentară"
+      },
+      "washer_soaking": {
+        "name": "Înmuiere"
+      },
+      "washer_night": {
+        "name": "Modul noapte"
+      },
+      "washer_anticrease": {
+        "name": "AntiCrease"
+      },
+      "oven_program": {
+        "name": "Program",
+        "state": {
+          "program_static": "Static",
+          "program_static_fan": "Static + ventilator",
+          "program_fan_heating": "Încălzire ventilator",
+          "program_multi_cooking": "Gătire multiplă (3D)",
+          "program_fan_heat_bottom": "Căldură ventilator + de jos",
+          "program_eco_grill": "Grătar Eco",
+          "program_full_grill": "Grătar complet",
+          "program_full_grill_fan": "Grătar complet + ventilator",
+          "program_bottom_heating": "Încălzire de jos",
+          "program_defrost": "Dezghețare",
+          "program_warm_keeping": "Păstrare căldură",
+          "program_eco_fan_heating": "Încălzire ventilator Eco",
+          "program_steam_cleaning": "Curăţare cu aburi",
+          "program_eco_pyro": "Curățare Eco",
+          "program_pyro": "Curățare"
+        }
+      },
+      "oven_temperature": {
+        "name": "Temperatură"
+      },
+      "settings_brightness": {
+        "name": "Luminozitate"
+      },
+      "variable_delay": {
+        "name": "Timp de finalizare program"
+      },
+      "variable_oven_duration": {
+        "name": "Durată gătire (oră: minute)"
+      },
+      "variable_remaining": {
+        "name": "Rămas"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "oven_warning_door_locked": {
+        "name": "Ușa este blocată"
+      },
+      "oven_warning_error": {
+        "name": "A apărut o eroare neașteptată în produs. Vă rugăm să verificați manualul de utilizare."
+      },
+      "oven_booster": {
+        "name": "Funcția de amplificare"
+      },
+      "oven_skip_preheating": {
+        "name": "Salt >"
+      },
+      "program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_mix_wash_plus": "Spălare completă",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_glasscare": "Îngrijire sticlă",
+          "program_new58min": "QuickWash 58'",
+          "program_30min": "Mini 30'",
+          "program_prewash": "Prespălare",
+          "program_hygiene": "HygieneCare",
+          "program_daily": "PROGRAM_DAILY",
+          "program_silent": "SilentWash",
+          "program_makine_temizleme": "Curățare interioară"
+        }
+      },
+      "setting_detergent_type": {
+        "name": "Tip de detergent",
+        "state": {
+          "setting_detergent_type_powder": "Detergent pudră",
+          "setting_detergent_type_tablet": "Detergent tabletă",
+          "setting_detergent_type_liquid": "Detergent lichid"
+        }
+      },
+      "dishwasher_rinse_aid_level": {
+        "name": "Nivel ajutor la clătire"
+      },
+      "dishwasher_water_hardness": {
+        "name": "Duritate apă"
+      },
+      "dishwasher_delay": {
+        "name": "Timp de întârziere pornire"
+      },
+      "dishwasher_duration": {
+        "name": "Durată"
+      },
+      "dishwasher_remaining": {
+        "name": "Timp rămas"
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Lipsește lichidul de clătire"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Lipsește sarea"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Verificați filtrul"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Apelare service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Nivel scăzut detergent lichid"
+      },
+      "dishwasher_traywash": {
+        "name": "Spălare tavă"
+      },
+      "dishwasher_fastplus": {
+        "name": "Mașină de spălat vase fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Steamgloss"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Clătire suplimentară"
+      },
+      "dishwasher_halfload": {
+        "name": "Încărcare pe jumătate"
+      },
+      "setting_auto_door": {
+        "name": "Doormatic"
+      },
+      "setting_inner_illumination": {
+        "name": "Iluminare interioară"
+      },
+      "dishwasher_program": {
+        "name": "Program",
+        "state": {
+          "program_auto": "Auto 40-65°C",
+          "program_aqua_flex": "PROGRAM_AQUA_FLEX",
+          "program_intensive_70": "Intensiv 70 °C",
+          "program_eco_50": "Eco 50 °C",
+          "program_delicate": "Delicat",
+          "program_quick_and_shine": "PROGRAM_QUICK_AND_SHINE",
+          "program_mini": "PROGRAM_MINI",
+          "program_prewash": "Prespălare",
+          "program_quiet": "PROGRAM_QUIET",
+          "program_clean_and_shine": "PROGRAM_CLEAN_AND_SHINE",
+          "program_innerclean": "InnerClean"
+        }
+      },
+      "dishwasher_liquid_detergent_level": {
+        "name": "Detergent lichid"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Igiena intensă A mașinii DE spălat vase"
+      },
+      "dishwasher_deepwash": {
+        "name": "Spălare profundă"
+      },
+      "washer_dry": {
+        "name": "Uscare",
+        "state": {
+          "dry_off": "Oprit",
+          "dry_extra": "Uscare suplimentară",
+          "dry_cabinet": "Wardrobe Dry",
+          "dry_iron": "Uscare pentru călcare",
+          "dry_10": "10 min.",
+          "dry_20": "20 min.",
+          "dry_30": "30 min",
+          "dry_60": "60 min.",
+          "dry_90": "90 min",
+          "dry_120": "120 min.",
+          "dry_150": "150 min"
+        }
+      },
+      "washer_rinse_count": {
+        "name": "Contor clătire"
+      },
+      "air_conditioner_soft_air": {
+        "name": "Aer slab",
+        "state": {
+          "air_conditioner_soft_air_off": "Oprit",
+          "air_conditioner_soft_air_up": "Sus",
+          "air_conditioner_soft_air_down": "Jos"
+        }
+      },
+      "air_conditioner_up_down_vane_control": {
+        "name": "Flux de aer vertical",
+        "state": {
+          "up_down_vane_control_off": "Oprit",
+          "up_down_vane_control_6": "6",
+          "up_down_vane_control_5": "5",
+          "up_down_vane_control_4": "4",
+          "up_down_vane_control_3": "3",
+          "up_down_vane_control_2": "2",
+          "up_down_vane_control_1": "1",
+          "up_down_vane_control_auto": "Automat"
+        }
+      },
+      "air_conditioner_left_right_vane_control": {
+        "name": "Flux de aer orizontal",
+        "state": {
+          "left_right_vane_control_off": "Oprit",
+          "left_right_vane_control_1": "1",
+          "left_right_vane_control_2": "2",
+          "left_right_vane_control_3": "3",
+          "left_right_vane_control_4": "4",
+          "left_right_vane_control_5": "5",
+          "left_right_vane_control_left": "Stânga",
+          "left_right_vane_control_right": "Dreapta",
+          "left_right_vane_control_auto": "Automat"
+        }
+      },
+      "air_conditioner_instant_consumption": {
+        "name": "Consum instantaneu de aer condiționat"
+      },
+      "air_conditioner_sleep_mode_minute": {
+        "name": "Modul de repaus al aparatului de aer condiționat minut"
+      },
+      "air_conditioner_auto_switch_off": {
+        "name": "Oprire automată"
+      },
+      "air_conditioner_auto_switch_on": {
+        "name": "Pornire automată"
+      }
+    },
+    "binary_sensor": {
+      "remote_control": {
+        "name": "Control de la distanță"
+      },
+      "washer_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "washer_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "washer_warning_security": {
+        "name": "Siguranță"
+      },
+      "oven_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "oven_warning_door_locked": {
+        "name": "Ușa este blocată"
+      },
+      "oven_warning_error": {
+        "name": "A apărut o eroare neașteptată în produs. Vă rugăm să verificați manualul de utilizare."
+      },
+      "dishwasher_warning_no_rinse_aid": {
+        "name": "Lipsește lichidul de clătire"
+      },
+      "dishwasher_warning_no_salt": {
+        "name": "Lipsește sarea"
+      },
+      "dishwasher_warning_no_water": {
+        "name": "Lipsește apa"
+      },
+      "dishwasher_warning_check_the_filter": {
+        "name": "Verificați filtrul"
+      },
+      "dishwasher_warning_door_is_open": {
+        "name": "Ușa este deschisă"
+      },
+      "dishwasher_warning_call_service": {
+        "name": "Apelare service"
+      },
+      "dishwasher_liquid_detergent_low": {
+        "name": "Nivel scăzut detergent lichid"
+      }
+    },
+    "climate": {
+      "ac": {
+        "name": "Ac"
+      }
+    },
+    "switch": {
+      "washer_prewash": {
+        "name": "Prespălare"
+      },
+      "washer_extrarinse": {
+        "name": "Clătire suplimentară"
+      },
+      "washer_hidden_anti_crease": {
+        "name": "Program anti-cute telecomandat"
+      },
+      "washer_steam": {
+        "name": "Abur"
+      },
+      "washer_phr": {
+        "name": "Îndepărtare păr de animale"
+      },
+      "washer_add_water": {
+        "name": "Apă suplimentară"
+      },
+      "washer_soaking": {
+        "name": "Înmuiere"
+      },
+      "washer_night": {
+        "name": "Modul noapte"
+      },
+      "washer_anticrease": {
+        "name": "AntiCrease"
+      },
+      "oven_booster": {
+        "name": "Funcția de amplificare"
+      },
+      "oven_skip_preheating": {
+        "name": "Salt >"
+      },
+      "dishwasher_traywash": {
+        "name": "Spălare tavă"
+      },
+      "dishwasher_fastplus": {
+        "name": "Mașină de spălat vase fastplus"
+      },
+      "dishwasher_steamgloss": {
+        "name": "Steamgloss"
+      },
+      "dishwasher_extrarinse": {
+        "name": "Clătire suplimentară"
+      },
+      "dishwasher_halfload": {
+        "name": "Încărcare pe jumătate"
+      },
+      "setting_auto_door": {
+        "name": "Doormatic"
+      },
+      "setting_inner_illumination": {
+        "name": "Iluminare interioară"
+      },
+      "dishwasher_hygiene_intense": {
+        "name": "Igiena intensă A mașinii DE spălat vase"
+      },
+      "dishwasher_deepwash": {
+        "name": "Spălare profundă"
+      }
+    }
+  }
+}

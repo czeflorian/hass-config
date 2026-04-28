@@ -1,0 +1,39 @@
+# Secrets
+secrets.yaml
+
+# Home Assistant internal state (auto-generated)
+.storage/
+blueprints/
+
+# Backups
+backups/
+*.tar
+
+# Databases
+home-assistant_v2.db*
+zigbee.db*
+*.db-shm
+*.db-wal
+
+# Logs
+home-assistant.log*
+*.log
+
+# Cloud / caches
+cloud/
+tts/
+www/community/
+
+# Temporary / system files
+*.tmp
+*.bak
+*.old
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Add-on runtime data
+addons_config/*/data/

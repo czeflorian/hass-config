@@ -347,24 +347,14 @@ Misty Forest:
       # contrast issues in menus/dropdowns where icons sit on light surfaces.
       # The MD3 surface variables below cover dropdown/menu item rendering.
 
-      # ── Web Awesome (wa-color-*) — newest UI (automation editor, dialogs) ──
-      # Plain text buttons (Cancel, OK in dialogs) read text color from
-      # brand-on-quiet / brand-text-* slots. Reference primary-color so the
-      # cascade is preserved.
-      wa-color-brand-fill-loud: "var(--primary-color)"
-      wa-color-brand-fill-normal: "var(--primary-color)"
-      wa-color-brand-fill-quiet: *dew_l
-      wa-color-brand-on-loud: "#ffffff"
-      wa-color-brand-on-normal: "#ffffff"
-      wa-color-brand-on-quiet: "var(--primary-color)"
-      wa-color-brand-text-loud: "var(--primary-color)"
-      wa-color-brand-text-normal: "var(--primary-color)"
-      wa-color-brand-text-quiet: "var(--primary-color)"
-      wa-color-brand-border-loud: "var(--primary-color)"
+      # ── Web Awesome (wa-color-*) — newest UI ──
+      # Minimal set. Setting too many wa-color-brand-* variables broke
+      # the Cancel button text rendering (became white on cream). HA's
+      # defaults handle plain text buttons better than my overrides did.
+      wa-color-brand-fill-loud: *fern_l
       wa-color-neutral-fill-normal: *mc_l
       wa-color-neutral-on-normal: *canopy_l
       wa-color-danger-fill-loud: *err_l
-      wa-color-danger-on-loud: "#ffffff"
 
     # ═══════════════════════════════════════════════════
     #                 DARK MODE
@@ -628,17 +618,7 @@ Misty Forest:
       # icon-primary-color left to cascade — see light mode comment.
 
       # ── Web Awesome ──
-      wa-color-brand-fill-loud: "var(--primary-color)"
-      wa-color-brand-fill-normal: "var(--primary-color)"
-      wa-color-brand-fill-quiet: *dew_d
-      wa-color-brand-on-loud: *mc_d
-      wa-color-brand-on-normal: *mc_d
-      wa-color-brand-on-quiet: "var(--primary-color)"
-      wa-color-brand-text-loud: "var(--primary-color)"
-      wa-color-brand-text-normal: "var(--primary-color)"
-      wa-color-brand-text-quiet: "var(--primary-color)"
-      wa-color-brand-border-loud: "var(--primary-color)"
+      wa-color-brand-fill-loud: *fern_d
       wa-color-neutral-fill-normal: *mc_d
       wa-color-neutral-on-normal: *canopy_d
       wa-color-danger-fill-loud: *err_d
-      wa-color-danger-on-loud: "#ffffff"

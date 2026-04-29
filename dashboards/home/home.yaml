@@ -19,6 +19,14 @@
 #          filename: dashboards/home/home.yaml
 # =============================================================================
 
+resources:
+  - url: /hacsfiles/mushroom/mushroom.js
+    type: module
+  - url: /hacsfiles/decluttering-card/decluttering-card.js
+    type: module
+  - url: /hacsfiles/lovelace-card-mod/card-mod.js
+    type: module
+
 decluttering_templates: !include decluttering_templates.yaml
 
 title: Home

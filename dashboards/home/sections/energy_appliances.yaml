@@ -26,15 +26,6 @@ cards:
     stat_types:
       - state
     days_to_show: 7
-    card_mod:
-      style: |
-        ha-card {
-          background: var(--card-background-color);
-          border-radius: 20px;
-          border: 1px solid var(--divider-color);
-          --graph-color-1: #d47a3a;
-        }
-        .card-header { color: var(--primary-text-color); }
 
   # ---- Washing machine ----
   - type: custom:decluttering-card

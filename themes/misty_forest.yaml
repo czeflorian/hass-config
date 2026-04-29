@@ -60,6 +60,7 @@ Misty Forest:
 
   modes:
 
+
     # ═══════════════════════════════════════════════════
     #                 LIGHT MODE
     # ═══════════════════════════════════════════════════
@@ -351,8 +352,14 @@ Misty Forest:
       # The plain Cancel button reads its text color from
       #   --wa-color-on-quiet ← --wa-color-brand-on-quiet
       # (confirmed via DevTools inspection of :host([variant=brand]) rules).
+      # But for plain (text-only) buttons, WA may also read from
+      # --wa-color-text-* and --wa-form-control-value-color. Setting all
+      # three families to ensure text is readable.
       wa-color-brand-fill-loud: *fern_l
       wa-color-brand-on-quiet: *fern_l
+      wa-color-text-normal: *canopy_l
+      wa-color-text-quiet: *fern_l
+      wa-form-control-value-color: *canopy_l
       wa-color-neutral-fill-normal: *mc_l
       wa-color-neutral-on-normal: *canopy_l
       wa-color-danger-fill-loud: *err_l
@@ -621,6 +628,9 @@ Misty Forest:
       # ── Web Awesome ──
       wa-color-brand-fill-loud: *fern_d
       wa-color-brand-on-quiet: *fern_d
+      wa-color-text-normal: *canopy_d
+      wa-color-text-quiet: *fern_d
+      wa-form-control-value-color: *canopy_d
       wa-color-neutral-fill-normal: *mc_d
       wa-color-neutral-on-normal: *canopy_d
       wa-color-danger-fill-loud: *err_d

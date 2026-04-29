@@ -151,9 +151,7 @@ Misty Forest:
       info-color: *fern_mid_l
 
       # ── Per-domain state colors (HA core) ──
-      # state-icon-color (inactive icons) is left at HA's default — it
-      # picks an appropriate neutral that adapts to context. Setting it
-      # explicitly causes contrast issues in menus and dropdowns.
+      state-icon-color: *fern_l
       state-icon-active-color: *ember_l
       state-icon-unavailable-color: *dis_l
       state-light-active-color: *ember_l
@@ -229,6 +227,11 @@ Misty Forest:
       mush-rgb-disabled: "189, 189, 189"
 
       # ── MDC (only what doesn't cascade from primary-color) ──
+      # mdc-theme-primary IS set explicitly here despite cascading from
+      # primary-color in most contexts — text buttons (Cancel, OK in
+      # dialogs) read their TEXT color from this variable, and HA's cascade
+      # isn't reliable for that particular context as of 2025.8+.
+      mdc-theme-primary: *fern_l
       mdc-theme-surface: *mc_l
       mdc-theme-on-surface: *canopy_l
       mdc-theme-background: *ff_l
@@ -248,9 +251,11 @@ Misty Forest:
       mdc-text-field-ink-color: *canopy_l
 
       # ── MD3 fallback ──
-      # Modern HA uses md-sys-color-* for MD3 components (dropdown items,
-      # newer dialogs, list items in command palette). Without these, those
-      # components default to Material Blue + white surfaces.
+      # Modern HA uses md-sys-color-* for MD3 components (newer dialogs,
+      # some list items). We deliberately DON'T set on-surface-variant —
+      # it's overloaded as both "secondary text" and "icon color on surfaces"
+      # depending on component, and any single value causes contrast issues
+      # somewhere.
       md-sys-color-primary: *fern_l
       md-sys-color-on-primary: "#ffffff"
       md-sys-color-surface: *mc_l
@@ -258,7 +263,6 @@ Misty Forest:
       md-sys-color-surface-container-high: *ff_l
       md-sys-color-surface-container-highest: *dew_l
       md-sys-color-on-surface: *canopy_l
-      md-sys-color-on-surface-variant: *bark_l
       md-sys-color-secondary: *ember_l
       md-sys-color-on-secondary: "#ffffff"
       md-sys-color-error: *err_l
@@ -343,11 +347,23 @@ Misty Forest:
       # contrast issues in menus/dropdowns where icons sit on light surfaces.
       # The MD3 surface variables below cover dropdown/menu item rendering.
 
-      # ── Web Awesome (wa-color-*) — newest UI (automation editor) ──
+      # ── Web Awesome (wa-color-*) — newest UI (automation editor, dialogs) ──
+      # variant="brand" appearance="plain" buttons (Cancel, OK in dialogs)
+      # read their TEXT color from the brand-on-quiet / text-quiet slots,
+      # not from the fill-loud slot. Need to set both families.
       wa-color-brand-fill-loud: *fern_l
+      wa-color-brand-fill-normal: *fern_l
+      wa-color-brand-fill-quiet: *dew_l
+      wa-color-brand-on-loud: "#ffffff"
+      wa-color-brand-on-normal: "#ffffff"
+      wa-color-brand-on-quiet: *fern_l
+      wa-color-brand-text-loud: *fern_l
+      wa-color-brand-text-quiet: *fern_l
+      wa-color-brand-border-loud: *fern_l
       wa-color-neutral-fill-normal: *mc_l
       wa-color-neutral-on-normal: *canopy_l
       wa-color-danger-fill-loud: *err_l
+      wa-color-danger-on-loud: "#ffffff"
 
     # ═══════════════════════════════════════════════════
     #                 DARK MODE
@@ -440,7 +456,7 @@ Misty Forest:
       info-color: *fern_mid_d
 
       # ── Per-domain state colors ──
-      # state-icon-color left at HA default to avoid menu contrast issues.
+      state-icon-color: *fern_d
       state-icon-active-color: *ember_d
       state-icon-unavailable-color: *dis_d
       state-light-active-color: *ember_d
@@ -516,6 +532,7 @@ Misty Forest:
       mush-rgb-disabled: "111, 111, 111"
 
       # ── MDC ──
+      mdc-theme-primary: *fern_d
       mdc-theme-surface: *mc_d
       mdc-theme-on-surface: *canopy_d
       mdc-theme-background: *ff_d
@@ -542,7 +559,6 @@ Misty Forest:
       md-sys-color-surface-container-high: *ff_d
       md-sys-color-surface-container-highest: *dew_d
       md-sys-color-on-surface: *canopy_d
-      md-sys-color-on-surface-variant: *bark_d
       md-sys-color-secondary: *ember_d
       md-sys-color-on-secondary: "#ffffff"
       md-sys-color-error: *err_d
@@ -612,6 +628,15 @@ Misty Forest:
 
       # ── Web Awesome ──
       wa-color-brand-fill-loud: *fern_d
+      wa-color-brand-fill-normal: *fern_d
+      wa-color-brand-fill-quiet: *dew_d
+      wa-color-brand-on-loud: *mc_d
+      wa-color-brand-on-normal: *mc_d
+      wa-color-brand-on-quiet: *fern_d
+      wa-color-brand-text-loud: *fern_d
+      wa-color-brand-text-quiet: *fern_d
+      wa-color-brand-border-loud: *fern_d
       wa-color-neutral-fill-normal: *mc_d
       wa-color-neutral-on-normal: *canopy_d
       wa-color-danger-fill-loud: *err_d
+      wa-color-danger-on-loud: "#ffffff"

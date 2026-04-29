@@ -1,0 +1,51 @@
+# ---- Movie Mode -------------------------------------------------------------
+# Behavior:
+#   - If sun is below horizon (dark out):
+#       Living room + kitchen lights + floor lamp dim to 15%, warm white.
+#   - If sun is above horizon (light out):
+#       Living room shades close, all kitchen + living room lights off.
+movie_mode:
+  alias: Movie Mode
+  description: >
+    Dim everything for evening viewing, or close shades and kill lights for
+    daytime viewing. Triggered by BILRESA button 2 or directly from the UI.
+  mode: single
+  icon: mdi:movie-open
+  sequence:
+    - choose:
+        # ---- Dark out: dim warm ----
+        - conditions:
+            - condition: state
+              entity_id: sun.sun
+              state: below_horizon
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id:
+                  - light.living_room_lights
+                  - light.kitchen_lights
+                  - light.floor_lamp
+              data:
+                brightness_pct: 15
+                kelvin: 2200
+                transition: 2
+
+        # ---- Light out: close shades, lights off ----
+        - conditions:
+            - condition: state
+              entity_id: sun.sun
+              state: above_horizon
+          sequence:
+            - action: cover.close_cover
+              target:
+                entity_id:
+                  - cover.living_room_left
+                  - cover.living_room_right
+            - action: light.turn_off
+              target:
+                entity_id:
+                  - light.living_room_lights
+                  - light.kitchen_lights
+                  - light.floor_lamp
+              data:
+                transition: 2

@@ -1,0 +1,76 @@
+# =============================================================================
+#  Section: Kitchen + Bedroom
+# =============================================================================
+
+type: grid
+column_span: 1
+cards:
+  # ---- Kitchen ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Kitchen
+
+  - type: custom:decluttering-card
+    template: light_tile
+    variables:
+      - entity: light.kitchen_lights
+      - name: Kitchen (Group)
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.kitchen_1
+          - name: Kitchen 1
+          - show_color_temp: false
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.kitchen_2
+          - name: Kitchen 2
+          - show_color_temp: false
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.kitchen_3
+          - name: Kitchen 3
+          - show_color_temp: false
+
+  - type: custom:decluttering-card
+    template: light_tile
+    variables:
+      - entity: light.dining_table_light
+      - name: Dining Table
+
+  # ---- Bedroom ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Bedroom
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.bedroom_lights
+          - name: Bedroom
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.ambient_light_bed
+          - name: Bed Ambience
+
+  - type: custom:decluttering-card
+    template: cover_tile
+    variables:
+      - entity: cover.bedroom
+      - name: Bedroom Shade
+
+  - type: custom:decluttering-card
+    template: air_quality_block
+    variables:
+      - prefix: alpstuga_bedroom
+      - prefix_clean: bedroom

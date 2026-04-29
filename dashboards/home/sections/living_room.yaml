@@ -1,0 +1,85 @@
+# =============================================================================
+#  Section: Living Room (lights, shades, air quality)
+# =============================================================================
+
+type: grid
+column_span: 1
+cards:
+  - type: custom:mushroom-title-card
+    title: Welcome home 🌿
+    subtitle: "{{ now().strftime('%A, %d %B %Y') }}"
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-person-card
+        entity: person.flo
+        name: Flo
+        show_state: true
+      - type: custom:mushroom-person-card
+        entity: person.hanni
+        name: Hanni
+        show_state: true
+
+  - type: weather-forecast
+    entity: weather.forecast_home
+    forecast_type: daily
+
+  # ---- Lights ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Living Room
+
+  - type: custom:decluttering-card
+    template: light_tile
+    variables:
+      - entity: light.living_room_lights
+      - name: Living Room (Group)
+
+  - type: custom:decluttering-card
+    template: light_tile
+    variables:
+      - entity: light.floor_lamp
+      - name: Floor Lamp
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.living_room_1
+          - name: Left
+          - show_color_temp: false
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.living_room_2
+          - name: Middle
+          - show_color_temp: false
+      - type: custom:decluttering-card
+        template: light_tile
+        variables:
+          - entity: light.living_room_3
+          - name: Right
+          - show_color_temp: false
+
+  # ---- Shades ----
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: cover_tile
+        variables:
+          - entity: cover.living_room_left
+          - name: Shade (Left)
+      - type: custom:decluttering-card
+        template: cover_tile
+        variables:
+          - entity: cover.living_room_right
+          - name: Shade (Right)
+
+  # ---- Air quality (entire block in one line) ----
+  - type: custom:decluttering-card
+    template: air_quality_block
+    variables:
+      - prefix: alpstuga_living_room
+      - prefix_clean: living_room

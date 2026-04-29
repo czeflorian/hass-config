@@ -1,41 +1,60 @@
-# Secrets
-secrets.yaml
-
-# Home Assistant internal state (auto-generated)
+# Runtime state and storage
 .storage/
-blueprints/
-
-# Backups
-backups/
-*.tar
-
-# Databases
-home-assistant_v2.db*
-zigbee.db*
-*.db-shm
-*.db-wal
+.cloud/
+.claude/
+.uuid
 
 # Logs
 home-assistant.log*
 *.log
+*.log.*
 
-# Cloud / caches
-cloud/
-tts/
-www/community/
+# Databases
+home-assistant_v2.db*
+*.db
+*.db-shm
+*.db-wal
 
-# Temporary / system files
-*.tmp
-*.bak
-*.old
+# Secrets — never commit
+secrets.yaml
+known_devices.yaml
+
+# Auth and tokens
+.HA_VERSION
+
+# Backups
+backups/
+*.tar
+*.tar.gz
+
+# OS junk
 .DS_Store
 Thumbs.db
 
-# Python cache
-__pycache__/
-*.pyc
+# Editor scratch
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
 
-# Add-on runtime data
-addons_config/*/data/
+# Add-on data (most of it is regenerable; keep config but exclude state)
+addons/
+addon_configs/
 
-.vscode
+# HACS — install location, regenerable
+custom_components/
+www/community/
+
+# Zigbee runtime state — keep config, exclude DBs
+zigbee.db*
+zigbee2mqtt/state.json
+zigbee2mqtt/database.db
+zigbee2mqtt/log/
+
+# Image cache
+image/
+tts/
+
+# Tuya/cloud integration tokens
+tuya/

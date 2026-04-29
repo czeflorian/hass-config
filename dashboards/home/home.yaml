@@ -1,0 +1,34 @@
+# =============================================================================
+#  Home Dashboard
+#
+#  Each section is in its own file. Keep this file structural — no logic.
+#
+#  Required custom cards (HACS):
+#    - mushroom
+#    - decluttering-card
+#    - card-mod
+#
+#  Required configuration.yaml entries:
+#    template: !include packages/air_quality.yaml   (or use packages)
+#    lovelace:
+#      mode: yaml
+#      resources: ...
+#      dashboards:
+#        lovelace-home:
+#          mode: yaml
+#          filename: dashboards/home/home.yaml
+# =============================================================================
+
+decluttering_templates: !include decluttering_templates.yaml
+
+title: Home
+views:
+  - title: Home
+    path: home
+    icon: mdi:home-heart
+    type: sections
+    max_columns: 3
+    sections:
+      - !include sections/living_room.yaml
+      - !include sections/kitchen_bedroom.yaml
+      - !include sections/energy_appliances.yaml

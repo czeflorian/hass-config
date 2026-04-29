@@ -1,0 +1,240 @@
+# =============================================================================
+#  Shade automation helpers
+#
+#  Helpers (input_boolean, input_number) defined as a package so they live
+#  in version control rather than HA's hidden .storage/. Edit values via UI
+#  at Settings → Devices & Services → Helpers.
+# =============================================================================
+
+input_boolean:
+  shades_automation_enabled:
+    name: Shade automation enabled
+    icon: mdi:blinds
+    initial: true
+
+  shades_manual_override_living_room:
+    name: Living Room shades — manual override
+    icon: mdi:hand-back-right
+    initial: false
+
+  shades_manual_override_bedroom:
+    name: Bedroom shades — manual override
+    icon: mdi:hand-back-right
+    initial: false
+
+  shades_wind_lockout:
+    name: Shades wind lockout
+    icon: mdi:weather-windy
+    initial: false
+
+  shades_automation_moving:
+    name: Shades automation moving (internal flag)
+    icon: mdi:cog-sync
+    initial: false
+
+input_number:
+  shade_automation_sunshine_threshold:
+    name: Solar radiation threshold
+    icon: mdi:white-balance-sunny
+    min: 0
+    max: 1000
+    step: 25
+    unit_of_measurement: "W/m²"
+    initial: 300
+
+  shade_automation_wind_gust_threshold:
+    name: Wind gust threshold
+    icon: mdi:weather-windy
+    min: 20
+    max: 100
+    step: 5
+    unit_of_measurement: km/h
+    initial: 40
+
+  shade_automation_wind_release_minutes:
+    name: Wind lockout release delay
+    icon: mdi:timer-sand
+    min: 5
+    max: 60
+    step: 5
+    unit_of_measurement: min
+    initial: 15
+
+# =============================================================================
+#  Template sensors — preconditions for shade closure per room
+# =============================================================================
+template:
+  - binary_sensor:
+      # ---- Living Room ----
+      - name: "Shade Close Conditions Living Room"
+        unique_id: shade_close_conditions_living_room
+        icon: mdi:blinds-horizontal-closed
+        state: >
+          {% set inside = states('sensor.alpstuga_living_room_temperature') | float(0) %}
+          {% set outside = states('sensor.wien_donaufeld_temperature') | float(0) %}
+          {% set radiation = states('sensor.wien_donaufeld_global_radiation') | float(0) %}
+          {% set radiation_thr = states('input_number.shade_automation_sunshine_threshold') | float(300) %}
+          {% set sun_up = is_state('sun.sun', 'above_horizon') %}
+          {% set now_ts = now().timestamp() %}
+          {% set sunset_ts = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% set before_sunset_minus_1h = (sunset_ts - now_ts) > 3600 %}
+          {{ outside > inside and radiation > radiation_thr and sun_up and before_sunset_minus_1h }}
+        availability: >
+          {{ states('sensor.alpstuga_living_room_temperature') not in ['unknown', 'unavailable']
+             and states('sensor.wien_donaufeld_temperature') not in ['unknown', 'unavailable']
+             and states('sensor.wien_donaufeld_global_radiation') not in ['unknown', 'unavailable'] }}
+
+      # ---- Bedroom ----
+      - name: "Shade Close Conditions Bedroom"
+        unique_id: shade_close_conditions_bedroom
+        icon: mdi:blinds-horizontal-closed
+        state: >
+          {% set inside = states('sensor.alpstuga_bedroom_temperature') | float(0) %}
+          {% set outside = states('sensor.wien_donaufeld_temperature') | float(0) %}
+          {% set radiation = states('sensor.wien_donaufeld_global_radiation') | float(0) %}
+          {% set radiation_thr = states('input_number.shade_automation_sunshine_threshold') | float(300) %}
+          {% set sun_up = is_state('sun.sun', 'above_horizon') %}
+          {% set now_ts = now().timestamp() %}
+          {% set sunset_ts = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% set before_sunset_minus_1h = (sunset_ts - now_ts) > 3600 %}
+          {{ outside > inside and radiation > radiation_thr and sun_up and before_sunset_minus_1h }}
+        availability: >
+          {{ states('sensor.alpstuga_bedroom_temperature') not in ['unknown', 'unavailable']
+             and states('sensor.wien_donaufeld_temperature') not in ['unknown', 'unavailable']
+             and states('sensor.wien_donaufeld_global_radiation') not in ['unknown', 'unavailable'] }}
+
+      # ---- High wind (with hysteresis baked into the wind_lockout flag) ----
+      - name: "Wind Gust Above Threshold"
+        unique_id: wind_gust_above_threshold
+        icon: mdi:weather-windy
+        state: >
+          {% set gust = states('sensor.wien_donaufeld_top_wind_speed') | float(0) %}
+          {% set thr = states('input_number.shade_automation_wind_gust_threshold') | float(40) %}
+          {{ gust > thr }}
+        availability: >
+          {{ states('sensor.wien_donaufeld_top_wind_speed') not in ['unknown', 'unavailable'] }}
+
+  # ===========================================================================
+  # Status sensors for dashboard tiles
+  # Each emits a string the dashboard maps to a color via the standard
+  # `status_tile` template. Statuses: good / moderate / poor / low /
+  # hazardous / active / idle / unavailable.
+  # ===========================================================================
+  - sensor:
+      # ---- Wind status (calm / elevated / lockout) ----
+      - name: "Wind Status"
+        unique_id: wind_status
+        state: >
+          {% if is_state('input_boolean.shades_wind_lockout', 'on') %} poor
+          {% elif is_state('binary_sensor.wind_gust_above_threshold', 'on') %} moderate
+          {% elif states('sensor.wien_donaufeld_top_wind_speed') in ['unknown', 'unavailable'] %} unavailable
+          {% else %} good
+          {% endif %}
+
+      # ---- Solar status (vs current radiation threshold) ----
+      - name: "Solar Status"
+        unique_id: solar_status
+        state: >
+          {% set v = states('sensor.wien_donaufeld_global_radiation') %}
+          {% if v in ['unknown', 'unavailable', 'none'] %} unavailable
+          {% else %}
+            {% set v = v | float(0) %}
+            {% set thr = states('input_number.shade_automation_sunshine_threshold') | float(300) %}
+            {% if v >= thr %} moderate
+            {% elif v >= thr / 2 %} good
+            {% else %} idle
+            {% endif %}
+          {% endif %}
+
+      # ---- Per-room shade automation status ----
+      # Three-way: manual_override / conditions_met / idle (or unavailable)
+      - name: "Living Room Shade Status"
+        unique_id: living_room_shade_status
+        state: >
+          {% if is_state('input_boolean.shades_manual_override_living_room', 'on') %} moderate
+          {% elif is_state('binary_sensor.shade_close_conditions_living_room', 'on') %} good
+          {% else %} idle
+          {% endif %}
+
+      - name: "Living Room Shade Status Text"
+        unique_id: living_room_shade_status_text
+        state: >
+          {% if is_state('input_boolean.shades_manual_override_living_room', 'on') %} Manual override
+          {% elif is_state('binary_sensor.shade_close_conditions_living_room', 'on') %} Conditions met
+          {% else %} Idle
+          {% endif %}
+
+      - name: "Bedroom Shade Status"
+        unique_id: bedroom_shade_status
+        state: >
+          {% if is_state('input_boolean.shades_manual_override_bedroom', 'on') %} moderate
+          {% elif is_state('binary_sensor.shade_close_conditions_bedroom', 'on') %} good
+          {% else %} idle
+          {% endif %}
+
+      - name: "Bedroom Shade Status Text"
+        unique_id: bedroom_shade_status_text
+        state: >
+          {% if is_state('input_boolean.shades_manual_override_bedroom', 'on') %} Manual override
+          {% elif is_state('binary_sensor.shade_close_conditions_bedroom', 'on') %} Conditions met
+          {% else %} Idle
+          {% endif %}
+
+      # ---- Reset button summary (text + status) ----
+      - name: "Shade Override Summary"
+        unique_id: shade_override_summary
+        state: >
+          {% set lr = is_state('input_boolean.shades_manual_override_living_room', 'on') %}
+          {% set br = is_state('input_boolean.shades_manual_override_bedroom', 'on') %}
+          {% if lr and br %} Both rooms overridden
+          {% elif lr %} Living Room overridden
+          {% elif br %} Bedroom overridden
+          {% else %} Nothing to reset
+          {% endif %}
+
+      - name: "Shade Override Active"
+        unique_id: shade_override_active
+        state: >
+          {% if is_state('input_boolean.shades_manual_override_living_room', 'on')
+             or is_state('input_boolean.shades_manual_override_bedroom', 'on') %} moderate
+          {% else %} idle
+          {% endif %}
+
+      # ---- Washing machine status ----
+      # Encodes both the icon AND the color. Icon picked via state attribute.
+      - name: "Washing Machine Status"
+        unique_id: washing_machine_status
+        state: >
+          {% set s = states('sensor.waschemasche_state') %}
+          {% if s == 'run' %} active
+          {% elif s == 'end' %} good
+          {% elif s == 'pause' %} moderate
+          {% elif s in ['unavailable', 'unknown', 'none'] %} unavailable
+          {% else %} idle
+          {% endif %}
+        attributes:
+          text: >
+            {% set s = states('sensor.waschemasche_state') %}
+            {% if s == 'run' %}
+              Running — {{ states('sensor.waschemasche_programme') }} — {{ states('sensor.waschemasche_remaining') }} left
+            {% elif s == 'end' %} Done — please unload
+            {% elif s == 'pause' %} Paused
+            {% elif s in ['unavailable', 'unknown', 'none'] %} Offline
+            {% else %} Ready
+            {% endif %}
+          icon: >
+            {% set s = states('sensor.waschemasche_state') %}
+            {% if s == 'run' %} mdi:washing-machine
+            {% elif s == 'end' %} mdi:check-circle
+            {% elif s == 'pause' %} mdi:pause-circle
+            {% elif s in ['unavailable', 'unknown', 'none'] %} mdi:help-circle-outline
+            {% else %} mdi:washing-machine-off
+            {% endif %}
+
+      # ---- Washing machine door ----
+      - name: "Washing Machine Door Status"
+        unique_id: washing_machine_door_status
+        state: >
+          {% if is_state('binary_sensor.waschemasche_door_is_open', 'on') %} moderate
+          {% else %} good
+          {% endif %}

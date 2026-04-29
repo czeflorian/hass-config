@@ -1,12 +1,24 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+homeassistant:
+  packages: !include_dir_named packages
+
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
 
-automation: !include automations.yaml
-template: !include_dir_merge_list templates/
+automation: !include_dir_merge_list automations/
 
-script: !include scripts.yaml
+script: !include_dir_merge_named scripts/
 scene: !include scenes.yaml
+
+lovelace:
+  mode: yaml
+  dashboards:
+    lovelace-home:
+      mode: yaml
+      filename: dashboards/home/home.yaml
+      title: Home
+      icon: mdi:home-heart
+      show_in_sidebar: true

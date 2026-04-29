@@ -1,0 +1,36 @@
+# ---- Reset shade overrides --------------------------------------------------
+# Hands manual control back to the shade automation. Clears both room
+# override flags, then immediately re-evaluates the close automations so
+# that if conditions are currently met, the shades close right away.
+#
+# automation.trigger with skip_condition: false runs the automation's
+# actions only if its conditions still pass — so this respects the master
+# kill switch and the wind lockout.
+#
+# NOTE: the entity_ids below are derived from the automation aliases via
+# HA's slugify rules. If you rename an automation in the UI, the entity_id
+# does NOT change (it sticks to the original alias slug). To verify the
+# actual entity_ids, check Developer Tools → States and search for
+# "automation.shades_close".
+shades_reset_overrides:
+  alias: Shades — reset manual overrides
+  description: >
+    Clears both manual-override flags and re-evaluates the close automations.
+  mode: single
+  icon: mdi:restart
+  sequence:
+    - action: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.shades_manual_override_living_room
+          - input_boolean.shades_manual_override_bedroom
+    # Brief pause to let the boolean state propagate before the automations
+    # re-check their conditions.
+    - delay: "00:00:01"
+    - action: automation.trigger
+      target:
+        entity_id:
+          - automation.shades_close_living_room_when_conditions_met
+          - automation.shades_close_bedroom_when_conditions_met
+      data:
+        skip_condition: false

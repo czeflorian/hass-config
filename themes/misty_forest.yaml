@@ -1,200 +1,412 @@
 # ─────────────────────────────────────────────────────
-# Misty Forest (Light + Dark)
-# Place in: /homeassistant/themes/misty_forest.yaml
+# Misty Forest — comprehensive
 #
-# In configuration.yaml add:
+# Place in: /config/themes/misty_forest.yaml
+# Enable in configuration.yaml:
 #   frontend:
 #     themes: !include_dir_merge_named themes/
 #
-# Then restart HA and select "Misty Forest" in your Profile.
-# HA will auto-switch between light/dark based on your OS.
+# This file uses YAML anchors (&name / *name) to define each color once
+# at the top, then reference it throughout. To re-skin: edit the palette
+# block and the change propagates everywhere.
 #
-# ── LIGHT PALETTE ────────────────────────────────────
-#   Forest Floor  #e8f0e4   main background
-#   Moss Card     #f0f5ee   card surfaces
-#   Fern          #4a7c59   sidebar · header · primary
-#   Ember         #d47a3a   accent · highlights
-#   Dew           #d4e8cc   borders · dividers
-#   Bark          #6b7c65   secondary text
-#   Canopy        #1c2e1e   primary text
-#
-# ── DARK PALETTE ─────────────────────────────────────
-#   Midnight Grove  #141f15   main background
-#   Deep Moss       #1c2b1e   card surfaces
-#   Fern            #4a7c59   sidebar · header · primary
-#   Ember           #d47a3a   accent · highlights
-#   Shadow Dew      #2a3d2c   borders · dividers
-#   Pale Bark       #8fa887   secondary text
-#   Mist            #ddecd5   primary text
+# Coverage (Tier 1):
+#   ✓ HA card chrome (backgrounds, borders, text)
+#   ✓ Sidebar + header
+#   ✓ Inputs, switches, sliders
+#   ✓ Mushroom RGB palette
+#   ✓ Per-domain state colors (lights, covers, sensors, etc.)
+#   ✓ History/statistics graph colors
+#   ✓ Energy dashboard colors
+#   ✓ Multi-series chart palette (graph-color-1 through 12)
+#   ✓ RGB-form variables for transparent overlays
 # ─────────────────────────────────────────────────────
 
 Misty Forest:
+
+  # ═══════════════════════════════════════════════════
+  # PALETTE — light mode
+  # Change these, everything below updates.
+  # ═══════════════════════════════════════════════════
+  forest-floor-light: &ff_l "#e8f0e4"           # main bg
+  moss-card-light:    &mc_l "#f0f5ee"           # cards
+  fern-light:         &fern_l "#4a7c59"         # primary green
+  fern-mid-light:     &fern_mid_l "#7aaa88"     # lighter green
+  fern-deep-light:    &fern_deep_l "#2e5c3a"    # darker green
+  ember-light:        &ember_l "#d47a3a"        # accent / warning
+  dew-light:          &dew_l "#d4e8cc"          # divider
+  bark-light:         &bark_l "#6b7c65"         # secondary text
+  canopy-light:       &canopy_l "#1c2e1e"       # primary text
+  disabled-light:     &dis_l "#a8bca2"
+
+  # Bridge color — between green and blue, used for "info" states. This
+  # is what makes HA's hardcoded blues stop clashing.
+  lichen-light:       &lichen_l "#4a8a82"
+
+  error-light:        &err_l "#b04040"
+  amber-light:        &amber_l "#c4961e"
+
+  # ═══════════════════════════════════════════════════
+  # PALETTE — dark mode
+  # ═══════════════════════════════════════════════════
+  midnight-grove:     &ff_d "#141f15"
+  deep-moss:          &mc_d "#1c2b1e"
+  fern-dark:          &fern_d "#7aaa88"         # primary in dark = brighter
+  fern-mid-dark:      &fern_mid_d "#a3c96e"
+  fern-deep-dark:     &fern_deep_d "#4a7c59"
+  ember-dark:         &ember_d "#d47a3a"
+  shadow-dew:         &dew_d "#2a3d2c"
+  pale-bark:          &bark_d "#8fa887"
+  mist:               &canopy_d "#ddecd5"
+  disabled-dark:      &dis_d "#4a5e4c"
+
+  lichen-dark:        &lichen_d "#6aa39c"
+
+  error-dark:         &err_d "#c06060"
+  amber-dark:         &amber_d "#d4a832"
+
   modes:
 
-    # ══════════════════════════════
-    # LIGHT MODE
-    # ══════════════════════════════
+    # ═══════════════════════════════════════════════════
+    #                 LIGHT MODE
+    # ═══════════════════════════════════════════════════
     light:
       # ── Backgrounds ──
-      primary-background-color: "#e8f0e4"
-      secondary-background-color: "#f0f5ee"
-      card-background-color: "#f0f5ee"
-      divider-color: "#d4e8cc"
+      primary-background-color: *ff_l
+      secondary-background-color: *mc_l
+      card-background-color: *mc_l
+      divider-color: *dew_l
 
       # ── Sidebar ──
-      sidebar-background-color: "#4a7c59"
-      sidebar-text-color: "#f0f5ee"
+      sidebar-background-color: *fern_l
+      sidebar-text-color: *mc_l
       sidebar-icon-color: "#c2e0c8"
       sidebar-selected-text-color: "#ffffff"
       sidebar-selected-icon-color: "#ffffff"
-      sidebar-border-color: "#3a6447"
+      sidebar-selected-background-color: *fern_deep_l
+      sidebar-border-color: *fern_deep_l
 
       # ── Header / Toolbar ──
-      app-header-background-color: "#4a7c59"
-      app-header-text-color: "#f0f5ee"
-      app-header-selection-bar-color: "#d47a3a"
-      app-header-edit-background-color: "#3a6447"
+      app-header-background-color: *fern_l
+      app-header-text-color: *mc_l
+      app-header-selection-bar-color: *ember_l
+      app-header-edit-background-color: *fern_deep_l
+      app-toolbar-text-color: *mc_l
 
       # ── Primary & accent ──
-      primary-color: "#4a7c59"
-      accent-color: "#d47a3a"
-      light-primary-color: "#7aaa88"
-      dark-primary-color: "#2e5c3a"
+      primary-color: *fern_l
+      accent-color: *ember_l
+      light-primary-color: *fern_mid_l
+      dark-primary-color: *fern_deep_l
+
+      # ── RGB forms (used by HA core for rgba() overlays) ──
+      rgb-primary-color: "74, 124, 89"
+      rgb-accent-color: "212, 122, 58"
+      rgb-primary-text-color: "28, 46, 30"
+      rgb-secondary-text-color: "107, 124, 101"
+      rgb-text-primary-color: "28, 46, 30"
+      rgb-card-background-color: "240, 245, 238"
+      rgb-state-icon-color: "74, 124, 89"
 
       # ── Text ──
-      primary-text-color: "#1c2e1e"
-      secondary-text-color: "#6b7c65"
-      text-primary-color: "#1c2e1e"
-      disabled-text-color: "#a8bca2"
-      text-accent-color: "#d47a3a"
-      label-badge-background-color: "#d47a3a"
+      primary-text-color: *canopy_l
+      secondary-text-color: *bark_l
+      text-primary-color: *canopy_l
+      disabled-text-color: *dis_l
+      text-accent-color: *ember_l
+      label-badge-background-color: *ember_l
       label-badge-text-color: "#ffffff"
 
       # ── Switches & toggles ──
-      switch-checked-color: "#4a7c59"
+      switch-checked-color: *fern_l
       switch-checked-button-color: "#ffffff"
-      switch-checked-track-color: "#7aaa88"
-      switch-unchecked-color: "#a8bca2"
+      switch-checked-track-color: *fern_mid_l
+      switch-unchecked-color: *dis_l
       switch-unchecked-button-color: "#ffffff"
-      switch-unchecked-track-color: "#d4e8cc"
+      switch-unchecked-track-color: *dew_l
 
       # ── Sliders ──
-      slider-color: "#4a7c59"
-      slider-secondary-color: "#d4e8cc"
-      slider-bar-color: "#d4e8cc"
+      slider-color: *fern_l
+      slider-secondary-color: *dew_l
+      slider-bar-color: *dew_l
+      paper-slider-knob-color: *fern_l
+      paper-slider-knob-start-color: *fern_l
+      paper-slider-pin-color: *fern_l
+      paper-slider-active-color: *fern_l
+      paper-slider-container-color: *dew_l
 
       # ── Cards ──
-      ha-card-background: "#f0f5ee"
-      ha-card-border-color: "#d4e8cc"
+      ha-card-background: *mc_l
+      ha-card-border-color: *dew_l
       ha-card-border-width: "1px"
       ha-card-border-radius: "20px"
       ha-card-box-shadow: "0 2px 12px rgba(28,46,30,0.07)"
+      ha-card-header-color: *canopy_l
 
       # ── Inputs ──
-      input-fill-color: "#e8f0e4"
-      input-ink-color: "#1c2e1e"
-      input-label-ink-color: "#6b7c65"
-      input-idle-line-color: "#d4e8cc"
-      input-hover-line-color: "#4a7c59"
-      input-focused-color: "#4a7c59"
-      input-focused-label-color: "#4a7c59"
-      input-focused-line-color: "#4a7c59"
+      input-background-color: *ff_l
+      input-fill-color: *ff_l
+      input-ink-color: *canopy_l
+      input-label-ink-color: *bark_l
+      input-idle-line-color: *dew_l
+      input-hover-line-color: *fern_l
+      input-focused-color: *fern_l
+      input-focused-label-color: *fern_l
+      input-focused-line-color: *fern_l
+      input-disabled-fill-color: *mc_l
+      input-disabled-ink-color: *dis_l
+      input-dropdown-icon-color: *bark_l
 
-      # ── States ──
-      success-color: "#4a7c59"
-      warning-color: "#d47a3a"
-      error-color: "#b04040"
-      info-color: "#4a7a9b"
+      # ── Buttons ──
+      mdc-theme-primary: *fern_l
+      mdc-theme-secondary: *ember_l
+      mdc-theme-on-primary: "#ffffff"
+      mdc-theme-on-secondary: "#ffffff"
+      paper-item-icon-color: *bark_l
+      paper-item-icon-active-color: *fern_l
 
-      # ── Mushroom ──
+      # ── States (semantic) ──
+      success-color: *fern_l
+      warning-color: *ember_l
+      error-color: *err_l
+      info-color: *lichen_l
+
+      # ── Per-domain state-on colors ──
+      # When an entity is "on" / "active" its icon picks up these. Without
+      # these set, HA falls back to a generic blue. THIS IS THE BIG WIN.
+      state-icon-color: *fern_l
+      state-icon-active-color: *ember_l
+      state-icon-unavailable-color: *dis_l
+      state-light-active-color: *ember_l
+      state-switch-active-color: *fern_l
+      state-binary_sensor-active-color: *fern_l
+      state-cover-active-color: *fern_l
+      state-fan-active-color: *fern_l
+      state-climate-heating-color: *ember_l
+      state-climate-cooling-color: *lichen_l
+      state-climate-drying-color: *amber_l
+      state-climate-idle-color: *dis_l
+      state-media_player-active-color: *fern_l
+      state-vacuum-active-color: *fern_l
+      state-person-home-color: *fern_l
+      state-person-not_home-color: *bark_l
+      state-update-installing-color: *amber_l
+
+      # ── History graph colors ──
+      # The on/off strips, the filled-area graphs in entity history.
+      history-fill-color: *fern_l
+      history-line-color: *fern_l
+      state-history-fill-color: *fern_l
+      state-history-line-color: *fern_l
+      state-on-color: *fern_l
+      state-off-color: *dis_l
+      state-unavailable-color: *dew_l
+
+      # ── Multi-series chart palette ──
+      # statistics-graph and history-graph cycle through these for each
+      # series. Order matters: series 1 gets color-1, etc. Sequenced for
+      # warm → bridge → cool, deliberately avoiding default HA blue.
+      graph-color-1: *fern_l           # primary green
+      graph-color-2: *ember_l          # rust accent
+      graph-color-3: *amber_l          # amber
+      graph-color-4: *lichen_l         # bridge teal
+      graph-color-5: *fern_deep_l      # darker green
+      graph-color-6: *bark_l           # bark
+      graph-color-7: *err_l            # red
+      graph-color-8: *fern_mid_l       # lighter green
+
+      # ── Energy dashboard ──
+      # The biggest source of "blue clash" in default HA. Setting these
+      # neutralizes the energy view.
+      energy-grid-consumption-color: *ember_l       # what you draw
+      energy-grid-return-color: *fern_l             # what you push back
+      energy-solar-color: *amber_l                  # solar production
+      energy-battery-in-color: *lichen_l
+      energy-battery-out-color: *fern_mid_l
+      energy-non-fossil-color: *fern_l
+      energy-gas-color: *err_l
+      energy-water-color: *lichen_l
+
+      # ── Mushroom RGB palette ──
       mush-rgb-red: "176, 64, 64"
       mush-rgb-orange: "212, 122, 58"
       mush-rgb-amber: "196, 150, 30"
+      mush-rgb-yellow: "200, 169, 100"
       mush-rgb-green: "74, 124, 89"
-      mush-rgb-blue: "74, 122, 155"
+      mush-rgb-teal: "74, 138, 130"
+      mush-rgb-cyan: "90, 144, 138"
+      mush-rgb-blue: "74, 138, 130"            # remapped to teal — was clashing
+      mush-rgb-indigo: "90, 110, 130"
       mush-rgb-purple: "130, 90, 150"
+      mush-rgb-pink: "180, 100, 130"
       mush-rgb-grey: "107, 124, 101"
+      mush-rgb-black: "28, 46, 30"
+      mush-rgb-disabled: "168, 188, 162"
 
-    # ══════════════════════════════
-    # DARK MODE
-    # ══════════════════════════════
+    # ═══════════════════════════════════════════════════
+    #                 DARK MODE
+    # ═══════════════════════════════════════════════════
     dark:
       # ── Backgrounds ──
-      primary-background-color: "#141f15"
-      secondary-background-color: "#1c2b1e"
-      card-background-color: "#1c2b1e"
-      divider-color: "#2a3d2c"
+      primary-background-color: *ff_d
+      secondary-background-color: *mc_d
+      card-background-color: *mc_d
+      divider-color: *dew_d
 
       # ── Sidebar ──
-      sidebar-background-color: "#4a7c59"
+      sidebar-background-color: *fern_deep_d
       sidebar-text-color: "#f0f5ee"
       sidebar-icon-color: "#c2e0c8"
       sidebar-selected-text-color: "#ffffff"
-      sidebar-selected-icon-color: "#ddecd5"
+      sidebar-selected-icon-color: *canopy_d
+      sidebar-selected-background-color: "#3a6447"
       sidebar-border-color: "#3a6447"
 
       # ── Header / Toolbar ──
-      app-header-background-color: "#4a7c59"
+      app-header-background-color: *fern_deep_d
       app-header-text-color: "#f0f5ee"
-      app-header-selection-bar-color: "#d47a3a"
+      app-header-selection-bar-color: *ember_d
       app-header-edit-background-color: "#3a6447"
+      app-toolbar-text-color: "#f0f5ee"
 
       # ── Primary & accent ──
-      primary-color: "#7aaa88"
-      accent-color: "#d47a3a"
-      light-primary-color: "#a3c96e"
-      dark-primary-color: "#4a7c59"
+      primary-color: *fern_d
+      accent-color: *ember_d
+      light-primary-color: *fern_mid_d
+      dark-primary-color: *fern_deep_d
+
+      # ── RGB forms ──
+      rgb-primary-color: "122, 170, 136"
+      rgb-accent-color: "212, 122, 58"
+      rgb-primary-text-color: "221, 236, 213"
+      rgb-secondary-text-color: "143, 168, 135"
+      rgb-text-primary-color: "221, 236, 213"
+      rgb-card-background-color: "28, 43, 30"
+      rgb-state-icon-color: "122, 170, 136"
 
       # ── Text ──
-      primary-text-color: "#ddecd5"
-      secondary-text-color: "#8fa887"
-      text-primary-color: "#ddecd5"
-      disabled-text-color: "#4a5e4c"
-      text-accent-color: "#d47a3a"
-      label-badge-background-color: "#d47a3a"
+      primary-text-color: *canopy_d
+      secondary-text-color: *bark_d
+      text-primary-color: *canopy_d
+      disabled-text-color: *dis_d
+      text-accent-color: *ember_d
+      label-badge-background-color: *ember_d
       label-badge-text-color: "#ffffff"
 
       # ── Switches & toggles ──
-      switch-checked-color: "#7aaa88"
-      switch-checked-button-color: "#1c2b1e"
-      switch-checked-track-color: "#4a7c59"
-      switch-unchecked-color: "#4a5e4c"
-      switch-unchecked-button-color: "#8fa887"
-      switch-unchecked-track-color: "#2a3d2c"
+      switch-checked-color: *fern_d
+      switch-checked-button-color: *mc_d
+      switch-checked-track-color: *fern_deep_d
+      switch-unchecked-color: *dis_d
+      switch-unchecked-button-color: *bark_d
+      switch-unchecked-track-color: *dew_d
 
       # ── Sliders ──
-      slider-color: "#7aaa88"
-      slider-secondary-color: "#2a3d2c"
-      slider-bar-color: "#2a3d2c"
+      slider-color: *fern_d
+      slider-secondary-color: *dew_d
+      slider-bar-color: *dew_d
+      paper-slider-knob-color: *fern_d
+      paper-slider-knob-start-color: *fern_d
+      paper-slider-pin-color: *fern_d
+      paper-slider-active-color: *fern_d
+      paper-slider-container-color: *dew_d
 
       # ── Cards ──
-      ha-card-background: "#1c2b1e"
-      ha-card-border-color: "#2a3d2c"
+      ha-card-background: *mc_d
+      ha-card-border-color: *dew_d
       ha-card-border-width: "1px"
       ha-card-border-radius: "20px"
       ha-card-box-shadow: "0 2px 16px rgba(0,0,0,0.3)"
+      ha-card-header-color: *canopy_d
 
       # ── Inputs ──
-      input-fill-color: "#1c2b1e"
-      input-ink-color: "#ddecd5"
-      input-label-ink-color: "#8fa887"
-      input-idle-line-color: "#2a3d2c"
-      input-hover-line-color: "#7aaa88"
-      input-focused-color: "#7aaa88"
-      input-focused-label-color: "#7aaa88"
-      input-focused-line-color: "#7aaa88"
+      input-background-color: *mc_d
+      input-fill-color: *mc_d
+      input-ink-color: *canopy_d
+      input-label-ink-color: *bark_d
+      input-idle-line-color: *dew_d
+      input-hover-line-color: *fern_d
+      input-focused-color: *fern_d
+      input-focused-label-color: *fern_d
+      input-focused-line-color: *fern_d
+      input-disabled-fill-color: *ff_d
+      input-disabled-ink-color: *dis_d
+      input-dropdown-icon-color: *bark_d
 
-      # ── States ──
-      success-color: "#7aaa88"
-      warning-color: "#d47a3a"
-      error-color: "#c06060"
-      info-color: "#6a9abb"
+      # ── Buttons ──
+      mdc-theme-primary: *fern_d
+      mdc-theme-secondary: *ember_d
+      mdc-theme-on-primary: *mc_d
+      mdc-theme-on-secondary: "#ffffff"
+      paper-item-icon-color: *bark_d
+      paper-item-icon-active-color: *fern_d
 
-      # ── Mushroom ──
+      # ── States (semantic) ──
+      success-color: *fern_d
+      warning-color: *ember_d
+      error-color: *err_d
+      info-color: *lichen_d
+
+      # ── Per-domain state-on colors ──
+      state-icon-color: *fern_d
+      state-icon-active-color: *ember_d
+      state-icon-unavailable-color: *dis_d
+      state-light-active-color: *ember_d
+      state-switch-active-color: *fern_d
+      state-binary_sensor-active-color: *fern_d
+      state-cover-active-color: *fern_d
+      state-fan-active-color: *fern_d
+      state-climate-heating-color: *ember_d
+      state-climate-cooling-color: *lichen_d
+      state-climate-drying-color: *amber_d
+      state-climate-idle-color: *dis_d
+      state-media_player-active-color: *fern_d
+      state-vacuum-active-color: *fern_d
+      state-person-home-color: *fern_d
+      state-person-not_home-color: *bark_d
+      state-update-installing-color: *amber_d
+
+      # ── History graph colors ──
+      history-fill-color: *fern_d
+      history-line-color: *fern_d
+      state-history-fill-color: *fern_d
+      state-history-line-color: *fern_d
+      state-on-color: *fern_d
+      state-off-color: *dis_d
+      state-unavailable-color: *dew_d
+
+      # ── Multi-series chart palette ──
+      graph-color-1: *fern_d
+      graph-color-2: *ember_d
+      graph-color-3: *amber_d
+      graph-color-4: *lichen_d
+      graph-color-5: *fern_deep_d
+      graph-color-6: *bark_d
+      graph-color-7: *err_d
+      graph-color-8: *fern_mid_d
+
+      # ── Energy dashboard ──
+      energy-grid-consumption-color: *ember_d
+      energy-grid-return-color: *fern_d
+      energy-solar-color: *amber_d
+      energy-battery-in-color: *lichen_d
+      energy-battery-out-color: *fern_mid_d
+      energy-non-fossil-color: *fern_d
+      energy-gas-color: *err_d
+      energy-water-color: *lichen_d
+
+      # ── Mushroom RGB palette ──
       mush-rgb-red: "192, 96, 96"
       mush-rgb-orange: "212, 122, 58"
       mush-rgb-amber: "210, 168, 50"
+      mush-rgb-yellow: "212, 188, 120"
       mush-rgb-green: "122, 170, 136"
-      mush-rgb-blue: "106, 154, 187"
+      mush-rgb-teal: "106, 163, 156"
+      mush-rgb-cyan: "120, 175, 168"
+      mush-rgb-blue: "106, 163, 156"           # remapped to teal
+      mush-rgb-indigo: "120, 140, 165"
       mush-rgb-purple: "160, 120, 180"
+      mush-rgb-pink: "200, 130, 160"
       mush-rgb-grey: "143, 168, 135"
+      mush-rgb-black: "221, 236, 213"
+      mush-rgb-disabled: "74, 94, 76"

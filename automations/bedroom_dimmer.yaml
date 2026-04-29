@@ -1,25 +1,3 @@
-- id: '1774277945754'
-  alias: Washing Machine KeepAlive
-  description: ''
-  triggers:
-  - trigger: time_pattern
-    minutes: /8
-  conditions:
-  - condition: state
-    entity_id: sensor.waschemasche_state
-    state:
-    - device_state_on
-  - condition: state
-    entity_id: binary_sensor.waschemasche_remote_control
-    state:
-    - 'on'
-  actions:
-  - action: select.select_first
-    metadata: {}
-    target:
-      entity_id: select.waschemasche_button_volume
-    data: {}
-  mode: single
 - id: dimmer_on_single
   alias: 'Dimmer: ON single press → turn on ambient light'
   trigger:

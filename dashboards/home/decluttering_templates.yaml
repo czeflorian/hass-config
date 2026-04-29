@@ -1,0 +1,332 @@
+# =============================================================================
+#  Decluttering-card templates
+#  Loaded via decluttering_templates: !include decluttering_templates.yaml
+#  in your lovelace.yaml.
+#
+#  Each template is a parameterized card. Instantiate with:
+#    type: custom:decluttering-card
+#    template: status_tile
+#    variables:
+#      - entity: sensor.foo
+#      - status_entity: sensor.foo_status
+#      - icon: mdi:bar
+#      - label: "Foo"
+#      - unit: "ppm"
+# =============================================================================
+
+# ---- Generic status tile ----------------------------------------------------
+# A mushroom-template-card whose icon color is driven by a *_status sensor
+# that has already been computed in the backend (see packages/).
+# This is the workhorse — used for AQI, CO2, humidity, batteries, ink, etc.
+#
+# Recognized status values:
+#   good              → success color (green)
+#   moderate          → warning color (amber)
+#   poor / low / hazardous → error color (red)
+#   active            → success color (green) — for "running/on" tiles
+#   idle              → secondary text color — for "off/standby" tiles
+#   unavailable       → disabled color
+status_tile:
+  default:
+    - unit: ""
+    - icon_when_unavailable: mdi:help-circle-outline
+  card:
+    type: custom:mushroom-template-card
+    primary: "[[label]]"
+    secondary: >-
+      {% set v = states('[[entity]]') %}
+      {% if v in ['unknown', 'unavailable', 'none'] %}
+        Offline
+      {% else %}
+        {{ v }}[[unit]]
+      {% endif %}
+    icon: >-
+      {% if states('[[entity]]') in ['unknown', 'unavailable', 'none'] %}
+        [[icon_when_unavailable]]
+      {% else %}
+        [[icon]]
+      {% endif %}
+    icon_color: >-
+      {% set s = states('[[status_entity]]') %}
+      {% if s in ['good', 'active'] %} var(--success-color)
+      {% elif s == 'moderate' %} var(--warning-color)
+      {% elif s in ['poor', 'low', 'hazardous'] %} var(--error-color)
+      {% elif s == 'idle' %} var(--secondary-text-color)
+      {% else %} var(--disabled-text-color)
+      {% endif %}
+    entity: "[[entity]]"
+    tap_action:
+      action: more-info
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
+
+# ---- Status tile (sensor attribute-driven) ----------------------------------
+# For cards where the displayed text and icon come from sensor attributes
+# (e.g. washing machine: state encodes color, attributes encode label + icon).
+# Useful when a single status sensor needs to drive multiple display fields.
+status_tile_attr:
+  default:
+    - tap_action: more-info
+  card:
+    type: custom:mushroom-template-card
+    primary: "[[label]]"
+    secondary: "{{ state_attr('[[status_entity]]', 'text') }}"
+    icon: "{{ state_attr('[[status_entity]]', 'icon') }}"
+    icon_color: >-
+      {% set s = states('[[status_entity]]') %}
+      {% if s in ['good', 'active'] %} var(--success-color)
+      {% elif s == 'moderate' %} var(--warning-color)
+      {% elif s in ['poor', 'low', 'hazardous'] %} var(--error-color)
+      {% elif s == 'idle' %} var(--secondary-text-color)
+      {% else %} var(--disabled-text-color)
+      {% endif %}
+    entity: "[[status_entity]]"
+    tap_action:
+      action: "[[tap_action]]"
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
+
+# ---- Status tile (custom text + status entity, no formatting) --------------
+# For cards where you want full control over secondary text and the color
+# comes from a separate status sensor.
+status_tile_text:
+  card:
+    type: custom:mushroom-template-card
+    primary: "[[label]]"
+    secondary: "[[secondary]]"
+    icon: "[[icon]]"
+    icon_color: >-
+      {% set s = states('[[status_entity]]') %}
+      {% if s in ['good', 'active'] %} var(--success-color)
+      {% elif s == 'moderate' %} var(--warning-color)
+      {% elif s in ['poor', 'low', 'hazardous'] %} var(--error-color)
+      {% elif s == 'idle' %} var(--secondary-text-color)
+      {% else %} var(--disabled-text-color)
+      {% endif %}
+    entity: "[[status_entity]]"
+    tap_action:
+      action: more-info
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
+
+# ---- Plain tile (no status logic, just display) -----------------------------
+# For values that don't have thresholds — e.g. raw temperature.
+plain_tile:
+  default:
+    - unit: ""
+    - icon_color: var(--success-color)
+  card:
+    type: custom:mushroom-template-card
+    primary: "[[label]]"
+    secondary: >-
+      {% set v = states('[[entity]]') %}
+      {% if v in ['unknown', 'unavailable', 'none'] %}
+        Offline
+      {% else %}
+        {{ v }}[[unit]]
+      {% endif %}
+    icon: "[[icon]]"
+    icon_color: >-
+      {% if states('[[entity]]') in ['unknown', 'unavailable', 'none'] %}
+        var(--disabled-text-color)
+      {% else %}
+        [[icon_color]]
+      {% endif %}
+    entity: "[[entity]]"
+    tap_action:
+      action: more-info
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
+
+# ---- Light tile -------------------------------------------------------------
+# Standard light card with toggle on tap, more-info on hold.
+light_tile:
+  default:
+    - show_color_temp: true
+  card:
+    type: custom:mushroom-light-card
+    entity: "[[entity]]"
+    name: "[[name]]"
+    show_brightness_control: true
+    show_color_temp_control: "[[show_color_temp]]"
+    collapsible_controls: true
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
+
+# ---- Cover tile -------------------------------------------------------------
+cover_tile:
+  card:
+    type: custom:mushroom-cover-card
+    entity: "[[entity]]"
+    name: "[[name]]"
+    show_position_control: true
+    card_mod:
+      style:
+        .: |
+          ha-card {
+            background: var(--card-background-color);
+            border-radius: 20px;
+            border: 1px solid var(--divider-color);
+          }
+          ha-state-icon { color: var(--success-color); }
+
+# ---- Section title ----------------------------------------------------------
+section_title:
+  card:
+    type: custom:mushroom-title-card
+    title: "[[title]]"
+    card_mod:
+      style: |
+        ha-card { background: none; box-shadow: none; }
+        .title {
+          font-size: 1rem;
+          letter-spacing: 0.12em;
+          color: var(--secondary-text-color);
+        }
+
+# ---- Subsection title -------------------------------------------------------
+subsection_title:
+  card:
+    type: custom:mushroom-title-card
+    title: "[[title]]"
+    card_mod:
+      style: |
+        ha-card { background: none; box-shadow: none; }
+        .title {
+          font-size: 0.85rem;
+          letter-spacing: 0.1em;
+          color: var(--secondary-text-color);
+          opacity: 0.8;
+        }
+
+# ---- Smart plug block (composite) -------------------------------------------
+# A switch tile + power/energy metrics in one block. Generic over which
+# plug — pass the entity prefix.
+smart_plug_block:
+  default:
+    - name: Smart Plug
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:mushroom-template-card
+        primary: "[[name]]"
+        secondary: "{{ state_attr('sensor.[[prefix]]_activity', 'text') }}"
+        icon: mdi:power-plug
+        icon_color: >-
+          {% set s = states('sensor.[[prefix]]_activity') %}
+          {% if s in ['good', 'active'] %} var(--success-color)
+          {% elif s == 'moderate' %} var(--warning-color)
+          {% elif s in ['poor', 'low', 'hazardous'] %} var(--error-color)
+          {% elif s == 'idle' %} var(--secondary-text-color)
+          {% else %} var(--disabled-text-color)
+          {% endif %}
+        entity: "switch.[[switch_entity]]"
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--card-background-color);
+              border-radius: 20px;
+              border: 1px solid var(--divider-color);
+            }
+      - type: horizontal-stack
+        cards:
+          - type: custom:decluttering-card
+            template: plain_tile
+            variables:
+              - entity: "sensor.[[prefix]]_power"
+              - label: Power
+              - icon: mdi:flash
+              - unit: " W"
+          - type: custom:decluttering-card
+            template: plain_tile
+            variables:
+              - entity: "sensor.[[prefix]]_energy"
+              - label: Total
+              - icon: mdi:counter
+              - unit: " kWh"
+          - type: custom:decluttering-card
+            template: plain_tile
+            variables:
+              - entity: "sensor.[[prefix]]_voltage"
+              - label: Voltage
+              - icon: mdi:sine-wave
+              - unit: " V"
+
+# ---- Air quality block (composite) ------------------------------------------
+# Drops in a complete AQI section for any room. Pass the entity prefix.
+air_quality_block:
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:decluttering-card
+        template: subsection_title
+        variables:
+          - title: Air Quality
+      - type: horizontal-stack
+        cards:
+          - type: custom:decluttering-card
+            template: status_tile
+            variables:
+              - entity: "sensor.[[prefix]]_pm2_5"
+              - status_entity: "sensor.[[prefix_clean]]_aqi_status"
+              - label: PM2.5
+              - icon: mdi:dots-circle
+              - unit: " µg/m³"
+          - type: custom:decluttering-card
+            template: status_tile
+            variables:
+              - entity: "sensor.[[prefix]]_carbon_dioxide"
+              - status_entity: "sensor.[[prefix_clean]]_co2_status"
+              - label: CO₂
+              - icon: mdi:molecule-co2
+              - unit: " ppm"
+      - type: horizontal-stack
+        cards:
+          - type: custom:decluttering-card
+            template: status_tile
+            variables:
+              - entity: "sensor.[[prefix]]_humidity"
+              - status_entity: "sensor.[[prefix_clean]]_humidity_status"
+              - label: Humidity
+              - icon: mdi:water-percent
+              - unit: " %"
+          - type: custom:decluttering-card
+            template: plain_tile
+            variables:
+              - entity: "sensor.[[prefix]]_temperature"
+              - label: Temperature
+              - icon: mdi:thermometer
+              - unit: " °C"

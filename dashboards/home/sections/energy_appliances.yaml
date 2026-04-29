@@ -1,0 +1,247 @@
+# =============================================================================
+#  Section: Energy + Appliances + Devices + Shade Automation
+#
+#  All coloring logic lives in template sensors (see packages/). Each sensor
+#  emits a status string the dashboard maps to a color via the standard
+#  status_tile / status_tile_attr / status_tile_text decluttering templates.
+# =============================================================================
+
+type: grid
+column_span: 1
+cards:
+  # ---- Energy ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Grid Usage — Last 7 Days
+
+  # NOTE: verify entity ID against Developer Tools → States.
+  - type: statistics-graph
+    chart_type: bar
+    period: day
+    title: Daily Grid Consumption
+    entities:
+      - entity: sensor.wnsm_at0010000000000000001000015255439
+        name: Grid
+    stat_types:
+      - state
+    days_to_show: 7
+
+  # ---- Washing machine ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Washing Machine
+
+  # NOTE: entity IDs say `waschemasche` (typo from integration setup).
+  # Rename via Settings → Devices → entity → ⚙ → entity_id.
+  - type: custom:decluttering-card
+    template: status_tile_attr
+    variables:
+      - status_entity: sensor.washing_machine_status
+      - label: Washing Machine
+
+  # Detail row only when there's something to show.
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: sensor.waschemasche_state
+        state_not: idle
+      - condition: state
+        entity: sensor.waschemasche_state
+        state_not: unavailable
+      - condition: state
+        entity: sensor.waschemasche_state
+        state_not: unknown
+    card:
+      type: vertical-stack
+      cards:
+        - type: horizontal-stack
+          cards:
+            - type: custom:decluttering-card
+              template: plain_tile
+              variables:
+                - entity: sensor.waschemasche_programme
+                - label: Programme
+                - icon: mdi:tshirt-crew
+            - type: custom:decluttering-card
+              template: plain_tile
+              variables:
+                - entity: sensor.waschemasche_remaining
+                - label: Remaining
+                - icon: mdi:timer-outline
+            - type: custom:decluttering-card
+              template: plain_tile
+              variables:
+                - entity: sensor.waschemasche_programme_end_time
+                - label: Ends at
+                - icon: mdi:clock-end
+        - type: horizontal-stack
+          cards:
+            - type: custom:decluttering-card
+              template: status_tile
+              variables:
+                - entity: binary_sensor.waschemasche_door_is_open
+                - status_entity: sensor.washing_machine_door_status
+                - label: Door
+                - icon: mdi:door
+            - type: custom:decluttering-card
+              template: plain_tile
+              variables:
+                - entity: sensor.waschemasche_temperature
+                - label: Temperature
+                - icon: mdi:thermometer-water
+            - type: custom:decluttering-card
+              template: plain_tile
+              variables:
+                - entity: sensor.waschemasche_spin
+                - label: Spin
+                - icon: mdi:rotate-3d-variant
+
+  # ---- Smart plug ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Smart Plug
+
+  - type: custom:decluttering-card
+    template: smart_plug_block
+    variables:
+      - prefix: grillplats_plug
+      - switch_entity: grillplats_plug_smart_plug
+      - name: GRILLPLATS
+
+  # ---- Devices ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Devices
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: status_tile
+        variables:
+          - entity: sensor.florians_iphone_battery_level
+          - status_entity: sensor.flo_iphone_battery_status
+          - label: Flo's iPhone
+          - icon: mdi:cellphone
+          - unit: "%"
+      - type: custom:decluttering-card
+        template: status_tile
+        variables:
+          - entity: sensor.hannis_phone_battery_level
+          - status_entity: sensor.hanni_phone_battery_status
+          - label: Hanni's Phone
+          - icon: mdi:cellphone
+          - unit: "%"
+
+  - type: custom:decluttering-card
+    template: status_tile_text
+    variables:
+      - status_entity: sensor.printer_ink_status
+      - label: Printer Ink
+      - icon: mdi:printer
+      - secondary: >-
+          {% set b = states('sensor.hp_envy_6000_series_black_cartridge') %}
+          {% set c = states('sensor.hp_envy_6000_series_tri_color_cartridge') %}
+          {% if b in ['unknown', 'unavailable'] or c in ['unknown', 'unavailable'] %}
+            Offline
+          {% else %}
+            Black: {{ b }}% · Color: {{ c }}%
+          {% endif %}
+
+  # ---- Shade automation ----
+  - type: custom:decluttering-card
+    template: section_title
+    variables:
+      - title: Shade Automation
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: input_boolean.shades_automation_enabled
+        name: Automation Enabled
+        icon: mdi:blinds
+        tap_action:
+          action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--card-background-color);
+              border-radius: 20px;
+              border: 1px solid var(--divider-color);
+            }
+      - type: custom:decluttering-card
+        template: status_tile_text
+        variables:
+          - status_entity: sensor.shade_override_active
+          - label: Reset Overrides
+          - icon: mdi:restart
+          - secondary: "{{ states('sensor.shade_override_summary') }}"
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: status_tile_text
+        variables:
+          - status_entity: sensor.living_room_shade_status
+          - label: Living Room
+          - icon: mdi:hand-back-right
+          - secondary: "{{ states('sensor.living_room_shade_status_text') }}"
+      - type: custom:decluttering-card
+        template: status_tile_text
+        variables:
+          - status_entity: sensor.bedroom_shade_status
+          - label: Bedroom
+          - icon: mdi:hand-back-right
+          - secondary: "{{ states('sensor.bedroom_shade_status_text') }}"
+
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: status_tile
+        variables:
+          - entity: sensor.wien_donaufeld_top_wind_speed
+          - status_entity: sensor.wind_status
+          - label: Wind Gust
+          - icon: mdi:weather-windy
+          - unit: " km/h"
+      - type: custom:decluttering-card
+        template: plain_tile
+        variables:
+          - entity: sensor.wien_donaufeld_temperature
+          - label: Outside
+          - icon: mdi:thermometer
+          - unit: " °C"
+      - type: custom:decluttering-card
+        template: status_tile
+        variables:
+          - entity: sensor.wien_donaufeld_global_radiation
+          - status_entity: sensor.solar_status
+          - label: Solar
+          - icon: mdi:white-balance-sunny
+          - unit: " W/m²"
+
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: input_boolean.shades_wind_lockout
+        state: "on"
+    card:
+      type: custom:mushroom-template-card
+      primary: Wind Lockout Active
+      secondary: >-
+        Auto-close suspended. Will release after wind stays below
+        {{ states('input_number.shade_automation_wind_gust_threshold') | int }} km/h
+        for {{ states('input_number.shade_automation_wind_release_minutes') | int }} min.
+      icon: mdi:alert
+      icon_color: var(--error-color)
+      entity: input_boolean.shades_wind_lockout
+      card_mod:
+        style: |
+          ha-card {
+            background: var(--card-background-color);
+            border-radius: 20px;
+            border: 1px solid var(--error-color);
+          }

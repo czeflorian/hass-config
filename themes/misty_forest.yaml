@@ -151,7 +151,10 @@ Misty Forest:
       info-color: *fern_mid_l
 
       # ── Per-domain state colors (HA core) ──
-      state-icon-color: *fern_l
+      # state-icon-color is the INACTIVE icon (light off, switch off, etc.).
+      # It must be a neutral, NOT primary green — otherwise off lights look
+      # the same as on lights.
+      state-icon-color: *bark_l
       state-icon-active-color: *ember_l
       state-icon-unavailable-color: *dis_l
       state-light-active-color: *ember_l
@@ -324,8 +327,10 @@ Misty Forest:
       ha-color-form-background-hover: *mc_l
       ha-color-form-background-disabled: *dew_l
 
-      # Icons — newer variable, may converge with md-sys-color-primary
-      icon-primary-color: *fern_l
+      # icon-primary-color is the icon color used ON TOP OF primary-colored
+      # surfaces (sidebar, badge fills, circular icon backgrounds). Must be
+      # light/cream because it sits on green. NOT the same as primary-color.
+      icon-primary-color: *mc_l
 
       # ── Web Awesome (wa-color-*) — newest UI (automation editor) ──
       wa-color-brand-fill-loud: *fern_l
@@ -424,7 +429,8 @@ Misty Forest:
       info-color: *fern_mid_d
 
       # ── Per-domain state colors ──
-      state-icon-color: *fern_d
+      # state-icon-color is INACTIVE — must be neutral, not primary.
+      state-icon-color: *bark_d
       state-icon-active-color: *ember_d
       state-icon-unavailable-color: *dis_d
       state-light-active-color: *ember_d
@@ -581,7 +587,7 @@ Misty Forest:
       ha-color-form-background-hover: *mc_d
       ha-color-form-background-disabled: *dew_d
 
-      icon-primary-color: *fern_d
+      icon-primary-color: *canopy_d
 
       # ── Web Awesome ──
       wa-color-brand-fill-loud: *fern_d

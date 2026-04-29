@@ -151,10 +151,9 @@ Misty Forest:
       info-color: *fern_mid_l
 
       # ── Per-domain state colors (HA core) ──
-      # state-icon-color is the INACTIVE icon (light off, switch off, etc.).
-      # It must be a neutral, NOT primary green — otherwise off lights look
-      # the same as on lights.
-      state-icon-color: *bark_l
+      # state-icon-color (inactive icons) is left at HA's default — it
+      # picks an appropriate neutral that adapts to context. Setting it
+      # explicitly causes contrast issues in menus and dropdowns.
       state-icon-active-color: *ember_l
       state-icon-unavailable-color: *dis_l
       state-light-active-color: *ember_l
@@ -249,9 +248,21 @@ Misty Forest:
       mdc-text-field-ink-color: *canopy_l
 
       # ── MD3 fallback ──
-      # Some MD3 components don't cascade from mdc-theme-primary. Pin this
-      # one variable to cover them. May be deprecated in future HA versions.
+      # Modern HA uses md-sys-color-* for MD3 components (dropdown items,
+      # newer dialogs, list items in command palette). Without these, those
+      # components default to Material Blue + white surfaces.
       md-sys-color-primary: *fern_l
+      md-sys-color-on-primary: "#ffffff"
+      md-sys-color-surface: *mc_l
+      md-sys-color-surface-container: *mc_l
+      md-sys-color-surface-container-high: *ff_l
+      md-sys-color-surface-container-highest: *dew_l
+      md-sys-color-on-surface: *canopy_l
+      md-sys-color-on-surface-variant: *bark_l
+      md-sys-color-secondary: *ember_l
+      md-sys-color-on-secondary: "#ffffff"
+      md-sys-color-error: *err_l
+      md-sys-color-on-error: "#ffffff"
 
       # ── HA color system (ha-color-*) — newer UI surfaces ──
       # Variants: loud (filled bold) / normal (filled standard) / quiet
@@ -327,10 +338,10 @@ Misty Forest:
       ha-color-form-background-hover: *mc_l
       ha-color-form-background-disabled: *dew_l
 
-      # icon-primary-color is the icon color used ON TOP OF primary-colored
-      # surfaces (sidebar, badge fills, circular icon backgrounds). Must be
-      # light/cream because it sits on green. NOT the same as primary-color.
-      icon-primary-color: *mc_l
+      # ── Icon and MD3 surface colors ──
+      # We DON'T set icon-primary-color — letting it cascade prevents
+      # contrast issues in menus/dropdowns where icons sit on light surfaces.
+      # The MD3 surface variables below cover dropdown/menu item rendering.
 
       # ── Web Awesome (wa-color-*) — newest UI (automation editor) ──
       wa-color-brand-fill-loud: *fern_l
@@ -429,8 +440,7 @@ Misty Forest:
       info-color: *fern_mid_d
 
       # ── Per-domain state colors ──
-      # state-icon-color is INACTIVE — must be neutral, not primary.
-      state-icon-color: *bark_d
+      # state-icon-color left at HA default to avoid menu contrast issues.
       state-icon-active-color: *ember_d
       state-icon-unavailable-color: *dis_d
       state-light-active-color: *ember_d
@@ -526,6 +536,17 @@ Misty Forest:
 
       # ── MD3 fallback ──
       md-sys-color-primary: *fern_d
+      md-sys-color-on-primary: *mc_d
+      md-sys-color-surface: *mc_d
+      md-sys-color-surface-container: *mc_d
+      md-sys-color-surface-container-high: *ff_d
+      md-sys-color-surface-container-highest: *dew_d
+      md-sys-color-on-surface: *canopy_d
+      md-sys-color-on-surface-variant: *bark_d
+      md-sys-color-secondary: *ember_d
+      md-sys-color-on-secondary: "#ffffff"
+      md-sys-color-error: *err_d
+      md-sys-color-on-error: "#ffffff"
 
       # ── HA color system ──
       ha-color-fill-primary-loud-resting: *fern_d
@@ -587,7 +608,7 @@ Misty Forest:
       ha-color-form-background-hover: *mc_d
       ha-color-form-background-disabled: *dew_d
 
-      icon-primary-color: *canopy_d
+      # icon-primary-color left to cascade — see light mode comment.
 
       # ── Web Awesome ──
       wa-color-brand-fill-loud: *fern_d

@@ -6,12 +6,22 @@
 #   frontend:
 #     themes: !include_dir_merge_named themes/
 #
+# Coverage:
+#   - HA core variables (backgrounds, text, sidebar, primary, accent)
+#   - State colors (per-domain *-active-color)
+#   - History graphs and chart palette
+#   - Energy dashboard
+#   - Mushroom (state mappings only — named colors stay at their defaults)
+#   - MDC surface/text/select (only what doesn't cascade from primary-color)
+#   - HA color system (ha-color-*) — automation editor, action chips, etc.
+#   - Web Awesome (wa-color-*) — newest UI surfaces
+#   - MD3 (md-sys-color-primary) — fallback for components that don't cascade
+#
 # Design notes:
-#   - Named colors (mush-rgb-blue, etc.) keep their Material Design defaults.
-#     Don't redefine what "blue" means — that's confusing.
-#   - State mappings (mush-rgb-state-cover-open, etc.) get overridden to use
-#     warm palette colors. That's the documented theming surface.
-#   - YAML anchors at the top — change a hex once, propagates everywhere.
+#   - Don't pin variables that already cascade from primary-color/accent-color.
+#   - Named Mushroom colors (red, blue, etc.) keep Material defaults — only
+#     the state mappings get overridden.
+#   - YAML anchors at top — change a hex once, propagates everywhere.
 # ─────────────────────────────────────────────────────
 
 Misty Forest:
@@ -68,6 +78,7 @@ Misty Forest:
       sidebar-selected-icon-color: "#ffffff"
       sidebar-selected-background-color: *fern_deep_l
       sidebar-border-color: *fern_deep_l
+      scrollbar-thumb-color: *fern_l
 
       # ── Header / Toolbar ──
       app-header-background-color: *fern_l
@@ -76,13 +87,13 @@ Misty Forest:
       app-header-edit-background-color: *fern_deep_l
       app-toolbar-text-color: *mc_l
 
-      # ── Primary & accent ──
+      # ── Primary & accent (these cascade to MDC, MD3, and most UI) ──
       primary-color: *fern_l
       accent-color: *ember_l
       light-primary-color: *fern_mid_l
       dark-primary-color: *fern_deep_l
 
-      # ── RGB forms (used by HA core for rgba() overlays) ──
+      # ── RGB forms (for rgba() overlays) ──
       rgb-primary-color: "74, 124, 89"
       rgb-accent-color: "212, 122, 58"
       rgb-primary-text-color: "28, 46, 30"
@@ -97,10 +108,8 @@ Misty Forest:
       text-primary-color: *canopy_l
       disabled-text-color: *dis_l
       text-accent-color: *ember_l
-      label-badge-background-color: *ember_l
-      label-badge-text-color: "#ffffff"
 
-      # ── Switches & toggles ──
+      # ── Switches ──
       switch-checked-color: *fern_l
       switch-checked-button-color: "#ffffff"
       switch-checked-track-color: *fern_mid_l
@@ -108,15 +117,10 @@ Misty Forest:
       switch-unchecked-button-color: "#ffffff"
       switch-unchecked-track-color: *dew_l
 
-      # ── Sliders ──
+      # ── Sliders (modern HA — paper-slider-* removed as obsolete) ──
       slider-color: *fern_l
       slider-secondary-color: *dew_l
       slider-bar-color: *dew_l
-      paper-slider-knob-color: *fern_l
-      paper-slider-knob-start-color: *fern_l
-      paper-slider-pin-color: *fern_l
-      paper-slider-active-color: *fern_l
-      paper-slider-container-color: *dew_l
 
       # ── Cards ──
       ha-card-background: *mc_l
@@ -140,66 +144,13 @@ Misty Forest:
       input-disabled-ink-color: *dis_l
       input-dropdown-icon-color: *bark_l
 
-      # ── Material Design Components (MDC) ──
-      # Covers ha-button, ha-dropdown-item, ha-select, mwc-list-item,
-      # checkboxes, radios, tabs, dialogs etc. Without these, MDC components
-      # default to Material Blue (#6200ee or similar). Many of HA's settings
-      # menus and dialogs render via these components.
-      mdc-theme-primary: *fern_l
-      mdc-theme-secondary: *ember_l
-      mdc-theme-on-primary: "#ffffff"
-      mdc-theme-on-secondary: "#ffffff"
-      mdc-theme-surface: *mc_l
-      mdc-theme-on-surface: *canopy_l
-      mdc-theme-background: *ff_l
-      mdc-theme-error: *err_l
-      mdc-theme-text-primary-on-background: *canopy_l
-      mdc-theme-text-secondary-on-background: *bark_l
-      mdc-theme-text-hint-on-background: *bark_l
-      mdc-theme-text-disabled-on-background: *dis_l
-      mdc-theme-text-icon-on-background: *bark_l
-
-      # Buttons (ha-button, mwc-button)
-      mdc-button-disabled-fill-color: *dew_l
-      mdc-button-outline-color: *fern_l
-
-      # List items (ha-dropdown-item, mwc-list-item)
-      mdc-list-item-graphic-margin: 16px
-      mdc-list-item-meta-size: 24px
-
-      # Select / dropdown
-      mdc-select-fill-color: *ff_l
-      mdc-select-ink-color: *canopy_l
-      mdc-select-label-ink-color: *bark_l
-      mdc-select-idle-line-color: *dew_l
-      mdc-select-hover-line-color: *fern_l
-      mdc-select-focused-dropdown-icon-color: *fern_l
-      mdc-select-dropdown-icon-color: *bark_l
-
-      # Checkbox / radio
-      mdc-checkbox-unchecked-color: *bark_l
-      mdc-checkbox-disabled-color: *dis_l
-      mdc-radio-unchecked-color: *bark_l
-      mdc-radio-disabled-color: *dis_l
-
-      # Tabs (settings menus, multi-pane dialogs)
-      mdc-tab-color-default: *bark_l
-      mdc-tab-text-label-color-default: *bark_l
-
-      # Ripples (touch feedback) — use primary green at low opacity
-      mdc-ripple-color: *fern_l
-
-      # Paper / legacy components still used in some places
-      paper-item-icon-color: *bark_l
-      paper-item-icon-active-color: *fern_l
-
       # ── States (semantic) ──
       success-color: *fern_l
       warning-color: *ember_l
       error-color: *err_l
       info-color: *fern_mid_l
 
-      # ── Per-domain state colors (HA core variables) ──
+      # ── Per-domain state colors (HA core) ──
       state-icon-color: *fern_l
       state-icon-active-color: *ember_l
       state-icon-unavailable-color: *dis_l
@@ -218,7 +169,7 @@ Misty Forest:
       state-person-not_home-color: *bark_l
       state-update-installing-color: *amber_l
 
-      # ── History graph colors ──
+      # ── History graphs ──
       history-fill-color: *fern_l
       history-line-color: *fern_l
       state-history-fill-color: *fern_l
@@ -238,41 +189,29 @@ Misty Forest:
       graph-color-8: *canopy_l
 
       # ── Energy dashboard ──
-      energy-grid-consumption-color: *ember_l       # what you draw
-      energy-grid-return-color: *fern_l             # what you push back
-      energy-solar-color: *amber_l                  # solar production
+      energy-grid-consumption-color: *ember_l
+      energy-grid-return-color: *fern_l
+      energy-solar-color: *amber_l
       energy-battery-in-color: *fern_deep_l
       energy-battery-out-color: *fern_mid_l
       energy-non-fossil-color: *fern_l
       energy-gas-color: *err_l
       energy-water-color: *fern_mid_l
 
-      # ── Mushroom — keep named colors at their Material Design defaults ──
-      # We DON'T override mush-rgb-red/blue/green/etc. These are the named
-      # color slots — if a card says `icon_color: blue`, it should be blue.
-      # We override only the STATE mappings below to point those slots at
-      # whichever named color we want for that state.
-
-      # Mushroom state mappings — point each state at our preferred named color.
-      # Syntax: state slot → reference a named color via its CSS var.
-      mush-rgb-state-fan: "var(--rgb-primary-color)"        # fern green
-      mush-rgb-state-light: "var(--mush-rgb-orange)"        # warm light glow
-      mush-rgb-state-entity: "var(--rgb-primary-color)"     # fern (was blue)
-      mush-rgb-state-switch: "var(--rgb-primary-color)"     # fern (was blue)
-
-      mush-rgb-state-cover-open: "var(--rgb-primary-color)" # fern (was blue)
+      # ── Mushroom state mappings (named colors keep MD defaults) ──
+      mush-rgb-state-fan: "var(--rgb-primary-color)"
+      mush-rgb-state-light: "var(--mush-rgb-orange)"
+      mush-rgb-state-entity: "var(--rgb-primary-color)"
+      mush-rgb-state-switch: "var(--rgb-primary-color)"
+      mush-rgb-state-cover-open: "var(--rgb-primary-color)"
       mush-rgb-state-cover-closed: "var(--mush-rgb-disabled)"
-
       mush-rgb-state-person-home: "var(--rgb-primary-color)"
       mush-rgb-state-person-not-home: "var(--mush-rgb-red)"
       mush-rgb-state-person-zone: "var(--rgb-accent-color)"
       mush-rgb-state-person-unknown: "var(--mush-rgb-grey)"
-
       mush-rgb-state-alarm-disarmed: "var(--rgb-primary-color)"
       mush-rgb-state-alarm-armed: "var(--mush-rgb-orange)"
       mush-rgb-state-alarm-triggered: "var(--mush-rgb-red)"
-
-      # Climate: keep semantic intuition (heat=warm, cool=green, off=grey)
       mush-rgb-state-climate-heat: "var(--mush-rgb-deep-orange)"
       mush-rgb-state-climate-cool: "var(--rgb-primary-color)"
       mush-rgb-state-climate-auto: "var(--rgb-primary-color)"
@@ -281,14 +220,118 @@ Misty Forest:
       mush-rgb-state-climate-fan-only: "var(--mush-rgb-grey)"
       mush-rgb-state-climate-idle: "var(--mush-rgb-grey)"
       mush-rgb-state-climate-off: "var(--mush-rgb-disabled)"
-
-      # Mushroom also uses these semantic slots
       mush-rgb-info: "var(--rgb-primary-color)"
       mush-rgb-success: "var(--mush-rgb-green)"
       mush-rgb-warning: "var(--mush-rgb-orange)"
       mush-rgb-danger: "var(--mush-rgb-red)"
-
       mush-rgb-disabled: "189, 189, 189"
+
+      # ── MDC (only what doesn't cascade from primary-color) ──
+      mdc-theme-surface: *mc_l
+      mdc-theme-on-surface: *canopy_l
+      mdc-theme-background: *ff_l
+      mdc-theme-text-primary-on-background: *canopy_l
+      mdc-theme-text-secondary-on-background: *bark_l
+      mdc-theme-text-hint-on-background: *bark_l
+      mdc-theme-text-disabled-on-background: *dis_l
+      mdc-theme-text-icon-on-background: *bark_l
+      mdc-select-fill-color: *ff_l
+      mdc-select-ink-color: *canopy_l
+      mdc-select-label-ink-color: *bark_l
+      mdc-select-idle-line-color: *dew_l
+      mdc-select-dropdown-icon-color: *bark_l
+      mdc-tab-color-default: *bark_l
+      mdc-tab-text-label-color-default: *bark_l
+      mdc-text-field-fill-color: *ff_l
+      mdc-text-field-ink-color: *canopy_l
+
+      # ── MD3 fallback ──
+      # Some MD3 components don't cascade from mdc-theme-primary. Pin this
+      # one variable to cover them. May be deprecated in future HA versions.
+      md-sys-color-primary: *fern_l
+
+      # ── HA color system (ha-color-*) — newer UI surfaces ──
+      # Variants: loud (filled bold) / normal (filled standard) / quiet
+      # (subtle/outline); states: resting / hover / active.
+      # Used heavily by the automation editor, action chips, integration
+      # cards, and modern dialog buttons.
+
+      # Primary fills
+      ha-color-fill-primary-loud-resting: *fern_l
+      ha-color-fill-primary-loud-hover: *fern_deep_l
+      ha-color-fill-primary-loud-active: *fern_deep_l
+      ha-color-fill-primary-normal-resting: *fern_l
+      ha-color-fill-primary-normal-hover: *fern_deep_l
+      ha-color-fill-primary-normal-active: *fern_deep_l
+      ha-color-fill-primary-quiet-resting: *dew_l
+      ha-color-fill-primary-quiet-hover: *fern_mid_l
+      ha-color-fill-primary-quiet-active: *fern_mid_l
+
+      # Neutral fills (chips, neutral buttons)
+      ha-color-fill-neutral-loud-resting: *bark_l
+      ha-color-fill-neutral-loud-hover: *canopy_l
+      ha-color-fill-neutral-normal-resting: *mc_l
+      ha-color-fill-neutral-normal-hover: *dew_l
+      ha-color-fill-neutral-normal-active: *fern_mid_l
+      ha-color-fill-neutral-quiet-resting: *ff_l
+      ha-color-fill-neutral-quiet-hover: *mc_l
+
+      # Danger fills (destructive actions)
+      ha-color-fill-danger-loud-resting: *err_l
+      ha-color-fill-danger-loud-hover: "#8a3030"
+      ha-color-fill-danger-normal-resting: *err_l
+      ha-color-fill-danger-normal-hover: "#8a3030"
+      ha-color-fill-danger-quiet-resting: *dew_l
+      ha-color-fill-danger-quiet-hover: "#e8c8c8"
+
+      # Success fills
+      ha-color-fill-success-loud-resting: *fern_l
+      ha-color-fill-success-loud-hover: *fern_deep_l
+      ha-color-fill-success-loud-active: *fern_deep_l
+      ha-color-fill-success-normal-resting: *fern_l
+      ha-color-fill-success-normal-hover: *fern_deep_l
+      ha-color-fill-success-normal-active: *fern_deep_l
+
+      # Disabled fills
+      ha-color-fill-disabled-loud-resting: *dew_l
+      ha-color-fill-disabled-normal-resting: *dew_l
+      ha-color-fill-disabled-normal-active: *dew_l
+
+      # Text/icon "on" colors (what goes on top of fills)
+      ha-color-on-primary-loud: "#ffffff"
+      ha-color-on-primary-normal: "#ffffff"
+      ha-color-on-neutral-normal: *canopy_l
+      ha-color-on-neutral-quiet: *bark_l
+      ha-color-on-danger-loud: "#ffffff"
+      ha-color-on-danger-normal: "#ffffff"
+      ha-color-on-danger-quiet: *err_l
+      ha-color-on-disabled: *dis_l
+      ha-color-on-disabled-loud: *dis_l
+      ha-color-on-disabled-normal: *dis_l
+      ha-color-on-disabled-quiet: *dis_l
+
+      # Borders
+      ha-color-border-neutral-loud: *bark_l
+      ha-color-border-neutral-normal: *dew_l
+      ha-color-border-neutral-quiet: *dew_l
+
+      # Surfaces and text
+      ha-color-surface-default: *mc_l
+      ha-color-text-secondary: *bark_l
+
+      # Form backgrounds
+      ha-color-form-background: *ff_l
+      ha-color-form-background-hover: *mc_l
+      ha-color-form-background-disabled: *dew_l
+
+      # Icons — newer variable, may converge with md-sys-color-primary
+      icon-primary-color: *fern_l
+
+      # ── Web Awesome (wa-color-*) — newest UI (automation editor) ──
+      wa-color-brand-fill-loud: *fern_l
+      wa-color-neutral-fill-normal: *mc_l
+      wa-color-neutral-on-normal: *canopy_l
+      wa-color-danger-fill-loud: *err_l
 
     # ═══════════════════════════════════════════════════
     #                 DARK MODE
@@ -308,6 +351,7 @@ Misty Forest:
       sidebar-selected-icon-color: *canopy_d
       sidebar-selected-background-color: "#3a6447"
       sidebar-border-color: "#3a6447"
+      scrollbar-thumb-color: *fern_d
 
       # ── Header / Toolbar ──
       app-header-background-color: *fern_deep_d
@@ -337,10 +381,8 @@ Misty Forest:
       text-primary-color: *canopy_d
       disabled-text-color: *dis_d
       text-accent-color: *ember_d
-      label-badge-background-color: *ember_d
-      label-badge-text-color: "#ffffff"
 
-      # ── Switches & toggles ──
+      # ── Switches ──
       switch-checked-color: *fern_d
       switch-checked-button-color: *mc_d
       switch-checked-track-color: *fern_deep_d
@@ -352,11 +394,6 @@ Misty Forest:
       slider-color: *fern_d
       slider-secondary-color: *dew_d
       slider-bar-color: *dew_d
-      paper-slider-knob-color: *fern_d
-      paper-slider-knob-start-color: *fern_d
-      paper-slider-pin-color: *fern_d
-      paper-slider-active-color: *fern_d
-      paper-slider-container-color: *dew_d
 
       # ── Cards ──
       ha-card-background: *mc_d
@@ -380,62 +417,13 @@ Misty Forest:
       input-disabled-ink-color: *dis_d
       input-dropdown-icon-color: *bark_d
 
-      # ── Material Design Components (MDC) ──
-      mdc-theme-primary: *fern_d
-      mdc-theme-secondary: *ember_d
-      mdc-theme-on-primary: *mc_d
-      mdc-theme-on-secondary: "#ffffff"
-      mdc-theme-surface: *mc_d
-      mdc-theme-on-surface: *canopy_d
-      mdc-theme-background: *ff_d
-      mdc-theme-error: *err_d
-      mdc-theme-text-primary-on-background: *canopy_d
-      mdc-theme-text-secondary-on-background: *bark_d
-      mdc-theme-text-hint-on-background: *bark_d
-      mdc-theme-text-disabled-on-background: *dis_d
-      mdc-theme-text-icon-on-background: *bark_d
-
-      # Buttons
-      mdc-button-disabled-fill-color: *dew_d
-      mdc-button-outline-color: *fern_d
-
-      # List items
-      mdc-list-item-graphic-margin: 16px
-      mdc-list-item-meta-size: 24px
-
-      # Select / dropdown
-      mdc-select-fill-color: *mc_d
-      mdc-select-ink-color: *canopy_d
-      mdc-select-label-ink-color: *bark_d
-      mdc-select-idle-line-color: *dew_d
-      mdc-select-hover-line-color: *fern_d
-      mdc-select-focused-dropdown-icon-color: *fern_d
-      mdc-select-dropdown-icon-color: *bark_d
-
-      # Checkbox / radio
-      mdc-checkbox-unchecked-color: *bark_d
-      mdc-checkbox-disabled-color: *dis_d
-      mdc-radio-unchecked-color: *bark_d
-      mdc-radio-disabled-color: *dis_d
-
-      # Tabs
-      mdc-tab-color-default: *bark_d
-      mdc-tab-text-label-color-default: *bark_d
-
-      # Ripples
-      mdc-ripple-color: *fern_d
-
-      # Paper / legacy
-      paper-item-icon-color: *bark_d
-      paper-item-icon-active-color: *fern_d
-
-      # ── States (semantic) ──
+      # ── States ──
       success-color: *fern_d
       warning-color: *ember_d
       error-color: *err_d
       info-color: *fern_mid_d
 
-      # ── Per-domain state colors (HA core variables) ──
+      # ── Per-domain state colors ──
       state-icon-color: *fern_d
       state-icon-active-color: *ember_d
       state-icon-unavailable-color: *dis_d
@@ -454,7 +442,7 @@ Misty Forest:
       state-person-not_home-color: *bark_d
       state-update-installing-color: *amber_d
 
-      # ── History graph colors ──
+      # ── History graphs ──
       history-fill-color: *fern_d
       history-line-color: *fern_d
       state-history-fill-color: *fern_d
@@ -463,7 +451,7 @@ Misty Forest:
       state-off-color: *dis_d
       state-unavailable-color: *dew_d
 
-      # ── Multi-series chart palette ──
+      # ── Chart palette ──
       graph-color-1: *fern_d
       graph-color-2: *ember_d
       graph-color-3: *amber_d
@@ -473,7 +461,7 @@ Misty Forest:
       graph-color-7: *fern_mid_d
       graph-color-8: *canopy_d
 
-      # ── Energy dashboard ──
+      # ── Energy ──
       energy-grid-consumption-color: *ember_d
       energy-grid-return-color: *fern_d
       energy-solar-color: *amber_d
@@ -488,19 +476,15 @@ Misty Forest:
       mush-rgb-state-light: "var(--mush-rgb-orange)"
       mush-rgb-state-entity: "var(--rgb-primary-color)"
       mush-rgb-state-switch: "var(--rgb-primary-color)"
-
       mush-rgb-state-cover-open: "var(--rgb-primary-color)"
       mush-rgb-state-cover-closed: "var(--mush-rgb-disabled)"
-
       mush-rgb-state-person-home: "var(--rgb-primary-color)"
       mush-rgb-state-person-not-home: "var(--mush-rgb-red)"
       mush-rgb-state-person-zone: "var(--rgb-accent-color)"
       mush-rgb-state-person-unknown: "var(--mush-rgb-grey)"
-
       mush-rgb-state-alarm-disarmed: "var(--rgb-primary-color)"
       mush-rgb-state-alarm-armed: "var(--mush-rgb-orange)"
       mush-rgb-state-alarm-triggered: "var(--mush-rgb-red)"
-
       mush-rgb-state-climate-heat: "var(--mush-rgb-deep-orange)"
       mush-rgb-state-climate-cool: "var(--rgb-primary-color)"
       mush-rgb-state-climate-auto: "var(--rgb-primary-color)"
@@ -509,10 +493,98 @@ Misty Forest:
       mush-rgb-state-climate-fan-only: "var(--mush-rgb-grey)"
       mush-rgb-state-climate-idle: "var(--mush-rgb-grey)"
       mush-rgb-state-climate-off: "var(--mush-rgb-disabled)"
-
       mush-rgb-info: "var(--rgb-primary-color)"
       mush-rgb-success: "var(--mush-rgb-green)"
       mush-rgb-warning: "var(--mush-rgb-orange)"
       mush-rgb-danger: "var(--mush-rgb-red)"
-
       mush-rgb-disabled: "111, 111, 111"
+
+      # ── MDC ──
+      mdc-theme-surface: *mc_d
+      mdc-theme-on-surface: *canopy_d
+      mdc-theme-background: *ff_d
+      mdc-theme-text-primary-on-background: *canopy_d
+      mdc-theme-text-secondary-on-background: *bark_d
+      mdc-theme-text-hint-on-background: *bark_d
+      mdc-theme-text-disabled-on-background: *dis_d
+      mdc-theme-text-icon-on-background: *bark_d
+      mdc-select-fill-color: *mc_d
+      mdc-select-ink-color: *canopy_d
+      mdc-select-label-ink-color: *bark_d
+      mdc-select-idle-line-color: *dew_d
+      mdc-select-dropdown-icon-color: *bark_d
+      mdc-tab-color-default: *bark_d
+      mdc-tab-text-label-color-default: *bark_d
+      mdc-text-field-fill-color: *mc_d
+      mdc-text-field-ink-color: *canopy_d
+
+      # ── MD3 fallback ──
+      md-sys-color-primary: *fern_d
+
+      # ── HA color system ──
+      ha-color-fill-primary-loud-resting: *fern_d
+      ha-color-fill-primary-loud-hover: *fern_mid_d
+      ha-color-fill-primary-loud-active: *fern_mid_d
+      ha-color-fill-primary-normal-resting: *fern_d
+      ha-color-fill-primary-normal-hover: *fern_mid_d
+      ha-color-fill-primary-normal-active: *fern_mid_d
+      ha-color-fill-primary-quiet-resting: *fern_deep_d
+      ha-color-fill-primary-quiet-hover: *fern_d
+      ha-color-fill-primary-quiet-active: *fern_d
+
+      ha-color-fill-neutral-loud-resting: *bark_d
+      ha-color-fill-neutral-loud-hover: *canopy_d
+      ha-color-fill-neutral-normal-resting: *mc_d
+      ha-color-fill-neutral-normal-hover: *dew_d
+      ha-color-fill-neutral-normal-active: *fern_d
+      ha-color-fill-neutral-quiet-resting: *ff_d
+      ha-color-fill-neutral-quiet-hover: *mc_d
+
+      ha-color-fill-danger-loud-resting: *err_d
+      ha-color-fill-danger-loud-hover: "#d07070"
+      ha-color-fill-danger-normal-resting: *err_d
+      ha-color-fill-danger-normal-hover: "#d07070"
+      ha-color-fill-danger-quiet-resting: *dew_d
+      ha-color-fill-danger-quiet-hover: "#3d2828"
+
+      ha-color-fill-success-loud-resting: *fern_d
+      ha-color-fill-success-loud-hover: *fern_mid_d
+      ha-color-fill-success-loud-active: *fern_mid_d
+      ha-color-fill-success-normal-resting: *fern_d
+      ha-color-fill-success-normal-hover: *fern_mid_d
+      ha-color-fill-success-normal-active: *fern_mid_d
+
+      ha-color-fill-disabled-loud-resting: *dew_d
+      ha-color-fill-disabled-normal-resting: *dew_d
+      ha-color-fill-disabled-normal-active: *dew_d
+
+      ha-color-on-primary-loud: *mc_d
+      ha-color-on-primary-normal: *mc_d
+      ha-color-on-neutral-normal: *canopy_d
+      ha-color-on-neutral-quiet: *bark_d
+      ha-color-on-danger-loud: "#ffffff"
+      ha-color-on-danger-normal: "#ffffff"
+      ha-color-on-danger-quiet: *err_d
+      ha-color-on-disabled: *dis_d
+      ha-color-on-disabled-loud: *dis_d
+      ha-color-on-disabled-normal: *dis_d
+      ha-color-on-disabled-quiet: *dis_d
+
+      ha-color-border-neutral-loud: *bark_d
+      ha-color-border-neutral-normal: *dew_d
+      ha-color-border-neutral-quiet: *dew_d
+
+      ha-color-surface-default: *mc_d
+      ha-color-text-secondary: *bark_d
+
+      ha-color-form-background: *ff_d
+      ha-color-form-background-hover: *mc_d
+      ha-color-form-background-disabled: *dew_d
+
+      icon-primary-color: *fern_d
+
+      # ── Web Awesome ──
+      wa-color-brand-fill-loud: *fern_d
+      wa-color-neutral-fill-normal: *mc_d
+      wa-color-neutral-on-normal: *canopy_d
+      wa-color-danger-fill-loud: *err_d

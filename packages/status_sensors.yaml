@@ -136,6 +136,17 @@ template:
             {% endif %}
           {% endif %}
 
+      - name: "Printer Ink Display"
+        unique_id: printer_ink_display
+        state: >
+          {% set b = states('sensor.hp_envy_6000_series_black_cartridge') %}
+          {% set c = states('sensor.hp_envy_6000_series_tri_color_cartridge') %}
+          {% if b in ['unknown', 'unavailable', 'none'] or c in ['unknown', 'unavailable', 'none'] %}
+            Offline
+          {% else %}
+            Black: {{ b }}% · Color: {{ c }}%
+          {% endif %}
+
       # ---- GRILLPLATS plug ----
       # Maps the plug to standard status vocabulary plus a human-readable text
       # attribute. State values: active (drawing power), moderate (standby),

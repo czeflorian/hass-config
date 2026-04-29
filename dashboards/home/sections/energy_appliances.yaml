@@ -21,11 +21,20 @@ cards:
     period: day
     title: Daily Grid Consumption
     entities:
-      - entity: sensor.wnsm_at0010000000000000001000015255439
+      - entity: wnsm:at0010000000000000001000015255439
         name: Grid
     stat_types:
       - state
     days_to_show: 7
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+          --graph-color-1: #d47a3a;
+        }
+        .card-header { color: var(--primary-text-color); }
 
   # ---- Washing machine ----
   - type: custom:decluttering-card
@@ -142,14 +151,7 @@ cards:
       - status_entity: sensor.printer_ink_status
       - label: Printer Ink
       - icon: mdi:printer
-      - secondary: >-
-          {% set b = states('sensor.hp_envy_6000_series_black_cartridge') %}
-          {% set c = states('sensor.hp_envy_6000_series_tri_color_cartridge') %}
-          {% if b in ['unknown', 'unavailable'] or c in ['unknown', 'unavailable'] %}
-            Offline
-          {% else %}
-            Black: {{ b }}% · Color: {{ c }}%
-          {% endif %}
+      - secondary: "{{ states('sensor.printer_ink_display') }}"
 
   # ---- Shade automation ----
   - type: custom:decluttering-card

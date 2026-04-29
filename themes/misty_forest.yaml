@@ -243,6 +243,29 @@ Misty Forest:
       mush-rgb-black: "28, 46, 30"
       mush-rgb-disabled: "168, 188, 162"
 
+      # ── Mushroom per-domain default state colors ──
+      # These drive the slider/button accent on Mushroom cards when no
+      # explicit icon_color is set. Without these, Mushroom falls back to
+      # its hardcoded blue. Set per domain to match the warm palette.
+      mush-rgb-state-light: "212, 122, 58"      # ember (matches HA core)
+      mush-rgb-state-switch: "74, 124, 89"      # fern
+      mush-rgb-state-cover: "74, 124, 89"       # fern — fixes the blue sliders
+      mush-rgb-state-fan: "74, 124, 89"
+      mush-rgb-state-binary-sensor: "74, 124, 89"
+      mush-rgb-state-media-player: "74, 124, 89"
+      mush-rgb-state-vacuum: "74, 124, 89"
+      mush-rgb-state-lock: "74, 124, 89"
+      mush-rgb-state-climate: "212, 122, 58"
+      mush-rgb-state-humidifier: "74, 138, 130"  # lichen
+      mush-rgb-state-update: "196, 150, 30"      # amber
+      mush-rgb-state-person: "74, 124, 89"
+      mush-rgb-state-number: "74, 124, 89"
+      mush-rgb-state-input-boolean: "74, 124, 89"
+      mush-rgb-state-input-number: "74, 124, 89"
+      mush-rgb-state-script: "74, 124, 89"
+      mush-rgb-state-scene: "212, 122, 58"
+      mush-rgb-state-entity: "74, 124, 89"
+
     # ═══════════════════════════════════════════════════
     #                 DARK MODE
     # ═══════════════════════════════════════════════════
@@ -410,3 +433,23 @@ Misty Forest:
       mush-rgb-grey: "143, 168, 135"
       mush-rgb-black: "221, 236, 213"
       mush-rgb-disabled: "74, 94, 76"
+
+      # ── Mushroom per-domain default state colors ──
+      mush-rgb-state-light: "212, 122, 58"
+      mush-rgb-state-switch: "122, 170, 136"
+      mush-rgb-state-cover: "122, 170, 136"
+      mush-rgb-state-fan: "122, 170, 136"
+      mush-rgb-state-binary-sensor: "122, 170, 136"
+      mush-rgb-state-media-player: "122, 170, 136"
+      mush-rgb-state-vacuum: "122, 170, 136"
+      mush-rgb-state-lock: "122, 170, 136"
+      mush-rgb-state-climate: "212, 122, 58"
+      mush-rgb-state-humidifier: "106, 163, 156"
+      mush-rgb-state-update: "210, 168, 50"
+      mush-rgb-state-person: "122, 170, 136"
+      mush-rgb-state-number: "122, 170, 136"
+      mush-rgb-state-input-boolean: "122, 170, 136"
+      mush-rgb-state-input-number: "122, 170, 136"
+      mush-rgb-state-script: "122, 170, 136"
+      mush-rgb-state-scene: "212, 122, 58"
+      mush-rgb-state-entity: "122, 170, 136"

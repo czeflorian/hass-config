@@ -14,11 +14,11 @@ script: !include_dir_merge_named scripts/
 scene: !include scenes.yaml
 
 lovelace:
-  mode: yaml
+  resource_mode: yaml
   dashboards:
     lovelace-home:
       mode: yaml
       filename: dashboards/home/home.yaml
       title: Home
-      icon: mdi:home-heart
+      icon: mdi:home-assistant
       show_in_sidebar: true

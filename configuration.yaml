@@ -16,9 +16,9 @@ scene: !include scenes.yaml
 lovelace:
   resource_mode: yaml
   resources:
-    - url: /hacsfiles/mushroom/mushroom.js
+    - url: /hacsfiles/lovelace-mushroom/mushroom.js
       type: module
-    - url: /hacsfiles/decluttering-card/decluttering-card.js
+    - url: /hacsfiles/decluttering-card/decluttering-card.js  # install via HACS first
       type: module
     - url: /hacsfiles/lovelace-card-mod/card-mod.js
       type: module

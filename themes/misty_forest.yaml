@@ -140,11 +140,56 @@ Misty Forest:
       input-disabled-ink-color: *dis_l
       input-dropdown-icon-color: *bark_l
 
-      # ── Buttons ──
+      # ── Material Design Components (MDC) ──
+      # Covers ha-button, ha-dropdown-item, ha-select, mwc-list-item,
+      # checkboxes, radios, tabs, dialogs etc. Without these, MDC components
+      # default to Material Blue (#6200ee or similar). Many of HA's settings
+      # menus and dialogs render via these components.
       mdc-theme-primary: *fern_l
       mdc-theme-secondary: *ember_l
       mdc-theme-on-primary: "#ffffff"
       mdc-theme-on-secondary: "#ffffff"
+      mdc-theme-surface: *mc_l
+      mdc-theme-on-surface: *canopy_l
+      mdc-theme-background: *ff_l
+      mdc-theme-error: *err_l
+      mdc-theme-text-primary-on-background: *canopy_l
+      mdc-theme-text-secondary-on-background: *bark_l
+      mdc-theme-text-hint-on-background: *bark_l
+      mdc-theme-text-disabled-on-background: *dis_l
+      mdc-theme-text-icon-on-background: *bark_l
+
+      # Buttons (ha-button, mwc-button)
+      mdc-button-disabled-fill-color: *dew_l
+      mdc-button-outline-color: *fern_l
+
+      # List items (ha-dropdown-item, mwc-list-item)
+      mdc-list-item-graphic-margin: 16px
+      mdc-list-item-meta-size: 24px
+
+      # Select / dropdown
+      mdc-select-fill-color: *ff_l
+      mdc-select-ink-color: *canopy_l
+      mdc-select-label-ink-color: *bark_l
+      mdc-select-idle-line-color: *dew_l
+      mdc-select-hover-line-color: *fern_l
+      mdc-select-focused-dropdown-icon-color: *fern_l
+      mdc-select-dropdown-icon-color: *bark_l
+
+      # Checkbox / radio
+      mdc-checkbox-unchecked-color: *bark_l
+      mdc-checkbox-disabled-color: *dis_l
+      mdc-radio-unchecked-color: *bark_l
+      mdc-radio-disabled-color: *dis_l
+
+      # Tabs (settings menus, multi-pane dialogs)
+      mdc-tab-color-default: *bark_l
+      mdc-tab-text-label-color-default: *bark_l
+
+      # Ripples (touch feedback) — use primary green at low opacity
+      mdc-ripple-color: *fern_l
+
+      # Paper / legacy components still used in some places
       paper-item-icon-color: *bark_l
       paper-item-icon-active-color: *fern_l
 
@@ -335,11 +380,52 @@ Misty Forest:
       input-disabled-ink-color: *dis_d
       input-dropdown-icon-color: *bark_d
 
-      # ── Buttons ──
+      # ── Material Design Components (MDC) ──
       mdc-theme-primary: *fern_d
       mdc-theme-secondary: *ember_d
       mdc-theme-on-primary: *mc_d
       mdc-theme-on-secondary: "#ffffff"
+      mdc-theme-surface: *mc_d
+      mdc-theme-on-surface: *canopy_d
+      mdc-theme-background: *ff_d
+      mdc-theme-error: *err_d
+      mdc-theme-text-primary-on-background: *canopy_d
+      mdc-theme-text-secondary-on-background: *bark_d
+      mdc-theme-text-hint-on-background: *bark_d
+      mdc-theme-text-disabled-on-background: *dis_d
+      mdc-theme-text-icon-on-background: *bark_d
+
+      # Buttons
+      mdc-button-disabled-fill-color: *dew_d
+      mdc-button-outline-color: *fern_d
+
+      # List items
+      mdc-list-item-graphic-margin: 16px
+      mdc-list-item-meta-size: 24px
+
+      # Select / dropdown
+      mdc-select-fill-color: *mc_d
+      mdc-select-ink-color: *canopy_d
+      mdc-select-label-ink-color: *bark_d
+      mdc-select-idle-line-color: *dew_d
+      mdc-select-hover-line-color: *fern_d
+      mdc-select-focused-dropdown-icon-color: *fern_d
+      mdc-select-dropdown-icon-color: *bark_d
+
+      # Checkbox / radio
+      mdc-checkbox-unchecked-color: *bark_d
+      mdc-checkbox-disabled-color: *dis_d
+      mdc-radio-unchecked-color: *bark_d
+      mdc-radio-disabled-color: *dis_d
+
+      # Tabs
+      mdc-tab-color-default: *bark_d
+      mdc-tab-text-label-color-default: *bark_d
+
+      # Ripples
+      mdc-ripple-color: *fern_d
+
+      # Paper / legacy
       paper-item-icon-color: *bark_d
       paper-item-icon-active-color: *fern_d
 

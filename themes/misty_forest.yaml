@@ -348,10 +348,11 @@ Misty Forest:
       # The MD3 surface variables below cover dropdown/menu item rendering.
 
       # ── Web Awesome (wa-color-*) — newest UI ──
-      # Minimal set. Setting too many wa-color-brand-* variables broke
-      # the Cancel button text rendering (became white on cream). HA's
-      # defaults handle plain text buttons better than my overrides did.
+      # The plain Cancel button reads its text color from
+      #   --wa-color-on-quiet ← --wa-color-brand-on-quiet
+      # (confirmed via DevTools inspection of :host([variant=brand]) rules).
       wa-color-brand-fill-loud: *fern_l
+      wa-color-brand-on-quiet: *fern_l
       wa-color-neutral-fill-normal: *mc_l
       wa-color-neutral-on-normal: *canopy_l
       wa-color-danger-fill-loud: *err_l
@@ -619,6 +620,7 @@ Misty Forest:
 
       # ── Web Awesome ──
       wa-color-brand-fill-loud: *fern_d
+      wa-color-brand-on-quiet: *fern_d
       wa-color-neutral-fill-normal: *mc_d
       wa-color-neutral-on-normal: *canopy_d
       wa-color-danger-fill-loud: *err_d

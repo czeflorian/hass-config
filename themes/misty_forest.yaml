@@ -14,7 +14,8 @@
 #   - Mushroom (state mappings only — named colors stay at their defaults)
 #   - MDC surface/text/select (only what doesn't cascade from primary-color)
 #   - HA color system (ha-color-*) — automation editor, action chips, etc.
-#   - Web Awesome (wa-color-*) — newest UI surfaces
+#   - Web Awesome (wa-color-*) — newest UI surfaces, full coverage of
+#     brand/neutral/danger groups + generic group-less tokens
 #   - MD3 (md-sys-color-primary) — fallback for components that don't cascade
 #
 # Design notes:
@@ -22,6 +23,12 @@
 #   - Named Mushroom colors (red, blue, etc.) keep Material defaults — only
 #     the state mappings get overridden.
 #   - YAML anchors at top — change a hex once, propagates everywhere.
+#
+# WA two-tier system (the reason text buttons were white-on-white):
+#   WA shadow DOM reads generic --wa-color-on-normal etc. The host element
+#   rewrites those to group-specific tokens (brand/neutral/danger) based on
+#   its variant attribute. So we set BOTH the group-specific tokens AND the
+#   generic ones as a safety net.
 # ─────────────────────────────────────────────────────
 
 Misty Forest:
@@ -349,20 +356,83 @@ Misty Forest:
       # The MD3 surface variables below cover dropdown/menu item rendering.
 
       # ── Web Awesome (wa-color-*) — newest UI ──
-      # The plain Cancel button reads its text color from
-      #   --wa-color-on-quiet ← --wa-color-brand-on-quiet
-      # (confirmed via DevTools inspection of :host([variant=brand]) rules).
-      # But for plain (text-only) buttons, WA may also read from
-      # --wa-color-text-* and --wa-form-control-value-color. Setting all
-      # three families to ensure text is readable.
+      #
+      # WA uses a two-tier color system. Shadow DOM reads GENERIC tokens
+      # (--wa-color-on-normal). The host element rewrites those generic
+      # tokens to GROUP-SPECIFIC ones based on its variant attribute:
+      #
+      #   wa-button[variant="brand"] {
+      #     --wa-color-on-normal: var(--wa-color-brand-on-normal);
+      #   }
+      #
+      # If a group-specific token is unset, it falls back to WA defaults
+      # (white-ish on light mode → white-on-white text bug). We set BOTH
+      # the group-specific tokens AND the generic tokens as a safety net.
+
+      # Generic (group-less) tokens — fallback when no variant matches
+      # and a defensive layer at :root scope.
+      wa-color-on-loud: "#ffffff"
+      wa-color-on-normal: *canopy_l
+      wa-color-on-quiet: *fern_l
+      wa-color-fill-loud: *fern_l
+      wa-color-fill-normal: *mc_l
+      wa-color-fill-quiet: *dew_l
+
+      # Brand group (primary-action buttons, links, etc.)
       wa-color-brand-fill-loud: *fern_l
+      wa-color-brand-fill-normal: *mc_l
+      wa-color-brand-fill-quiet: *dew_l
+      wa-color-brand-on-loud: "#ffffff"
+      wa-color-brand-on-normal: *canopy_l
       wa-color-brand-on-quiet: *fern_l
-      wa-color-text-normal: *canopy_l
-      wa-color-text-quiet: *fern_l
-      wa-form-control-value-color: *canopy_l
+      wa-color-brand-border-loud: *fern_deep_l
+      wa-color-brand-border-normal: *fern_l
+      wa-color-brand-border-quiet: *dew_l
+
+      # Neutral group (default for unspecified variants)
+      wa-color-neutral-fill-loud: *bark_l
       wa-color-neutral-fill-normal: *mc_l
+      wa-color-neutral-fill-quiet: *ff_l
+      wa-color-neutral-on-loud: "#ffffff"
       wa-color-neutral-on-normal: *canopy_l
+      wa-color-neutral-on-quiet: *bark_l
+      wa-color-neutral-border-loud: *bark_l
+      wa-color-neutral-border-normal: *dew_l
+      wa-color-neutral-border-quiet: *dew_l
+
+      # Success group
+      wa-color-success-fill-loud: *fern_l
+      wa-color-success-fill-normal: *mc_l
+      wa-color-success-fill-quiet: *dew_l
+      wa-color-success-on-loud: "#ffffff"
+      wa-color-success-on-normal: *canopy_l
+      wa-color-success-on-quiet: *fern_l
+
+      # Warning group
+      wa-color-warning-fill-loud: *ember_l
+      wa-color-warning-fill-normal: *mc_l
+      wa-color-warning-fill-quiet: *dew_l
+      wa-color-warning-on-loud: "#ffffff"
+      wa-color-warning-on-normal: *canopy_l
+      wa-color-warning-on-quiet: *ember_l
+
+      # Danger group
       wa-color-danger-fill-loud: *err_l
+      wa-color-danger-fill-normal: *mc_l
+      wa-color-danger-fill-quiet: *dew_l
+      wa-color-danger-on-loud: "#ffffff"
+      wa-color-danger-on-normal: *canopy_l
+      wa-color-danger-on-quiet: *err_l
+
+      # Foundational text/surface tokens (used when no variant context)
+      wa-color-text-normal: *canopy_l
+      wa-color-text-quiet: *bark_l
+      wa-color-text-link: *fern_l
+      wa-color-surface-default: *mc_l
+      wa-color-surface-raised: *ff_l
+      wa-color-surface-lowered: *dew_l
+      wa-form-control-value-color: *canopy_l
+
 
     # ═══════════════════════════════════════════════════
     #                 DARK MODE
@@ -625,12 +695,68 @@ Misty Forest:
 
       # icon-primary-color left to cascade — see light mode comment.
 
-      # ── Web Awesome ──
+      # ── Web Awesome — same two-tier structure as light mode ──
+      # See comment block in light mode for the rationale.
+
+      # Generic (group-less) tokens
+      wa-color-on-loud: *mc_d
+      wa-color-on-normal: *canopy_d
+      wa-color-on-quiet: *fern_d
+      wa-color-fill-loud: *fern_d
+      wa-color-fill-normal: *mc_d
+      wa-color-fill-quiet: *dew_d
+
+      # Brand group
       wa-color-brand-fill-loud: *fern_d
+      wa-color-brand-fill-normal: *mc_d
+      wa-color-brand-fill-quiet: *dew_d
+      wa-color-brand-on-loud: *mc_d
+      wa-color-brand-on-normal: *canopy_d
       wa-color-brand-on-quiet: *fern_d
-      wa-color-text-normal: *canopy_d
-      wa-color-text-quiet: *fern_d
-      wa-form-control-value-color: *canopy_d
+      wa-color-brand-border-loud: *fern_mid_d
+      wa-color-brand-border-normal: *fern_d
+      wa-color-brand-border-quiet: *dew_d
+
+      # Neutral group
+      wa-color-neutral-fill-loud: *bark_d
       wa-color-neutral-fill-normal: *mc_d
+      wa-color-neutral-fill-quiet: *ff_d
+      wa-color-neutral-on-loud: *mc_d
       wa-color-neutral-on-normal: *canopy_d
+      wa-color-neutral-on-quiet: *bark_d
+      wa-color-neutral-border-loud: *bark_d
+      wa-color-neutral-border-normal: *dew_d
+      wa-color-neutral-border-quiet: *dew_d
+
+      # Success group
+      wa-color-success-fill-loud: *fern_d
+      wa-color-success-fill-normal: *mc_d
+      wa-color-success-fill-quiet: *dew_d
+      wa-color-success-on-loud: *mc_d
+      wa-color-success-on-normal: *canopy_d
+      wa-color-success-on-quiet: *fern_d
+
+      # Warning group
+      wa-color-warning-fill-loud: *ember_d
+      wa-color-warning-fill-normal: *mc_d
+      wa-color-warning-fill-quiet: *dew_d
+      wa-color-warning-on-loud: "#ffffff"
+      wa-color-warning-on-normal: *canopy_d
+      wa-color-warning-on-quiet: *ember_d
+
+      # Danger group
       wa-color-danger-fill-loud: *err_d
+      wa-color-danger-fill-normal: *mc_d
+      wa-color-danger-fill-quiet: *dew_d
+      wa-color-danger-on-loud: "#ffffff"
+      wa-color-danger-on-normal: *canopy_d
+      wa-color-danger-on-quiet: *err_d
+
+      # Foundational text/surface tokens
+      wa-color-text-normal: *canopy_d
+      wa-color-text-quiet: *bark_d
+      wa-color-text-link: *fern_d
+      wa-color-surface-default: *mc_d
+      wa-color-surface-raised: *ff_d
+      wa-color-surface-lowered: *dew_d
+      wa-form-control-value-color: *canopy_d

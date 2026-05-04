@@ -44,10 +44,13 @@
         entity_id: input_boolean.shades_automation_moving
     - action: cover.close_cover
       target:
-        entity_id:
-          - cover.living_room_left
-          - cover.living_room_right
-    - delay: "00:00:30"  # wait for covers to finish moving + report state
+        entity_id: cover.living_room_left
+    - delay: "00:00:02"
+    - action: cover.close_cover
+      target:
+        entity_id: cover.living_room_right
+    - wait_template: "{{ is_state('cover.living_room_left', 'closed') and is_state('cover.living_room_right', 'closed') }}"
+      timeout: "00:02:00"
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.shades_automation_moving
@@ -80,7 +83,8 @@
     - action: cover.close_cover
       target:
         entity_id: cover.bedroom
-    - delay: "00:00:30"
+    - wait_template: "{{ is_state('cover.bedroom', 'closed') }}"
+      timeout: "00:02:00"
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.shades_automation_moving
@@ -103,11 +107,17 @@
         entity_id: input_boolean.shades_automation_moving
     - action: cover.open_cover
       target:
-        entity_id:
-          - cover.living_room_left
-          - cover.living_room_right
-          - cover.bedroom
-    - delay: "00:00:30"
+        entity_id: cover.living_room_left
+    - delay: "00:00:02"
+    - action: cover.open_cover
+      target:
+        entity_id: cover.living_room_right
+    - delay: "00:00:02"
+    - action: cover.open_cover
+      target:
+        entity_id: cover.bedroom
+    - wait_template: "{{ is_state('cover.living_room_left', 'open') and is_state('cover.living_room_right', 'open') and is_state('cover.bedroom', 'open') }}"
+      timeout: "00:02:00"
     - action: input_boolean.turn_off
       target:
         entity_id: input_boolean.shades_automation_moving
@@ -160,6 +170,10 @@
       entity_id: input_boolean.shades_automation_moving
       state: "off"
   actions:
+    - delay: "00:00:05"  # debounce to avoid false triggers
+    - condition: state
+      entity_id: input_boolean.shades_automation_moving
+      state: "off"  # recheck after delay
     - action: input_boolean.turn_on
       target:
         entity_id: input_boolean.shades_manual_override_living_room
@@ -177,6 +191,10 @@
       entity_id: input_boolean.shades_automation_moving
       state: "off"
   actions:
+    - delay: "00:00:05"  # debounce to avoid false triggers
+    - condition: state
+      entity_id: input_boolean.shades_automation_moving
+      state: "off"  # recheck after delay
     - action: input_boolean.turn_on
       target:
         entity_id: input_boolean.shades_manual_override_bedroom

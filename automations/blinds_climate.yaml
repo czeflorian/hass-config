@@ -127,15 +127,19 @@
       then:
         - action: cover.close_cover
           target:
-            entity_id:
-              - cover.living_room_left
-              - cover.living_room_right
+            entity_id: cover.living_room_left
+        - delay: "00:00:01"
+        - action: cover.close_cover
+          target:
+            entity_id: cover.living_room_right
       else:
         - action: cover.open_cover
           target:
-            entity_id:
-              - cover.living_room_left
-              - cover.living_room_right
+            entity_id: cover.living_room_left
+        - delay: "00:00:01"
+        - action: cover.open_cover
+          target:
+            entity_id: cover.living_room_right
 
 # TODO: enable when the Midea climate entity exists (REPLACE_ME__bedroom_ac)
 # - id: ac_bedroom

@@ -1,0 +1,163 @@
+# ---- Blinds + climate control -----------------------------------------------
+# Priority stack:
+#   1. WIND   → retract all covers immediately
+#   2. MANUAL → freeze zone until 09:30 or script.resume_auto_blinds
+#   3. AUTO   → close when radiation high AND outside > inside temp
+#
+# Sensors + script: packages/blinds_climate.yaml
+# Override flags:   packages/shade_automation.yaml
+
+# ---- Wind safety -------------------------------------------------------------
+# Open = stowed/safe. Swap to close_cover if any cover is an awning.
+- id: blinds_wind_safety
+  alias: "Blinds — wind safety"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.wind_unsafe
+      to: "on"
+  actions:
+    - action: cover.open_cover
+      target:
+        entity_id:
+          - cover.bedroom
+          - cover.living_room_left
+          - cover.living_room_right
+
+# ---- Detect manual (physical-remote) operation ------------------------------
+# ESPSomfy-RTS fires espsomfy-rts_event with source: remote for physical
+# remote presses; HA-initiated commands report source: internal.
+# CONFIRM: verify the event_type string in Developer Tools → Events.
+- id: blinds_detect_manual
+  alias: "Blinds — detect manual"
+  triggers:
+    - trigger: event
+      event_type: espsomfy-rts_event
+      event_data:
+        source: remote
+  actions:
+    - choose:
+        - conditions: "{{ trigger.event.data.entity_id == 'cover.bedroom' }}"
+          sequence:
+            - action: input_boolean.turn_on
+              target: {entity_id: input_boolean.shades_manual_override_bedroom}
+        - conditions: >
+            {{ trigger.event.data.entity_id in
+               ['cover.living_room_left', 'cover.living_room_right'] }}
+          sequence:
+            - action: input_boolean.turn_on
+              target: {entity_id: input_boolean.shades_manual_override_living_room}
+  mode: queued
+
+# ---- Reset to auto at 09:30 -------------------------------------------------
+- id: blinds_reset_auto
+  alias: "Blinds — reset at 09:30"
+  triggers:
+    - trigger: time
+      at: "09:30:00"
+  actions:
+    - action: script.resume_auto_blinds
+
+# ---- Bedroom shading --------------------------------------------------------
+- id: blinds_bedroom_shading
+  alias: "Blinds — bedroom shading"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.radiation_high
+      to: ["on", "off"]
+    - trigger: state
+      entity_id: binary_sensor.wind_unsafe
+      to: "off"
+    - trigger: state
+      entity_id: input_boolean.shades_manual_override_bedroom
+      to: "off"
+  conditions:
+    - condition: state
+      entity_id: binary_sensor.wind_unsafe
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.shades_manual_override_bedroom
+      state: "off"
+  actions:
+    - if:
+        - condition: state
+          entity_id: binary_sensor.radiation_high
+          state: "on"
+        - condition: template
+          value_template: >
+            {{ states('sensor.wien_donaufeld_temperature') | float(0)
+               > states('sensor.alpstuga_bedroom_temperature') | float(99) }}
+      then:
+        - action: cover.close_cover
+          target:
+            entity_id: cover.bedroom
+      else:
+        - action: cover.open_cover
+          target:
+            entity_id: cover.bedroom
+
+# ---- Living-room shading ----------------------------------------------------
+- id: blinds_living_room_shading
+  alias: "Blinds — living-room shading"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.radiation_high
+      to: ["on", "off"]
+    - trigger: state
+      entity_id: binary_sensor.wind_unsafe
+      to: "off"
+    - trigger: state
+      entity_id: input_boolean.shades_manual_override_living_room
+      to: "off"
+  conditions:
+    - condition: state
+      entity_id: binary_sensor.wind_unsafe
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.shades_manual_override_living_room
+      state: "off"
+  actions:
+    - if:
+        - condition: state
+          entity_id: binary_sensor.radiation_high
+          state: "on"
+        - condition: template
+          value_template: >
+            {{ states('sensor.wien_donaufeld_temperature') | float(0)
+               > states('sensor.alpstuga_living_room_temperature') | float(99) }}
+      then:
+        - action: cover.close_cover
+          target:
+            entity_id:
+              - cover.living_room_left
+              - cover.living_room_right
+      else:
+        - action: cover.open_cover
+          target:
+            entity_id:
+              - cover.living_room_left
+              - cover.living_room_right
+
+# TODO: enable when the Midea climate entity exists (REPLACE_ME__bedroom_ac)
+# - id: ac_bedroom
+#   alias: "AC — bedroom"
+#   triggers:
+#     - trigger: numeric_state
+#       entity_id: sensor.alpstuga_bedroom_temperature
+#       above: 25
+#       id: hot
+#     - trigger: numeric_state
+#       entity_id: sensor.alpstuga_bedroom_temperature
+#       below: 23.1
+#       id: cool
+#   actions:
+#     - choose:
+#         - conditions: "{{ trigger.id == 'hot' }}"
+#           sequence:
+#             - action: climate.set_temperature
+#               target: {entity_id: REPLACE_ME__bedroom_ac}
+#               data: {hvac_mode: cool, temperature: 23}
+#         - conditions: "{{ trigger.id == 'cool' }}"
+#           sequence:
+#             - action: climate.set_hvac_mode
+#               target: {entity_id: REPLACE_ME__bedroom_ac}
+#               data: {hvac_mode: "off"}

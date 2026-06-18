@@ -153,9 +153,9 @@ cards:
   - type: horizontal-stack
     cards:
       - type: custom:mushroom-entity-card
-        entity: input_boolean.shades_automation_enabled
-        name: Automation Enabled
-        icon: mdi:blinds
+        entity: script.resume_auto_blinds
+        name: Resume Auto
+        icon: mdi:autorenew
         tap_action:
           action: toggle
         card_mod:
@@ -172,23 +172,6 @@ cards:
           - label: Reset Overrides
           - icon: mdi:restart
           - secondary: "{{ states('sensor.shade_override_summary') }}"
-
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: status_tile_text
-        variables:
-          - status_entity: sensor.living_room_shade_status
-          - label: Living Room
-          - icon: mdi:hand-back-right
-          - secondary: "{{ states('sensor.living_room_shade_status_text') }}"
-      - type: custom:decluttering-card
-        template: status_tile_text
-        variables:
-          - status_entity: sensor.bedroom_shade_status
-          - label: Bedroom
-          - icon: mdi:hand-back-right
-          - secondary: "{{ states('sensor.bedroom_shade_status_text') }}"
 
   - type: horizontal-stack
     cards:
@@ -216,25 +199,3 @@ cards:
           - icon: mdi:white-balance-sunny
           - unit: " W/m²"
 
-  - type: conditional
-    conditions:
-      - condition: state
-        entity: input_boolean.shades_wind_lockout
-        state: "on"
-    card:
-      type: custom:mushroom-template-card
-      primary: Wind Lockout Active
-      secondary: >-
-        Auto-close suspended. Will release after wind stays below
-        {{ states('input_number.shade_automation_wind_gust_threshold') | int }} km/h
-        for {{ states('input_number.shade_automation_wind_release_minutes') | int }} min.
-      icon: mdi:alert
-      icon_color: var(--error-color)
-      entity: input_boolean.shades_wind_lockout
-      card_mod:
-        style: |
-          ha-card {
-            background: var(--card-background-color);
-            border-radius: 20px;
-            border: 1px solid var(--error-color);
-          }

@@ -33,6 +33,27 @@ binary_sensor:
     hysteresis: 40  # on at ~250 W/m², off at ~170 W/m²
 
 # -----------------------------------------------------------------------------
+# Dashboard status sensors — drive the wind + solar tiles
+# -----------------------------------------------------------------------------
+template:
+  - sensor:
+      - name: "Wind Status"
+        unique_id: wind_status
+        state: >
+          {% if is_state('binary_sensor.wind_unsafe', 'on') %} poor
+          {% elif states('sensor.wien_donaufeld_top_wind_speed') in ['unknown', 'unavailable'] %} unavailable
+          {% else %} good
+          {% endif %}
+
+      - name: "Solar Status"
+        unique_id: solar_status
+        state: >
+          {% if is_state('binary_sensor.radiation_high', 'on') %} moderate
+          {% elif states('sensor.wien_donaufeld_global_radiation') in ['unknown', 'unavailable', 'none'] %} unavailable
+          {% else %} good
+          {% endif %}
+
+# -----------------------------------------------------------------------------
 # Scripts
 # -----------------------------------------------------------------------------
 script:

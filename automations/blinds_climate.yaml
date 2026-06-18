@@ -18,10 +18,15 @@
   actions:
     - action: cover.open_cover
       target:
-        entity_id:
-          - cover.bedroom
-          - cover.living_room_left
-          - cover.living_room_right
+        entity_id: cover.bedroom
+    - delay: "00:00:01"
+    - action: cover.open_cover
+      target:
+        entity_id: cover.living_room_left
+    - delay: "00:00:01"
+    - action: cover.open_cover
+      target:
+        entity_id: cover.living_room_right
 
 # ---- Detect manual (physical-remote) operation ------------------------------
 # ESPSomfy-RTS fires espsomfy-rts_event with source: remote for physical

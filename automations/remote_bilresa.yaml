@@ -14,7 +14,6 @@
   triggers:
     - trigger: state
       entity_id: event.bilresa_living_room_button_1
-      attribute: event_type
       to: multi_press_1
   actions:
     - action: light.toggle

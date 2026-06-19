@@ -1,0 +1,23 @@
+# ---- Washing machine — remote control keep-alive ----------------------------
+# Homewhiz remote control sessions time out after ~10 minutes of inactivity.
+# Every 5 minutes while the machine is running, re-select the current
+# programme option (sends a command to the device without changing anything,
+# which resets the timeout).
+#
+# REPLACE_ME__wm_programme_select: find this in Developer Tools → States,
+# search "waschemasche" — look for a select.* or input_select.* entity.
+- id: washing_machine_keepalive
+  alias: "Washing Machine — remote control keep-alive"
+  triggers:
+    - trigger: time_pattern
+      minutes: "/5"
+  conditions:
+    - condition: state
+      entity_id: sensor.waschemasche_state
+      state: "run"
+  actions:
+    - action: select.select_option
+      target:
+        entity_id: REPLACE_ME__wm_programme_select
+      data:
+        option: "{{ states('REPLACE_ME__wm_programme_select') }}"

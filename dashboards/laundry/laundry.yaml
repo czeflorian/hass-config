@@ -1,0 +1,147 @@
+# =============================================================================
+#  Laundry Dashboard
+#  Full washing machine controls and status.
+#
+#  REPLACE_ME entities — find in Developer Tools → States (search "waschemasche"):
+#    REPLACE_ME__wm_programme_select  → select.* for programme choice
+#    REPLACE_ME__wm_temperature       → select.* or number.* for temperature
+#    REPLACE_ME__wm_spin              → select.* for spin speed
+#    REPLACE_ME__wm_power_switch      → switch.* to power on/off remotely
+# =============================================================================
+
+decluttering_templates: !include ../home/decluttering_templates.yaml
+
+title: Laundry
+views:
+  - title: Laundry
+    path: laundry
+    icon: mdi:washing-machine
+    type: sections
+    max_columns: 2
+    sections:
+      # ---- Status --------------------------------------------------------------
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: Status
+
+          - type: custom:decluttering-card
+            template: status_tile_attr
+            variables:
+              - status_entity: sensor.washing_machine_status
+              - label: Washing Machine
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.waschemasche_programme
+                  - label: Programme
+                  - icon: mdi:tshirt-crew
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.waschemasche_remaining
+                  - label: Remaining
+                  - icon: mdi:timer-outline
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.waschemasche_programme_end_time
+                  - label: Ends at
+                  - icon: mdi:clock-end
+              - type: custom:decluttering-card
+                template: status_tile
+                variables:
+                  - entity: binary_sensor.waschemasche_door_is_open
+                  - status_entity: sensor.washing_machine_door_status
+                  - label: Door
+                  - icon: mdi:door
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.waschemasche_temperature
+                  - label: Temperature
+                  - icon: mdi:thermometer-water
+                  - unit: " °C"
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.waschemasche_spin
+                  - label: Spin
+                  - icon: mdi:rotate-3d-variant
+
+      # ---- Controls -----------------------------------------------------------
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: Controls
+
+          # Power — REPLACE_ME__wm_power_switch
+          - type: custom:mushroom-entity-card
+            entity: REPLACE_ME__wm_power_switch
+            name: Power
+            icon: mdi:power
+            tap_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
+
+          # Programme — REPLACE_ME__wm_programme_select
+          - type: custom:mushroom-select-card
+            entity: REPLACE_ME__wm_programme_select
+            name: Programme
+            icon: mdi:washing-machine
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
+
+          - type: horizontal-stack
+            cards:
+              # Temperature — REPLACE_ME__wm_temperature
+              - type: custom:mushroom-select-card
+                entity: REPLACE_ME__wm_temperature
+                name: Temp
+                icon: mdi:thermometer-water
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: var(--card-background-color);
+                      border-radius: 20px;
+                      border: 1px solid var(--divider-color);
+                    }
+
+              # Spin — REPLACE_ME__wm_spin
+              - type: custom:mushroom-select-card
+                entity: REPLACE_ME__wm_spin
+                name: Spin
+                icon: mdi:rotate-3d-variant
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: var(--card-background-color);
+                      border-radius: 20px;
+                      border: 1px solid var(--divider-color);
+                    }

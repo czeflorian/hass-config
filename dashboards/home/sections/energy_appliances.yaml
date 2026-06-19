@@ -41,62 +41,12 @@ cards:
       - status_entity: sensor.washing_machine_status
       - label: Washing Machine
 
-  # Detail row only when there's something to show.
-  - type: conditional
-    conditions:
-      - condition: state
-        entity: sensor.waschemasche_state
-        state_not: idle
-      - condition: state
-        entity: sensor.waschemasche_state
-        state_not: unavailable
-      - condition: state
-        entity: sensor.waschemasche_state
-        state_not: unknown
-    card:
-      type: vertical-stack
-      cards:
-        - type: horizontal-stack
-          cards:
-            - type: custom:decluttering-card
-              template: plain_tile
-              variables:
-                - entity: sensor.waschemasche_programme
-                - label: Programme
-                - icon: mdi:tshirt-crew
-            - type: custom:decluttering-card
-              template: plain_tile
-              variables:
-                - entity: sensor.waschemasche_remaining
-                - label: Remaining
-                - icon: mdi:timer-outline
-            - type: custom:decluttering-card
-              template: plain_tile
-              variables:
-                - entity: sensor.waschemasche_programme_end_time
-                - label: Ends at
-                - icon: mdi:clock-end
-        - type: horizontal-stack
-          cards:
-            - type: custom:decluttering-card
-              template: status_tile
-              variables:
-                - entity: binary_sensor.waschemasche_door_is_open
-                - status_entity: sensor.washing_machine_door_status
-                - label: Door
-                - icon: mdi:door
-            - type: custom:decluttering-card
-              template: plain_tile
-              variables:
-                - entity: sensor.waschemasche_temperature
-                - label: Temperature
-                - icon: mdi:thermometer-water
-            - type: custom:decluttering-card
-              template: plain_tile
-              variables:
-                - entity: sensor.waschemasche_spin
-                - label: Spin
-                - icon: mdi:rotate-3d-variant
+  - type: custom:decluttering-card
+    template: plain_tile
+    variables:
+      - entity: sensor.waschemasche_remaining
+      - label: Remaining
+      - icon: mdi:timer-outline
 
   # ---- Smart plug ----
   - type: custom:decluttering-card

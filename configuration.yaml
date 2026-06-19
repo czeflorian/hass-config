@@ -30,3 +30,9 @@ lovelace:
       title: Home
       icon: mdi:home-assistant
       show_in_sidebar: true
+    lovelace-laundry:
+      mode: yaml
+      filename: dashboards/laundry/laundry.yaml
+      title: Laundry
+      icon: mdi:washing-machine
+      show_in_sidebar: true

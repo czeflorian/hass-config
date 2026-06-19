@@ -11,7 +11,7 @@
   conditions:
     - condition: state
       entity_id: select.waschemasche_state
-      state: "device_state_running"
+      state: "device_state_on"
   actions:
     - action: select.select_option
       target:

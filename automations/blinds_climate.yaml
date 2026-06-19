@@ -89,8 +89,9 @@
           state: "on"
         - condition: template
           value_template: >
-            {{ states('sensor.wien_donaufeld_temperature') | float(0)
-               > states('sensor.alpstuga_bedroom_temperature') | float(99) }}
+            {% set outside = states('sensor.wien_donaufeld_temperature') | float(0) %}
+            {% set inside = states('sensor.alpstuga_bedroom_temperature') | float(99) %}
+            {{ outside > inside or outside > 23 }}
       then:
         - action: cover.close_cover
           target:
@@ -127,8 +128,9 @@
           state: "on"
         - condition: template
           value_template: >
-            {{ states('sensor.wien_donaufeld_temperature') | float(0)
-               > states('sensor.alpstuga_living_room_temperature') | float(99) }}
+            {% set outside = states('sensor.wien_donaufeld_temperature') | float(0) %}
+            {% set inside = states('sensor.alpstuga_living_room_temperature') | float(99) %}
+            {{ outside > inside or outside > 23 }}
       then:
         - action: cover.close_cover
           target:

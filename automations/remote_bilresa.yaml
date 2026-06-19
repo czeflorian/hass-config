@@ -7,14 +7,16 @@
 #   long_press     → button held (fires on press)
 #   long_release   → held button released
 
-- id: bilresa_lr_button_1_single
-  alias: BILRESA LR — Button 1 single press → toggle living room lights
+- id: bilresa_lr_button_2_single
+  alias: BILRESA LR — Button 2 (top) single press → toggle living room lights
   description: ""
   mode: single
   triggers:
     - trigger: state
-      entity_id: event.bilresa_living_room_button_1
-      to: multi_press_1
+      entity_id: event.bilresa_living_room_button_2
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
   actions:
     - action: light.toggle
       target:

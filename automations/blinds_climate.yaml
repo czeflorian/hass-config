@@ -65,6 +65,7 @@
 # ---- Bedroom shading --------------------------------------------------------
 - id: blinds_bedroom_shading
   alias: "Blinds — bedroom shading"
+  mode: queued
   triggers:
     - trigger: state
       entity_id: binary_sensor.radiation_high
@@ -104,6 +105,7 @@
 # ---- Living-room shading ----------------------------------------------------
 - id: blinds_living_room_shading
   alias: "Blinds — living-room shading"
+  mode: queued
   triggers:
     - trigger: state
       entity_id: binary_sensor.radiation_high

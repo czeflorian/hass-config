@@ -133,34 +133,8 @@ views:
                       border-radius: 20px;
                       border: 1px solid var(--divider-color);
                     }
-
-          - type: custom:mushroom-select-card
-            entity: select.waschemasche_drying
-            name: Drying
-            icon: mdi:tumble-dryer
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
-
           - type: horizontal-stack
             cards:
-              - type: custom:mushroom-entity-card
-                entity: switch.waschemasche_extra_rinse
-                name: Extra Rinse
-                icon: mdi:water-plus
-                tap_action:
-                  action: toggle
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
 
               - type: custom:mushroom-select-card
                 entity: select.waschemasche_fast
@@ -173,3 +147,31 @@ views:
                       border-radius: 20px;
                       border: 1px solid var(--divider-color);
                     }
+              - type: custom:mushroom-select-card
+                entity: select.waschemasche_drying
+                name: Drying
+                icon: mdi:tumble-dryer
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: var(--card-background-color);
+                      border-radius: 20px;
+                      border: 1px solid var(--divider-color);
+                    }
+          - type: custom:mushroom-entity-card
+            entity: switch.waschemasche_extra_rinse
+            name: Extra Rinse
+            icon: mdi:water-plus
+            tap_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
+
+          
+
+

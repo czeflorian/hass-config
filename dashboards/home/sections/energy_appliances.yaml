@@ -100,28 +100,26 @@ cards:
     variables:
       - title: Shade Automation
 
-  - type: horizontal-stack
-    cards:
-      - type: custom:mushroom-entity-card
-        entity: script.resume_auto_blinds
-        name: Resume Auto
-        icon: mdi:autorenew
-        tap_action:
-          action: toggle
-        card_mod:
-          style: |
-            ha-card {
-              background: var(--card-background-color);
-              border-radius: 20px;
-              border: 1px solid var(--divider-color);
-            }
-      - type: custom:decluttering-card
-        template: status_tile_text
-        variables:
-          - status_entity: sensor.shade_override_active
-          - label: Reset Overrides
-          - icon: mdi:restart
-          - secondary: "{{ states('sensor.shade_override_summary') }}"
+  - type: custom:mushroom-template-card
+    primary: Resume Auto
+    secondary: "{{ states('sensor.shade_override_summary') }}"
+    icon: mdi:autorenew
+    icon_color: >-
+      {% if is_state('sensor.shade_override_active', 'moderate') %}
+        var(--warning-color)
+      {% else %}
+        var(--success-color)
+      {% endif %}
+    tap_action:
+      action: call-service
+      service: script.resume_auto_blinds
+    card_mod:
+      style: |
+        ha-card {
+          background: var(--card-background-color);
+          border-radius: 20px;
+          border: 1px solid var(--divider-color);
+        }
 
   - type: horizontal-stack
     cards:

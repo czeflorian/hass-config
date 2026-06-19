@@ -3,9 +3,6 @@
 # Every 5 minutes while the machine is running, re-select the current
 # programme option (sends a command to the device without changing anything,
 # which resets the timeout).
-#
-# REPLACE_ME__wm_programme_select: find this in Developer Tools → States,
-# search "waschemasche" — look for a select.* or input_select.* entity.
 - id: washing_machine_keepalive
   alias: "Washing Machine — remote control keep-alive"
   triggers:
@@ -13,11 +10,11 @@
       minutes: "/5"
   conditions:
     - condition: state
-      entity_id: sensor.waschemasche_state
-      state: "run"
+      entity_id: select.waschemasche_state
+      state: "device_state_running"
   actions:
     - action: select.select_option
       target:
-        entity_id: REPLACE_ME__wm_programme_select
+        entity_id: select.waschemasche_programme
       data:
-        option: "{{ states('REPLACE_ME__wm_programme_select') }}"
+        option: "{{ states('select.waschemasche_programme') }}"

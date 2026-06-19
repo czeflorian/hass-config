@@ -1,12 +1,6 @@
 # =============================================================================
 #  Laundry Dashboard
 #  Full washing machine controls and status.
-#
-#  REPLACE_ME entities — find in Developer Tools → States (search "waschemasche"):
-#    REPLACE_ME__wm_programme_select  → select.* for programme choice
-#    REPLACE_ME__wm_temperature       → select.* or number.* for temperature
-#    REPLACE_ME__wm_spin              → select.* for spin speed
-#    REPLACE_ME__wm_power_switch      → switch.* to power on/off remotely
 # =============================================================================
 
 decluttering_templates: !include ../home/decluttering_templates.yaml
@@ -73,7 +67,6 @@ views:
                   - entity: sensor.waschemasche_temperature
                   - label: Temperature
                   - icon: mdi:thermometer-water
-                  - unit: " °C"
               - type: custom:decluttering-card
                 template: plain_tile
                 variables:
@@ -90,13 +83,11 @@ views:
             variables:
               - title: Controls
 
-          # Power — REPLACE_ME__wm_power_switch
-          - type: custom:mushroom-entity-card
-            entity: REPLACE_ME__wm_power_switch
+          # Power on/off via state select (no dedicated power switch entity)
+          - type: custom:mushroom-select-card
+            entity: select.waschemasche_state
             name: Power
             icon: mdi:power
-            tap_action:
-              action: toggle
             card_mod:
               style: |
                 ha-card {
@@ -105,9 +96,8 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
-          # Programme — REPLACE_ME__wm_programme_select
           - type: custom:mushroom-select-card
-            entity: REPLACE_ME__wm_programme_select
+            entity: select.waschemasche_programme
             name: Programme
             icon: mdi:washing-machine
             card_mod:
@@ -120,9 +110,8 @@ views:
 
           - type: horizontal-stack
             cards:
-              # Temperature — REPLACE_ME__wm_temperature
               - type: custom:mushroom-select-card
-                entity: REPLACE_ME__wm_temperature
+                entity: select.waschemasche_temperature
                 name: Temp
                 icon: mdi:thermometer-water
                 card_mod:
@@ -133,9 +122,8 @@ views:
                       border: 1px solid var(--divider-color);
                     }
 
-              # Spin — REPLACE_ME__wm_spin
               - type: custom:mushroom-select-card
-                entity: REPLACE_ME__wm_spin
+                entity: select.waschemasche_spin
                 name: Spin
                 icon: mdi:rotate-3d-variant
                 card_mod:

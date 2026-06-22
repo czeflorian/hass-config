@@ -1,5 +1,10 @@
 # =============================================================================
 #  Climate Dashboard — AC + Blinds
+#
+#  Layout: 2 columns, 3 sections
+#    Row 1 left:  AC status context (temps, power, outdoor)
+#    Row 1 right: AC controls (climate card, night routine)
+#    Row 2 full:  Blinds (position + overrides in one place)
 # =============================================================================
 
 decluttering_templates: !include ../home/decluttering_templates.yaml
@@ -13,49 +18,16 @@ views:
     max_columns: 2
     sections:
 
-      # ---- Status --------------------------------------------------------------
+      # ---- AC — context (left column) -----------------------------------------
       - type: grid
         column_span: 1
         cards:
           - type: custom:decluttering-card
             template: section_title
             variables:
-              - title: Status
+              - title: Air Conditioning
 
-          # AC — current mode / action / temperatures
-          - type: custom:mushroom-template-card
-            primary: Living Room AC
-            secondary: >
-              {% set mode = states('climate.living_room_klima') %}
-              {% set action = state_attr('climate.living_room_klima', 'hvac_action') %}
-              {% set target = state_attr('climate.living_room_klima', 'temperature') %}
-              {% set current = state_attr('climate.living_room_klima', 'current_temperature') %}
-              {% if mode == 'unavailable' %} Unavailable
-              {% elif mode == 'off' %} Off
-              {% else %} {{ action | title }} · target {{ target }}°C · now {{ current }}°C
-              {% endif %}
-            icon: mdi:air-conditioner
-            icon_color: >
-              {% set mode = states('climate.living_room_klima') %}
-              {% set action = state_attr('climate.living_room_klima', 'hvac_action') %}
-              {% if mode in ['off', 'unavailable'] %} var(--disabled-text-color)
-              {% elif action == 'cooling' %} var(--info-color)
-              {% elif action in ['heating', 'defrosting'] %} var(--warning-color)
-              {% elif action == 'idle' %} var(--success-color)
-              {% else %} var(--secondary-text-color)
-              {% endif %}
-            entity: climate.living_room_klima
-            tap_action:
-              action: more-info
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
-
-          # Temperature sensors
+          # Temperatures
           - type: horizontal-stack
             cards:
               - type: custom:decluttering-card
@@ -73,7 +45,7 @@ views:
                   - icon: mdi:home-thermometer
                   - unit: " °C"
 
-          # AC power consumption (via GRILLPLATS plug)
+          # Power consumption (via GRILLPLATS plug)
           - type: horizontal-stack
             cards:
               - type: custom:decluttering-card
@@ -125,48 +97,7 @@ views:
                   - icon: mdi:thermometer
                   - unit: " °C"
 
-          # Blind positions
-          - type: horizontal-stack
-            cards:
-              - type: custom:decluttering-card
-                template: cover_tile
-                variables:
-                  - entity: cover.bedroom
-                  - name: Bedroom
-              - type: custom:decluttering-card
-                template: cover_tile
-                variables:
-                  - entity: cover.living_room_left
-                  - name: LR Left
-              - type: custom:decluttering-card
-                template: cover_tile
-                variables:
-                  - entity: cover.living_room_right
-                  - name: LR Right
-
-          # Manual overrides summary
-          - type: custom:mushroom-template-card
-            primary: Manual Overrides
-            secondary: "{{ states('sensor.shade_override_summary') }}"
-            icon: mdi:hand-back-right
-            icon_color: >
-              {% if is_state('sensor.shade_override_active', 'moderate') %}
-                var(--warning-color)
-              {% else %}
-                var(--success-color)
-              {% endif %}
-            entity: sensor.shade_override_active
-            tap_action:
-              action: more-info
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
-
-      # ---- Controls -----------------------------------------------------------
+      # ---- AC — controls (right column) ---------------------------------------
       - type: grid
         column_span: 1
         cards:
@@ -175,12 +106,7 @@ views:
             variables:
               - title: Controls
 
-          # ---- Air conditioning ----
-          - type: custom:decluttering-card
-            template: subsection_title
-            variables:
-              - title: Air Conditioning
-
+          # Climate card — shows current state + all mode/temp controls
           - type: custom:mushroom-climate-card
             entity: climate.living_room_klima
             name: Living Room AC
@@ -201,11 +127,12 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
+          # Hardware controls
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
                 entity: switch.living_room_klima_outdoor_silent_mode
-                name: Outdoor Silent
+                name: Silent Mode
                 icon: mdi:volume-off
                 tap_action:
                   action: toggle
@@ -241,7 +168,7 @@ views:
                       border: 1px solid var(--divider-color);
                     }
 
-          # ---- Night routine ----
+          # Night routine
           - type: custom:decluttering-card
             template: subsection_title
             variables:
@@ -269,12 +196,13 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
+          # display_mode: buttons renders like all other mushroom cards (no slider)
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-number-card
                 entity: input_number.ac_night_pulldown_temp
                 name: Pull-down
-                display_mode: slider
+                display_mode: buttons
                 card_mod:
                   style: |
                     ha-card {
@@ -285,7 +213,7 @@ views:
               - type: custom:mushroom-number-card
                 entity: input_number.ac_night_hold_temp
                 name: Hold
-                display_mode: slider
+                display_mode: buttons
                 card_mod:
                   style: |
                     ha-card {
@@ -308,12 +236,16 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
-          # ---- Blinds ----
+      # ---- Blinds (full width — position + overrides together) ----------------
+      - type: grid
+        column_span: 2
+        cards:
           - type: custom:decluttering-card
-            template: subsection_title
+            template: section_title
             variables:
               - title: Blinds
 
+          # Cover positions + controls
           - type: horizontal-stack
             cards:
               - type: custom:decluttering-card
@@ -332,6 +264,7 @@ views:
                   - entity: cover.living_room_right
                   - name: LR Right
 
+          # Override toggles + resume in one row
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
@@ -360,24 +293,23 @@ views:
                       border-radius: 20px;
                       border: 1px solid var(--divider-color);
                     }
-
-          - type: custom:mushroom-template-card
-            primary: Resume Auto
-            secondary: "{{ states('sensor.shade_override_summary') }}"
-            icon: mdi:autorenew
-            icon_color: >
-              {% if is_state('sensor.shade_override_active', 'moderate') %}
-                var(--warning-color)
-              {% else %}
-                var(--success-color)
-              {% endif %}
-            tap_action:
-              action: call-service
-              service: script.resume_auto_blinds
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
+              - type: custom:mushroom-template-card
+                primary: Resume Auto
+                secondary: "{{ states('sensor.shade_override_summary') }}"
+                icon: mdi:autorenew
+                icon_color: >
+                  {% if is_state('sensor.shade_override_active', 'moderate') %}
+                    var(--warning-color)
+                  {% else %}
+                    var(--success-color)
+                  {% endif %}
+                tap_action:
+                  action: call-service
+                  service: script.resume_auto_blinds
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: var(--card-background-color);
+                      border-radius: 20px;
+                      border: 1px solid var(--divider-color);
+                    }

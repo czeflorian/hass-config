@@ -1,0 +1,164 @@
+# =============================================================================
+#  Lights Dashboard — per-light controls organised by room
+# =============================================================================
+
+decluttering_templates: !include ../home/decluttering_templates.yaml
+
+title: Lights
+views:
+  - title: Lights
+    path: lights
+    icon: mdi:lightbulb-group
+    type: sections
+    max_columns: 2
+    sections:
+
+      # ---- At a glance (full width) -------------------------------------------
+      - type: grid
+        column_span: 2
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: At a Glance
+
+          - type: custom:mushroom-template-card
+            primary: Lights
+            secondary: >
+              {% set groups = ['light.living_room_lights',
+                               'light.kitchen_lights',
+                               'light.bedroom_lights'] %}
+              {% set on = states.light
+                 | rejectattr('entity_id', 'in', groups)
+                 | selectattr('state', 'eq', 'on') | list %}
+              {% if on | count == 0 %} All off
+              {% elif on | count == 1 %} {{ on[0].name }}
+              {% else %} {{ on | count }} on — {{ on | map(attribute='name') | join(', ') }}
+              {% endif %}
+            icon: mdi:lightbulb-group
+            icon_color: >
+              {% set groups = ['light.living_room_lights',
+                               'light.kitchen_lights',
+                               'light.bedroom_lights'] %}
+              {% if states.light | rejectattr('entity_id', 'in', groups)
+                    | selectattr('state', 'eq', 'on') | list | count > 0 %}
+                var(--warning-color)
+              {% else %}
+                var(--secondary-text-color)
+              {% endif %}
+            entity: light.living_room_lights
+            tap_action:
+              action: none
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
+
+      # ---- Living Room (left column) ------------------------------------------
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: Living Room
+
+          - type: custom:decluttering-card
+            template: light_tile
+            variables:
+              - entity: light.living_room_lights
+              - name: Living Room (All)
+
+          - type: custom:decluttering-card
+            template: light_tile
+            variables:
+              - entity: light.floor_lamp
+              - name: Floor Lamp
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.living_room_1
+                  - name: Left
+                  - show_color_temp: false
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.living_room_2
+                  - name: Middle
+                  - show_color_temp: false
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.living_room_3
+                  - name: Right
+                  - show_color_temp: false
+
+      # ---- Kitchen (right column) ---------------------------------------------
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: Kitchen
+
+          - type: custom:decluttering-card
+            template: light_tile
+            variables:
+              - entity: light.kitchen_lights
+              - name: Kitchen (All)
+
+          - type: custom:decluttering-card
+            template: light_tile
+            variables:
+              - entity: light.dining_table_light
+              - name: Dining Table
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.kitchen_1
+                  - name: Kitchen 1
+                  - show_color_temp: false
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.kitchen_2
+                  - name: Kitchen 2
+                  - show_color_temp: false
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.kitchen_3
+                  - name: Kitchen 3
+                  - show_color_temp: false
+
+      # ---- Bedroom (full width) -----------------------------------------------
+      - type: grid
+        column_span: 2
+        cards:
+          - type: custom:decluttering-card
+            template: section_title
+            variables:
+              - title: Bedroom
+
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.bedroom_lights
+                  - name: Bedroom (All)
+              - type: custom:decluttering-card
+                template: light_tile
+                variables:
+                  - entity: light.ambient_light_bed
+                  - name: Bed Ambience

@@ -27,7 +27,7 @@ views:
     path: home
     icon: mdi:home-heart
     type: sections
-    max_columns: 3
+    max_columns: 2
     sections:
       - !include sections/living_room.yaml
       - !include sections/kitchen_bedroom.yaml

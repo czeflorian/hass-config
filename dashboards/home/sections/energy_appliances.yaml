@@ -1,15 +1,14 @@
 # =============================================================================
-#  Section: Energy + Appliances + Devices + Shade Automation
-#
-#  All coloring logic lives in template sensors (see packages/). Each sensor
-#  emits a status string the dashboard maps to a color via the standard
-#  status_tile / status_tile_attr / status_tile_text decluttering templates.
+#  Section: Energy + Appliances
+#  Washing machine → Laundry dashboard.
+#  GRILLPLATS plug → Climate dashboard.
+#  Phones, shade automation → removed (on Climate dashboard).
 # =============================================================================
 
 type: grid
-column_span: 1
+column_span: 2
 cards:
-  # ---- Running now (AC or grill active) ----
+  # ---- Running now (AC active) — only shown when on ----
   - type: conditional
     conditions:
       - condition: or
@@ -84,7 +83,6 @@ cards:
     variables:
       - title: Grid Usage — Last 7 Days
 
-  # NOTE: verify entity ID against Developer Tools → States.
   - type: statistics-graph
     chart_type: bar
     period: day
@@ -96,64 +94,11 @@ cards:
       - state
     days_to_show: 7
 
-  # ---- Washing machine ----
-  - type: custom:decluttering-card
-    template: section_title
-    variables:
-      - title: Washing Machine
-
-  # NOTE: entity IDs say `waschemasche` (typo from integration setup).
-  # Rename via Settings → Devices → entity → ⚙ → entity_id.
-  - type: custom:decluttering-card
-    template: status_tile_attr
-    variables:
-      - status_entity: sensor.washing_machine_status
-      - label: Washing Machine
-
-  - type: custom:decluttering-card
-    template: plain_tile
-    variables:
-      - entity: sensor.waschemasche_remaining
-      - label: Remaining
-      - icon: mdi:timer-outline
-
-  # ---- Smart plug ----
-  - type: custom:decluttering-card
-    template: section_title
-    variables:
-      - title: Smart Plug
-
-  - type: custom:decluttering-card
-    template: smart_plug_block
-    variables:
-      - prefix: grillplats_plug
-      - switch_entity: grillplats_plug_smart_plug
-      - name: GRILLPLATS
-
   # ---- Devices ----
   - type: custom:decluttering-card
     template: section_title
     variables:
       - title: Devices
-
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: status_tile
-        variables:
-          - entity: sensor.florians_iphone_battery_level
-          - status_entity: sensor.flo_iphone_battery_status
-          - label: Flo's iPhone
-          - icon: mdi:cellphone
-          - unit: "%"
-      - type: custom:decluttering-card
-        template: status_tile
-        variables:
-          - entity: sensor.hannis_phone_battery_level
-          - status_entity: sensor.hanni_phone_battery_status
-          - label: Hanni's Phone
-          - icon: mdi:cellphone
-          - unit: "%"
 
   - type: custom:decluttering-card
     template: status_tile_text
@@ -162,57 +107,3 @@ cards:
       - label: Printer Ink
       - icon: mdi:printer
       - secondary: "{{ states('sensor.printer_ink_display') }}"
-
-  # ---- Shade automation ----
-  - type: custom:decluttering-card
-    template: section_title
-    variables:
-      - title: Shade Automation
-
-  - type: custom:mushroom-template-card
-    primary: Resume Auto
-    secondary: "{{ states('sensor.shade_override_summary') }}"
-    icon: mdi:autorenew
-    icon_color: >-
-      {% if is_state('sensor.shade_override_active', 'moderate') %}
-        var(--warning-color)
-      {% else %}
-        var(--success-color)
-      {% endif %}
-    tap_action:
-      action: call-service
-      service: script.resume_auto_blinds
-    card_mod:
-      style: |
-        ha-card {
-          background: var(--card-background-color);
-          border-radius: 20px;
-          border: 1px solid var(--divider-color);
-        }
-
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: status_tile
-        variables:
-          - entity: sensor.wien_donaufeld_top_wind_speed
-          - status_entity: sensor.wind_status
-          - label: Wind Gust
-          - icon: mdi:weather-windy
-          - unit: " km/h"
-      - type: custom:decluttering-card
-        template: plain_tile
-        variables:
-          - entity: sensor.wien_donaufeld_temperature
-          - label: Outside
-          - icon: mdi:thermometer
-          - unit: " °C"
-      - type: custom:decluttering-card
-        template: status_tile
-        variables:
-          - entity: sensor.wien_donaufeld_global_radiation
-          - status_entity: sensor.solar_status
-          - label: Solar
-          - icon: mdi:white-balance-sunny
-          - unit: " W/m²"
-

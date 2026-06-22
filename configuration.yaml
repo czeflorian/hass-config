@@ -42,3 +42,9 @@ lovelace:
       title: Climate
       icon: mdi:thermometer
       show_in_sidebar: true
+    lovelace-lights:
+      mode: yaml
+      filename: dashboards/lights/lights.yaml
+      title: Lights
+      icon: mdi:lightbulb-group
+      show_in_sidebar: true

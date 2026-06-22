@@ -73,6 +73,31 @@ views:
                   - icon: mdi:home-thermometer
                   - unit: " °C"
 
+          # AC power consumption (via GRILLPLATS plug)
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.grillplats_plug_power
+                  - label: AC Power
+                  - icon: mdi:flash
+                  - unit: " W"
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.ac_session_energy
+                  - label: This Session
+                  - icon: mdi:lightning-bolt
+                  - unit: " kWh"
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.grillplats_plug_energy
+                  - label: Total Energy
+                  - icon: mdi:counter
+                  - unit: " kWh"
+
           # Outdoor context
           - type: horizontal-stack
             cards:
@@ -195,6 +220,19 @@ views:
                 entity: select.living_room_klima_rate_select
                 name: Power Gear
                 icon: mdi:speedometer
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: var(--card-background-color);
+                      border-radius: 20px;
+                      border: 1px solid var(--divider-color);
+                    }
+              - type: custom:mushroom-entity-card
+                entity: switch.grillplats_plug_smart_plug
+                name: AC Plug
+                icon: mdi:power-plug
+                tap_action:
+                  action: toggle
                 card_mod:
                   style: |
                     ha-card {

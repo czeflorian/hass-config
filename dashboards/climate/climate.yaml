@@ -2,9 +2,9 @@
 #  Climate Dashboard — AC + Blinds
 #
 #  Layout: 2 columns, 3 sections
-#    Row 1 left:  AC status context (temps, power, outdoor)
+#    Row 1 left:  AC status context (temps, power)
 #    Row 1 right: AC controls (climate card, night routine)
-#    Row 2 full:  Blinds (position + overrides in one place)
+#    Row 2 full:  Blinds (outdoor context, position, resume)
 # =============================================================================
 
 decluttering_templates: !include ../home/decluttering_templates.yaml
@@ -45,7 +45,7 @@ views:
                   - icon: mdi:home-thermometer
                   - unit: " °C"
 
-          # Power consumption (via GRILLPLATS plug)
+          # Power consumption this session
           - type: horizontal-stack
             cards:
               - type: custom:decluttering-card
@@ -62,40 +62,6 @@ views:
                   - label: This Session
                   - icon: mdi:lightning-bolt
                   - unit: " kWh"
-              - type: custom:decluttering-card
-                template: plain_tile
-                variables:
-                  - entity: sensor.grillplats_plug_energy
-                  - label: Total Energy
-                  - icon: mdi:counter
-                  - unit: " kWh"
-
-          # Outdoor context
-          - type: horizontal-stack
-            cards:
-              - type: custom:decluttering-card
-                template: status_tile
-                variables:
-                  - entity: sensor.wien_donaufeld_global_radiation
-                  - status_entity: sensor.solar_status
-                  - label: Solar
-                  - icon: mdi:white-balance-sunny
-                  - unit: " W/m²"
-              - type: custom:decluttering-card
-                template: status_tile
-                variables:
-                  - entity: sensor.wien_donaufeld_top_wind_speed
-                  - status_entity: sensor.wind_status
-                  - label: Wind
-                  - icon: mdi:weather-windy
-                  - unit: " km/h"
-              - type: custom:decluttering-card
-                template: plain_tile
-                variables:
-                  - entity: sensor.wien_donaufeld_temperature
-                  - label: Outside
-                  - icon: mdi:thermometer
-                  - unit: " °C"
 
       # ---- AC — controls (right column) ---------------------------------------
       - type: grid
@@ -106,7 +72,7 @@ views:
             variables:
               - title: Controls
 
-          # Climate card — shows current state + all mode/temp controls
+          # Climate card — tap opens full more-info dialog; mode buttons inline
           - type: custom:mushroom-climate-card
             entity: climate.living_room_klima
             name: Living Room AC
@@ -119,6 +85,8 @@ views:
               - fan_only
               - auto
             collapsible_controls: false
+            tap_action:
+              action: more-info
             card_mod:
               style: |
                 ha-card {
@@ -127,7 +95,7 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
-          # Hardware controls
+          # Silent mode + power gear — equal halves
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-entity-card
@@ -154,49 +122,50 @@ views:
                       border-radius: 20px;
                       border: 1px solid var(--divider-color);
                     }
-              - type: custom:mushroom-entity-card
-                entity: switch.grillplats_plug_smart_plug
-                name: AC Plug
-                icon: mdi:power-plug
-                tap_action:
-                  action: toggle
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
 
           # Night routine
           - type: custom:decluttering-card
             template: subsection_title
             variables:
               - title: Night Routine
+          - type: horizontal-stack
+            cards:
+            - type: custom:mushroom-template-card
+              primary: Goodnight
+              secondary: >
+                {% if is_state('script.goodnight_ac', 'on') %} Running…
+                {% else %} Cool then quiet hold
+                {% endif %}
+              icon: mdi:power-sleep
+              icon_color: >
+                {% if is_state('script.goodnight_ac', 'on') %} var(--info-color)
+                {% else %} var(--primary-color)
+                {% endif %}
+              tap_action:
+                action: call-service
+                service: script.goodnight_ac
+              card_mod:
+                style: |
+                  ha-card {
+                    background: var(--card-background-color);
+                    border-radius: 20px;
+                    border: 1px solid var(--divider-color);
+                  }
+            - type: custom:mushroom-entity-card
+              entity: input_datetime.ac_night_off_time
+              name: Morning off time
+              icon: mdi:alarm
+              tap_action:
+                action: more-info
+              card_mod:
+                style: |
+                  ha-card {
+                    background: var(--card-background-color);
+                    border-radius: 20px;
+                    border: 1px solid var(--divider-color);
+                  }
 
-          - type: custom:mushroom-template-card
-            primary: Goodnight
-            secondary: >
-              {% if is_state('script.goodnight_ac', 'on') %} Running…
-              {% else %} Cool then quiet hold
-              {% endif %}
-            icon: mdi:power-sleep
-            icon_color: >
-              {% if is_state('script.goodnight_ac', 'on') %} var(--info-color)
-              {% else %} var(--primary-color)
-              {% endif %}
-            tap_action:
-              action: call-service
-              service: script.goodnight_ac
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
-
-          # display_mode: buttons renders like all other mushroom cards (no slider)
+          # Temperature targets — buttons mode matches mushroom card height/style
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-number-card
@@ -222,21 +191,7 @@ views:
                       border: 1px solid var(--divider-color);
                     }
 
-          - type: custom:mushroom-entity-card
-            entity: input_datetime.ac_night_off_time
-            name: Morning off time
-            icon: mdi:alarm
-            tap_action:
-              action: more-info
-            card_mod:
-              style: |
-                ha-card {
-                  background: var(--card-background-color);
-                  border-radius: 20px;
-                  border: 1px solid var(--divider-color);
-                }
-
-      # ---- Blinds (full width — position + overrides together) ----------------
+      # ---- Blinds (full width) ------------------------------------------------
       - type: grid
         column_span: 2
         cards:
@@ -244,6 +199,33 @@ views:
             template: section_title
             variables:
               - title: Blinds
+
+          # Outdoor conditions — what the blind automation responds to
+          - type: horizontal-stack
+            cards:
+              - type: custom:decluttering-card
+                template: status_tile
+                variables:
+                  - entity: sensor.wien_donaufeld_global_radiation
+                  - status_entity: sensor.solar_status
+                  - label: Solar
+                  - icon: mdi:white-balance-sunny
+                  - unit: " W/m²"
+              - type: custom:decluttering-card
+                template: status_tile
+                variables:
+                  - entity: sensor.wien_donaufeld_top_wind_speed
+                  - status_entity: sensor.wind_status
+                  - label: Wind
+                  - icon: mdi:weather-windy
+                  - unit: " km/h"
+              - type: custom:decluttering-card
+                template: plain_tile
+                variables:
+                  - entity: sensor.wien_donaufeld_temperature
+                  - label: Outside
+                  - icon: mdi:thermometer
+                  - unit: " °C"
 
           # Cover positions + controls
           - type: horizontal-stack
@@ -264,52 +246,24 @@ views:
                   - entity: cover.living_room_right
                   - name: LR Right
 
-          # Override toggles + resume in one row
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: input_boolean.shades_manual_override_bedroom
-                name: Bedroom Override
-                icon: mdi:hand-back-right
-                tap_action:
-                  action: toggle
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
-              - type: custom:mushroom-entity-card
-                entity: input_boolean.shades_manual_override_living_room
-                name: LR Override
-                icon: mdi:hand-back-right
-                tap_action:
-                  action: toggle
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
-              - type: custom:mushroom-template-card
-                primary: Resume Auto
-                secondary: "{{ states('sensor.shade_override_summary') }}"
-                icon: mdi:autorenew
-                icon_color: >
-                  {% if is_state('sensor.shade_override_active', 'moderate') %}
-                    var(--warning-color)
-                  {% else %}
-                    var(--success-color)
-                  {% endif %}
-                tap_action:
-                  action: call-service
-                  service: script.resume_auto_blinds
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
+          # Standalone card = full width on mobile
+          - type: custom:mushroom-template-card
+            primary: Resume Auto
+            secondary: "{{ states('sensor.shade_override_summary') }}"
+            icon: mdi:autorenew
+            icon_color: >
+              {% if is_state('sensor.shade_override_active', 'moderate') %}
+                var(--warning-color)
+              {% else %}
+                var(--success-color)
+              {% endif %}
+            tap_action:
+              action: call-service
+              service: script.resume_auto_blinds
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }

@@ -1,38 +1,46 @@
 # =============================================================================
-#  Grill session energy tracking
+#  AC session energy tracking via GRILLPLATS smart plug
 #
-#  Snapshots cumulative kWh when the grill starts drawing power (> 10 W),
-#  then derives "energy used this session" by subtraction.
+#  The AC (climate.living_room_klima) is plugged into the GRILLPLATS IKEA
+#  smart plug. The plug's cumulative energy meter is used to snapshot how
+#  much power the AC has consumed since it was last turned on.
 #
-#  Triggering on power draw (not switch state) avoids a false reset when
-#  the smart plug restores to "on" after being physically re-plugged in.
+#  Session starts when the climate entity leaves "off" for any active mode.
+#  Switching between modes (cool → heat, etc.) does NOT reset the counter.
 #
 #  Caveat: trigger-based sensors lose their value on HA restart. A restart
-#  mid-session will skew the figure until the next on-cycle — acceptable.
+#  mid-session skews the figure until the next on-cycle — acceptable.
 # =============================================================================
 
 template:
-  # Snapshot the meter reading when the grill starts drawing power
+  # Snapshot the meter reading when the AC turns on (from off → active mode)
   - trigger:
-      - platform: numeric_state
-        entity_id: sensor.grillplats_plug_power
-        above: 10
+      - platform: state
+        entity_id: climate.living_room_klima
+        from: "off"
+        to:
+          - cool
+          - heat
+          - dry
+          - fan_only
+          - auto
     sensor:
-      - name: "Grill session start energy"
-        unique_id: grill_session_start_energy
+      - name: "AC session start energy"
+        unique_id: ac_session_start_energy
         unit_of_measurement: "kWh"
         state: "{{ states('sensor.grillplats_plug_energy') | float(0) }}"
 
-  # Running delta for the current session (0 when switch is off)
+  # Running delta since the AC turned on (0 when off or unavailable)
   - sensor:
-      - name: "Grill session energy"
-        unique_id: grill_session_energy
+      - name: "AC session energy"
+        unique_id: ac_session_energy
         unit_of_measurement: "kWh"
         device_class: energy
         state: >
-          {% if is_state('switch.grillplats_plug', 'on') %}
+          {% set mode = states('climate.living_room_klima') %}
+          {% if mode not in ['off', 'unavailable', 'unknown'] %}
             {{ [states('sensor.grillplats_plug_energy') | float(0)
-                - states('sensor.grill_session_start_energy') | float(0), 0] | max }}
+                - states('sensor.ac_session_start_energy') | float(0), 0] | max }}
           {% else %}
             0
           {% endif %}

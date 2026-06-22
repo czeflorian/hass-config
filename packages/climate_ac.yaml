@@ -1,0 +1,68 @@
+# =============================================================================
+#  Night AC routine — helpers and script
+#
+#  After creating, set defaults in Settings → Helpers:
+#    ac_night_pulldown_temp  → 21
+#    ac_night_hold_temp      → 23
+#    ac_night_off_time       → 07:00
+# =============================================================================
+
+input_number:
+  ac_night_pulldown_temp:
+    name: AC night pull-down temp
+    min: 16
+    max: 30
+    step: 0.5
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer-low
+  ac_night_hold_temp:
+    name: AC night hold temp
+    min: 16
+    max: 30
+    step: 0.5
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+
+input_datetime:
+  ac_night_off_time:
+    name: AC night off time
+    has_date: false
+    has_time: true
+
+script:
+  goodnight_ac:
+    alias: "Goodnight — cool then quiet hold"
+    icon: mdi:power-sleep
+    mode: restart
+    sequence:
+      # Phase 1 — pull down (awake; louder/faster fan is fine)
+      - action: climate.set_hvac_mode
+        target: {entity_id: climate.living_room_klima}
+        data: {hvac_mode: cool}
+      - action: switch.turn_off
+        target: {entity_id: switch.living_room_klima_outdoor_silent_mode}
+      - action: climate.set_fan_mode
+        target: {entity_id: climate.living_room_klima}
+        data: {fan_mode: auto}
+      - action: climate.set_temperature
+        target: {entity_id: climate.living_room_klima}
+        data:
+          temperature: "{{ states('input_number.ac_night_pulldown_temp') | float(21) }}"
+      # Wait until room reaches pull-down target, or 45 min max.
+      # float(99) default means a dead sensor falls through to quiet hold
+      # rather than running loud all night.
+      - wait_template: >
+          {{ states('sensor.alpstuga_living_room_temperature') | float(99)
+             <= states('input_number.ac_night_pulldown_temp') | float(21) }}
+        timeout: "00:45:00"
+        continue_on_timeout: true
+      # Phase 2 — silent continuous hold for the night
+      - action: switch.turn_on
+        target: {entity_id: switch.living_room_klima_outdoor_silent_mode}
+      - action: climate.set_fan_mode
+        target: {entity_id: climate.living_room_klima}
+        data: {fan_mode: silent}
+      - action: climate.set_temperature
+        target: {entity_id: climate.living_room_klima}
+        data:
+          temperature: "{{ states('input_number.ac_night_hold_temp') | float(23) }}"

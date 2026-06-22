@@ -36,3 +36,9 @@ lovelace:
       title: Laundry
       icon: mdi:washing-machine
       show_in_sidebar: true
+    lovelace-climate:
+      mode: yaml
+      filename: dashboards/climate/climate.yaml
+      title: Climate
+      icon: mdi:thermometer
+      show_in_sidebar: true

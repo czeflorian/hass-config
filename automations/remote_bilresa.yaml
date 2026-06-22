@@ -21,3 +21,16 @@
     - action: light.toggle
       target:
         entity_id: light.living_room_lights
+
+- id: ac_night_start
+  alias: "BILRESA LR — Button 1 (bottom) single press → start goodnight AC"
+  description: ""
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: event.bilresa_living_room_button_1
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+  actions:
+    - action: script.goodnight_ac

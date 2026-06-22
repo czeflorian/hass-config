@@ -2,18 +2,7 @@
 # Script: packages/climate_ac.yaml → script.goodnight_ac
 # Helpers: input_number.ac_night_pulldown_temp / ac_night_hold_temp
 #          input_datetime.ac_night_off_time
-
-# BILRESA button 1 (bottom) — single press → start goodnight routine
-- id: ac_night_start
-  alias: "AC night — start (BILRESA button 1)"
-  triggers:
-    - trigger: state
-      entity_id: event.bilresa_living_room_button_1
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
-  actions:
-    - action: script.goodnight_ac
+# Button trigger: automations/remote_bilresa.yaml → ac_night_start
 
 # Morning off — shut down AC and restore silent-mode switch to default off
 - id: ac_night_morning_off

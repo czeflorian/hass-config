@@ -1,26 +1,29 @@
 # =============================================================================
 #  Grill session energy tracking
 #
-#  Snapshots cumulative kWh at plug turn-on, then derives "energy used
-#  this session" by subtraction. Resets to 0 when plug turns off.
+#  Snapshots cumulative kWh when the grill starts drawing power (> 10 W),
+#  then derives "energy used this session" by subtraction.
+#
+#  Triggering on power draw (not switch state) avoids a false reset when
+#  the smart plug restores to "on" after being physically re-plugged in.
 #
 #  Caveat: trigger-based sensors lose their value on HA restart. A restart
 #  mid-session will skew the figure until the next on-cycle — acceptable.
 # =============================================================================
 
 template:
-  # Snapshot the meter reading when the plug turns on
+  # Snapshot the meter reading when the grill starts drawing power
   - trigger:
-      - platform: state
-        entity_id: switch.grillplats_plug
-        to: "on"
+      - platform: numeric_state
+        entity_id: sensor.grillplats_plug_power
+        above: 10
     sensor:
       - name: "Grill session start energy"
         unique_id: grill_session_start_energy
         unit_of_measurement: "kWh"
         state: "{{ states('sensor.grillplats_plug_energy') | float(0) }}"
 
-  # Running delta for the current session (0 when off)
+  # Running delta for the current session (0 when switch is off)
   - sensor:
       - name: "Grill session energy"
         unique_id: grill_session_energy

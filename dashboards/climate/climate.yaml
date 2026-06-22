@@ -72,7 +72,8 @@ views:
             variables:
               - title: Controls
 
-          # Climate card — tap opens full more-info dialog; mode buttons inline
+          # Compact single-row — matches laundry Power card width behaviour.
+          # collapsible_controls: true keeps it one row; tap for full more-info.
           - type: custom:mushroom-climate-card
             entity: climate.living_room_klima
             name: Living Room AC
@@ -84,7 +85,7 @@ views:
               - dry
               - fan_only
               - auto
-            collapsible_controls: false
+            collapsible_controls: true
             tap_action:
               action: more-info
             card_mod:
@@ -95,33 +96,32 @@ views:
                   border: 1px solid var(--divider-color);
                 }
 
-          # Silent mode + power gear — equal halves
-          - type: horizontal-stack
-            cards:
-              - type: custom:mushroom-entity-card
-                entity: switch.living_room_klima_outdoor_silent_mode
-                name: Silent Mode
-                icon: mdi:volume-off
-                tap_action:
-                  action: toggle
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
-              - type: custom:mushroom-select-card
-                entity: select.living_room_klima_rate_select
-                name: Power Gear
-                icon: mdi:speedometer
-                card_mod:
-                  style: |
-                    ha-card {
-                      background: var(--card-background-color);
-                      border-radius: 20px;
-                      border: 1px solid var(--divider-color);
-                    }
+          # Different card types (toggle vs select) → each standalone, like laundry
+          - type: custom:mushroom-entity-card
+            entity: switch.living_room_klima_outdoor_silent_mode
+            name: Silent Mode
+            icon: mdi:volume-off
+            tap_action:
+              action: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
+
+          - type: custom:mushroom-select-card
+            entity: select.living_room_klima_rate_select
+            name: Power Gear
+            icon: mdi:speedometer
+            card_mod:
+              style: |
+                ha-card {
+                  background: var(--card-background-color);
+                  border-radius: 20px;
+                  border: 1px solid var(--divider-color);
+                }
 
           # Night routine
           - type: custom:decluttering-card

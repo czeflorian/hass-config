@@ -152,28 +152,4 @@
         - action: cover.open_cover
           target:
             entity_id: cover.living_room_right
-
-# TODO: enable when the Midea climate entity exists (REPLACE_ME__bedroom_ac)
-# - id: ac_bedroom
-#   alias: "AC — bedroom"
-#   triggers:
-#     - trigger: numeric_state
-#       entity_id: sensor.alpstuga_bedroom_temperature
-#       above: 25
-#       id: hot
-#     - trigger: numeric_state
-#       entity_id: sensor.alpstuga_bedroom_temperature
-#       below: 23.1
-#       id: cool
-#   actions:
-#     - choose:
-#         - conditions: "{{ trigger.id == 'hot' }}"
-#           sequence:
-#             - action: climate.set_temperature
-#               target: {entity_id: REPLACE_ME__bedroom_ac}
-#               data: {hvac_mode: cool, temperature: 23}
-#         - conditions: "{{ trigger.id == 'cool' }}"
-#           sequence:
-#             - action: climate.set_hvac_mode
-#               target: {entity_id: REPLACE_ME__bedroom_ac}
-#               data: {hvac_mode: "off"}
+# TODO: add ac_bedroom automation when Midea climate entity (REPLACE_ME__bedroom_ac) exists

@@ -252,7 +252,8 @@ views:
             secondary: "{{ states('sensor.shade_override_summary') }}"
             icon: mdi:autorenew
             icon_color: >
-              {% if is_state('sensor.shade_override_active', 'moderate') %}
+              {% if is_state('input_boolean.shades_manual_override_living_room', 'on')
+                 or is_state('input_boolean.shades_manual_override_bedroom', 'on') %}
                 var(--warning-color)
               {% else %}
                 var(--success-color)

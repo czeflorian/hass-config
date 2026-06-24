@@ -34,14 +34,6 @@ template:
           {% else %} Nothing to reset
           {% endif %}
 
-      - name: "Shade Override Active"
-        unique_id: shade_override_active
-        state: >
-          {% if is_state('input_boolean.shades_manual_override_living_room', 'on')
-             or is_state('input_boolean.shades_manual_override_bedroom', 'on') %} moderate
-          {% else %} idle
-          {% endif %}
-
       # ---- Washing machine status ----
       - name: "Washing Machine Status"
         unique_id: washing_machine_status

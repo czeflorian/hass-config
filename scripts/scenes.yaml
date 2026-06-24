@@ -38,9 +38,11 @@ movie_mode:
           sequence:
             - action: cover.close_cover
               target:
-                entity_id:
-                  - cover.living_room_left
-                  - cover.living_room_right
+                entity_id: cover.living_room_left
+            - delay: "00:00:01"
+            - action: cover.close_cover
+              target:
+                entity_id: cover.living_room_right
             - action: light.turn_off
               target:
                 entity_id:

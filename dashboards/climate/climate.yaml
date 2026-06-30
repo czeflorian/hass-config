@@ -165,6 +165,29 @@ views:
                     border: 1px solid var(--divider-color);
                   }
 
+          - type: conditional
+            conditions:
+              - entity: script.goodnight_ac
+                state: "on"
+            card:
+              type: custom:mushroom-template-card
+              primary: Abort Night Routine
+              secondary: Stop the goodnight script
+              icon: mdi:stop-circle
+              icon_color: var(--error-color)
+              tap_action:
+                action: call-service
+                service: script.turn_off
+                target:
+                  entity_id: script.goodnight_ac
+              card_mod:
+                style: |
+                  ha-card {
+                    background: var(--card-background-color);
+                    border-radius: 20px;
+                    border: 1px solid var(--divider-color);
+                  }
+
           # Temperature targets — buttons mode matches mushroom card height/style
           - type: horizontal-stack
             cards:

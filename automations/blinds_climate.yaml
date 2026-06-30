@@ -137,17 +137,26 @@
             {% set inside = states('sensor.alpstuga_living_room_temperature') | float(99) %}
             {{ outside > inside or outside > 23 }}
       then:
-        - action: cover.close_cover
-          target:
-            entity_id: cover.living_room_left
+        # Skip left blind when AC is running — coolant hose through that window
+        - if:
+            - condition: template
+              value_template: "{{ states('sensor.grillplats_plug_power') | float(0) == 0 }}"
+          then:
+            - action: cover.close_cover
+              target:
+                entity_id: cover.living_room_left
         - delay: "00:00:01"
         - action: cover.close_cover
           target:
             entity_id: cover.living_room_right
       else:
-        - action: cover.open_cover
-          target:
-            entity_id: cover.living_room_left
+        - if:
+            - condition: template
+              value_template: "{{ states('sensor.grillplats_plug_power') | float(0) == 0 }}"
+          then:
+            - action: cover.open_cover
+              target:
+                entity_id: cover.living_room_left
         - delay: "00:00:01"
         - action: cover.open_cover
           target:

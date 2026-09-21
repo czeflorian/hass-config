@@ -6,7 +6,8 @@
 #   - If sun is above horizon (light out):
 #       Living room shades close, all kitchen + living room lights off.
 # Revert: double press on BILRESA LR button 2 (movie/TV button) restores
-# living room + floor lamp + kitchen lights to normal (see remote_bilresa.yaml).
+# living room lights + floor lamp to normal (see remote_bilresa.yaml). Kitchen
+# is deliberately left off — revert means "back to work", not "go to kitchen".
 movie_mode:
   alias: Movie Mode
   description: >

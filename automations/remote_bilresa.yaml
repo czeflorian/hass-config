@@ -54,7 +54,6 @@
         entity_id:
           - light.living_room_lights
           - light.floor_lamp
-          - light.kitchen_lights
       data:
         brightness_pct: 100
         color_temp_kelvin: 3000

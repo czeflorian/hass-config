@@ -11,10 +11,24 @@
 # double_press, triple_press, hold, release, rotate_up, rotate_down (with a
 # `notches` count).
 #
+# IMPORTANT: triggers use a plain `state` trigger + a template condition on
+# event_type, NOT an `attribute:`-scoped state trigger. An attribute-scoped
+# trigger only fires when that attribute's VALUE changes — so two
+# consecutive same-direction scrolls (event_type repeats, e.g. rotate_down
+# then rotate_down again) would silently not fire a second time, even
+# though a new event genuinely happened. The plain state trigger fires on
+# every event because the entity's underlying state (a timestamp) always
+# changes.
+#
 # Note: entity_id below keeps its original "living_room" prefix from when
 # the device was first set up under the wrong area in this integration — the
 # device itself has since been reassigned to the bedroom area, but renaming
 # would change the entity_id and break this file, so it's left as-is.
+#
+# Even with the trigger fixed, the wheel's firmware itself has a built-in
+# ~500ms-1s anti-flood delay between notch batches (documented by the
+# integration author) — this gets close to smooth but isn't truly
+# analog-continuous, and that residual delay can't be removed in software.
 
 - id: bilresa_bedroom_press_single
   alias: "BILRESA Bedroom — center press single → toggle bedroom lights"
@@ -23,8 +37,9 @@
   triggers:
     - trigger: state
       entity_id: event.living_room_bilresa_living_room_channel_1
-      attribute: event_type
-      to: press
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'press' }}"
   actions:
     - action: light.toggle
       target:
@@ -37,8 +52,9 @@
   triggers:
     - trigger: state
       entity_id: event.living_room_bilresa_living_room_channel_1
-      attribute: event_type
-      to: double_press
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'double_press' }}"
   actions:
     - action: light.toggle
       target:
@@ -51,8 +67,9 @@
   triggers:
     - trigger: state
       entity_id: event.living_room_bilresa_living_room_channel_1
-      attribute: event_type
-      to: hold
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'hold' }}"
   actions:
     - choose:
         - conditions:
@@ -85,8 +102,9 @@
   triggers:
     - trigger: state
       entity_id: event.living_room_bilresa_living_room_channel_1
-      attribute: event_type
-      to: rotate_up
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'rotate_up' }}"
   actions:
     - variables:
         notches: "{{ trigger.to_state.attributes.notches | default(1) | int }}"
@@ -107,8 +125,9 @@
   triggers:
     - trigger: state
       entity_id: event.living_room_bilresa_living_room_channel_1
-      attribute: event_type
-      to: rotate_down
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'rotate_down' }}"
   actions:
     - variables:
         notches: "{{ trigger.to_state.attributes.notches | default(1) | int }}"

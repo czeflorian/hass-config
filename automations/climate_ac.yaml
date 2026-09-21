@@ -2,7 +2,7 @@
 # Script: packages/climate_ac.yaml → script.goodnight_ac
 # Helpers: input_number.ac_night_pulldown_temp / ac_night_hold_temp
 #          input_datetime.ac_night_off_time
-# Button trigger: automations/remote_bilresa_bedroom.yaml → ac_night_start
+# No button trigger currently — script.goodnight_ac is manual-only (UI/dashboard).
 
 # Morning off — shut down AC and restore silent-mode switch to default off
 - id: ac_night_morning_off

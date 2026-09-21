@@ -1,9 +1,12 @@
 # ---- Movie Mode -------------------------------------------------------------
 # Behavior:
 #   - If sun is below horizon (dark out):
-#       Living room lights + floor lamp dim to 15%, warm white; kitchen off.
+#       Living room lights as dim + warm as they go; floor lamp to 50%
+#       brightness as warm as it goes; kitchen off.
 #   - If sun is above horizon (light out):
 #       Living room shades close, all kitchen + living room lights off.
+# Revert: double press on BILRESA LR button 2 (movie/TV button) restores
+# living room + floor lamp + kitchen lights to normal (see remote_bilresa.yaml).
 movie_mode:
   alias: Movie Mode
   description: >
@@ -21,12 +24,17 @@ movie_mode:
           sequence:
             - action: light.turn_on
               target:
-                entity_id:
-                  - light.living_room_lights
-                  - light.floor_lamp
+                entity_id: light.living_room_lights
               data:
-                brightness_pct: 15
-                kelvin: 2200
+                brightness_pct: 1
+                color_temp_kelvin: "{{ state_attr('light.living_room_lights', 'min_color_temp_kelvin') }}"
+                transition: 2
+            - action: light.turn_on
+              target:
+                entity_id: light.floor_lamp
+              data:
+                brightness_pct: 50
+                color_temp_kelvin: "{{ state_attr('light.floor_lamp', 'min_color_temp_kelvin') }}"
                 transition: 2
             - action: light.turn_off
               target:

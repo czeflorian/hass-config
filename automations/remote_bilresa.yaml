@@ -37,3 +37,25 @@
       target:
         entity_id: media_player.tv_samsung_q7_series_55
     - action: script.movie_mode
+
+- id: bilresa_lr_button_2_double
+  alias: "BILRESA LR — Button 2 (top) double press → revert movie mode lights"
+  description: ""
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: event.bilresa_living_room_button_2
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id:
+          - light.living_room_lights
+          - light.floor_lamp
+          - light.kitchen_lights
+      data:
+        brightness_pct: 100
+        color_temp_kelvin: 3000
+        transition: 2

@@ -7,23 +7,8 @@
 #   long_press     → button held (fires on press)
 #   long_release   → held button released
 
-- id: bilresa_lr_button_2_single
-  alias: BILRESA LR — Button 2 (top) single press → toggle living room lights
-  description: ""
-  mode: single
-  triggers:
-    - trigger: state
-      entity_id: event.bilresa_living_room_button_2
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
-  actions:
-    - action: light.toggle
-      target:
-        entity_id: light.living_room_lights
-
-- id: ac_night_start
-  alias: "BILRESA LR — Button 1 (bottom) single press → start goodnight AC"
+- id: bilresa_lr_button_1_single
+  alias: BILRESA LR — Button 1 (bottom, bigger) single press → toggle living room lights
   description: ""
   mode: single
   triggers:
@@ -33,4 +18,22 @@
     - condition: template
       value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
   actions:
-    - action: script.goodnight_ac
+    - action: light.toggle
+      target:
+        entity_id: light.living_room_lights
+
+- id: bilresa_lr_button_2_single
+  alias: "BILRESA LR — Button 2 (top) single press → TV mode"
+  description: ""
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: event.bilresa_living_room_button_2
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+  actions:
+    - action: media_player.turn_on
+      target:
+        entity_id: media_player.tv_samsung_q7_series_55
+    - action: script.movie_mode

@@ -1,0 +1,21 @@
+# ---- BILRESA Bedroom scroll wheel --------------------------------------------
+# 9-entity scroll/dial remote (event.bedroom_bilresa_bedroom_button_1-9).
+# Entities 3, 6, 9 are the real clickable buttons (they support long_press /
+# long_release); 1, 2, 4, 5, 7, 8 are scroll-direction ticks only. Event types:
+#   multi_press_1  → single press
+#   multi_press_2  → double press
+#   long_press     → button held (fires on press)
+#   long_release   → held button released
+
+- id: ac_night_start
+  alias: "BILRESA Bedroom — Button 3 single press → start goodnight AC"
+  description: ""
+  mode: single
+  triggers:
+    - trigger: state
+      entity_id: event.bedroom_bilresa_bedroom_button_3
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+  actions:
+    - action: script.goodnight_ac

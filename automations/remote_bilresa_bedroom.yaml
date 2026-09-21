@@ -9,6 +9,12 @@
 #                                             long_release)
 # Channels 2 and 3 (buttons 4-9) are unused — likely redundant/failover
 # endpoints from the same physical controls.
+#
+# Note on scrolling: Matter only reports a batched multi_press_N once you
+# stop turning the wheel (N = ticks in that motion), not a live event per
+# tick. The scroll automations below match any multi_press_N and scale the
+# brightness step by N (5% per tick) so a longer spin moves brightness
+# further in one go, instead of only reacting to single (N=1) ticks.
 
 - id: bilresa_bedroom_press_single
   alias: "BILRESA Bedroom — center press single → toggle bedroom lights"
@@ -83,15 +89,17 @@
       entity_id: event.bedroom_bilresa_bedroom_button_1
   conditions:
     - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+      value_template: "{{ trigger.to_state.attributes.event_type is match('multi_press_[0-9]+$') }}"
   actions:
+    - variables:
+        ticks: "{{ trigger.to_state.attributes.event_type.split('_')[-1] | int }}"
     - action: light.turn_on
       target:
         entity_id: >-
           {{ ['light.bedroom_lights', 'light.ambient_light_bed']
              | select('is_state', 'on') | list }}
       data:
-        brightness_step_pct: 10
+        brightness_step_pct: "{{ 5 * ticks }}"
 
 - id: bilresa_bedroom_scroll_ccw
   alias: "BILRESA Bedroom — scroll counter-clockwise → dim active bedroom lights"
@@ -102,12 +110,14 @@
       entity_id: event.bedroom_bilresa_bedroom_button_2
   conditions:
     - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+      value_template: "{{ trigger.to_state.attributes.event_type is match('multi_press_[0-9]+$') }}"
   actions:
+    - variables:
+        ticks: "{{ trigger.to_state.attributes.event_type.split('_')[-1] | int }}"
     - action: light.turn_on
       target:
         entity_id: >-
           {{ ['light.bedroom_lights', 'light.ambient_light_bed']
              | select('is_state', 'on') | list }}
       data:
-        brightness_step_pct: -10
+        brightness_step_pct: "{{ -5 * ticks }}"

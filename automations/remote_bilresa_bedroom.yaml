@@ -1,20 +1,20 @@
-# ---- BILRESA Bedroom scroll wheel --------------------------------------------
-# Matter device exposing 9 event entities as 3 channels of 3 endpoints each
-# (press / clockwise / counter-clockwise). Only channel 1 was confirmed live
-# by direct testing:
-#   event.bedroom_bilresa_bedroom_button_1 → clockwise scroll tick
-#   event.bedroom_bilresa_bedroom_button_2 → counter-clockwise scroll tick
-#   event.bedroom_bilresa_bedroom_button_3 → center press (supports
-#                                             multi_press_1/2/3, long_press,
-#                                             long_release)
-# Channels 2 and 3 (buttons 4-9) are unused — likely redundant/failover
-# endpoints from the same physical controls.
+# ---- BILRESA Bedroom scroll wheel (via ha-ikea-bilresa HACS integration) ----
+# Home Assistant's built-in Matter integration only reports one batched
+# multi_press_N event after you stop scrolling, so real scrolling (N>1) felt
+# laggy/dead. The community `Vituhlos/ha-ikea-bilresa` custom integration
+# (https://github.com/Vituhlos/ha-ikea-bilresa) listens to the device's raw
+# MultiPressOngoing stream directly, giving live per-notch events while
+# scrolling — used here instead of the core Matter event.* entities.
 #
-# Note on scrolling: Matter only reports a batched multi_press_N once you
-# stop turning the wheel (N = ticks in that motion), not a live event per
-# tick. The scroll automations below match any multi_press_N and scale the
-# brightness step by N (5% per tick) so a longer spin moves brightness
-# further in one go, instead of only reacting to single (N=1) ticks.
+# The wheel has a physical 3-position channel selector; ours is fixed on
+# channel 1 (channels 2/3 are unused). Event types on that channel: press,
+# double_press, triple_press, hold, release, rotate_up, rotate_down (with a
+# `notches` count).
+#
+# Note: entity_id below keeps its original "living_room" prefix from when
+# the device was first set up under the wrong area in this integration — the
+# device itself has since been reassigned to the bedroom area, but renaming
+# would change the entity_id and break this file, so it's left as-is.
 
 - id: bilresa_bedroom_press_single
   alias: "BILRESA Bedroom — center press single → toggle bedroom lights"
@@ -22,10 +22,9 @@
   mode: single
   triggers:
     - trigger: state
-      entity_id: event.bedroom_bilresa_bedroom_button_3
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+      entity_id: event.living_room_bilresa_living_room_channel_1
+      attribute: event_type
+      to: press
   actions:
     - action: light.toggle
       target:
@@ -37,25 +36,23 @@
   mode: single
   triggers:
     - trigger: state
-      entity_id: event.bedroom_bilresa_bedroom_button_3
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'multi_press_2' }}"
+      entity_id: event.living_room_bilresa_living_room_channel_1
+      attribute: event_type
+      to: double_press
   actions:
     - action: light.toggle
       target:
         entity_id: light.ambient_light_bed
 
-- id: bilresa_bedroom_press_long
+- id: bilresa_bedroom_press_hold
   alias: "BILRESA Bedroom — center press held → toggle bedroom lights + ambience together"
   description: ""
   mode: single
   triggers:
     - trigger: state
-      entity_id: event.bedroom_bilresa_bedroom_button_3
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == 'long_press' }}"
+      entity_id: event.living_room_bilresa_living_room_channel_1
+      attribute: event_type
+      to: hold
   actions:
     - choose:
         - conditions:
@@ -80,44 +77,46 @@
               - light.bedroom_lights
               - light.ambient_light_bed
 
-- id: bilresa_bedroom_scroll_cw
-  alias: "BILRESA Bedroom — scroll clockwise → brighten active bedroom lights"
+- id: bilresa_bedroom_scroll_up
+  alias: "BILRESA Bedroom — scroll up → brighten active bedroom lights"
   description: ""
-  mode: single
+  mode: parallel
+  max: 20
   triggers:
     - trigger: state
-      entity_id: event.bedroom_bilresa_bedroom_button_1
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type is match('multi_press_[0-9]+$') }}"
+      entity_id: event.living_room_bilresa_living_room_channel_1
+      attribute: event_type
+      to: rotate_up
   actions:
     - variables:
-        ticks: "{{ trigger.to_state.attributes.event_type.split('_')[-1] | int }}"
+        notches: "{{ trigger.to_state.attributes.notches | default(1) | int }}"
     - action: light.turn_on
       target:
         entity_id: >-
           {{ ['light.bedroom_lights', 'light.ambient_light_bed']
              | select('is_state', 'on') | list }}
       data:
-        brightness_step_pct: "{{ 5 * ticks }}"
+        brightness_step_pct: "{{ 5 * notches }}"
+        transition: 1
 
-- id: bilresa_bedroom_scroll_ccw
-  alias: "BILRESA Bedroom — scroll counter-clockwise → dim active bedroom lights"
+- id: bilresa_bedroom_scroll_down
+  alias: "BILRESA Bedroom — scroll down → dim active bedroom lights"
   description: ""
-  mode: single
+  mode: parallel
+  max: 20
   triggers:
     - trigger: state
-      entity_id: event.bedroom_bilresa_bedroom_button_2
-  conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type is match('multi_press_[0-9]+$') }}"
+      entity_id: event.living_room_bilresa_living_room_channel_1
+      attribute: event_type
+      to: rotate_down
   actions:
     - variables:
-        ticks: "{{ trigger.to_state.attributes.event_type.split('_')[-1] | int }}"
+        notches: "{{ trigger.to_state.attributes.notches | default(1) | int }}"
     - action: light.turn_on
       target:
         entity_id: >-
           {{ ['light.bedroom_lights', 'light.ambient_light_bed']
              | select('is_state', 'on') | list }}
       data:
-        brightness_step_pct: "{{ -5 * ticks }}"
+        brightness_step_pct: "{{ -5 * notches }}"
+        transition: 1
